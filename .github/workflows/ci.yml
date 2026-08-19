@@ -185,6 +185,11 @@ jobs:
         id: geometry_tests
         run: python scripts/test-verify-geometry.py
 
+      - name: Verify draw.io emitter
+        if: always()
+        id: mxgraph_emit_tests
+        run: python scripts/test-mxgraph-emit.py
+
       - name: Verify generated icon assets
         if: always()
         id: icons

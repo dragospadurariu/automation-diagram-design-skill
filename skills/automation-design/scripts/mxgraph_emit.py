@@ -1168,20 +1168,22 @@ def punched_through(box: Box, connectors: list[Connector]) -> bool:
 def furniture_style(box: Box, variables: dict[str, str]) -> str:
     """The shared style head of the small furniture — badges and chips.
 
-    Deliberately no whiteSpace=wrap: in a pill-sized box draw.io lays a
-    wrapped label out about half a model pixel left of true centre, and on an
-    18x10 role badge half a pixel is a visible lean. Measured, not theorised —
-    a probe of the same 18x10/16x8 chips against a centre hairline, rendered
-    by embed.diagrams.net at 6x and 12x, reads dx ≈ -0.5px for every
-    combination carrying whiteSpace=wrap (html on or off, any spacing or
-    overflow) and dx ≈ 0 for html=1 without it. SVG text never wraps, so wrap
-    buys nothing here and costs exactly the centring the source has.
+    `spacing=0` alone does not centre a label in a pill-sized box: draw.io's
+    HTML label path keeps its default side spacing unless spacingLeft and
+    spacingRight are zeroed explicitly, and the residue is worth ~4px of lean
+    plus ~6px of vertical sag at these sizes — on an 18x10 role badge the text
+    escapes the pill entirely. Measured, not theorised: a probe of the same
+    18x10/16x8 pills against centre hairlines, rendered by embed.diagrams.net
+    at 6x and centroid-read per axis, puts every other combination (wrap on or
+    off, html=0, overflow=fill/width, bold, Helvetica) off-centre on at least
+    one axis, while wrap + spacing=0 + spacingLeft=0 + spacingRight=0 reads
+    dx = dy = -0.08px on both pill sizes.
     """
     return (
-        f"{shape_prefix(box)}html=1;"
+        f"{shape_prefix(box)}html=1;whiteSpace=wrap;"
         f"{paint('fill', box.fill, variables=variables)};"
         f"{paint('stroke', box.stroke, variables=variables)};"
-        f"verticalAlign=middle;align=center;spacing=0;"
+        f"verticalAlign=middle;align=center;spacing=0;spacingLeft=0;spacingRight=0;"
         f"{dash_bits(box.dash)}{opacity_bits(box.opacity)}"
     )
 

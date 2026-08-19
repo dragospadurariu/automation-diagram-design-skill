@@ -1,6 +1,6 @@
 ---
 description: Export an automation-design HTML file to .svg and .png next to the source
-argument-hint: <html-file> [--svg-only|--png-only] [--scale=N] [--output=<path>]
+argument-hint: <html-file> [--svg-only|--png-only|--format=drawio] [--scale=N] [--output=<path>]
 allowed-tools:
   - Read
   - Write
@@ -10,6 +10,8 @@ allowed-tools:
 ---
 
 Export the diagram HTML at `$1` to `.svg` and/or `.png`, following the procedure documented in [`skills/automation-design/references/export.md`](../skills/automation-design/references/export.md). Treat that reference as the source of truth — don't reimplement the logic here.
+
+With `--format=drawio`, follow [`skills/automation-design/references/export-drawio.md`](../skills/automation-design/references/export-drawio.md) instead: run the packaged emitter (`<skill-dir>/scripts/mxgraph_emit.py`) with `--report` and relay its delta ledger. The other flags don't apply to this path.
 
 Full argument string: `$ARGUMENTS`
 

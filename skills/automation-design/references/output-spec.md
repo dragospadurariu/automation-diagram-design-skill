@@ -21,8 +21,9 @@ Infer choices that are clear from the request (for example, "for my deck" implie
 | `svg` | `.svg` next to the source | the `<svg>` node, vector text | editorial wrapper; fonts substitute in offline tools |
 | `png` | `.png` at `device_scale_factor` | pixels exactly as the browser renders them | vector editability |
 | `html+png` | both | — | — |
+| `drawio` | editable `.drawio` next to the source | geometry, colors, fonts, edge bindings | editorial wrapper, pattern fills, motion ([`export-drawio.md`](export-drawio.md)) |
 
-Always generate the HTML first — `svg` and `png` are produced *from* it via [`export.md`](export.md). Never hand-author an SVG file directly; the HTML is the source of truth and the only artifact the taste gate (SKILL.md §9) is written against.
+Always generate the HTML first — `svg` and `png` are produced *from* it via [`export.md`](export.md), and `drawio` via [`export-drawio.md`](export-drawio.md). Never hand-author an SVG file directly; the HTML is the source of truth and the only artifact the taste gate (SKILL.md §9) is written against.
 
 Pick by destination:
 
