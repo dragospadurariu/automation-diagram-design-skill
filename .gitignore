@@ -1,0 +1,6 @@
+.claude/
+.mcp.json
+__pycache__/
+*.py[cod]
+.playwright-mcp/
+experiments/

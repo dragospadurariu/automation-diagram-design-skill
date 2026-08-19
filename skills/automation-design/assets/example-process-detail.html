@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Process detail · Flowchart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
+      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
+      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8;
+      --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
+      --mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    .frame { width: 100%; max-width: 1280px; }
+    .eyebrow { margin-bottom: 0.5rem; color: var(--muted); font: 500 0.66rem var(--mono); letter-spacing: 0.18em; text-transform: uppercase; }
+    h1 { margin-bottom: 1.5rem; color: var(--ink); font: 400 clamp(1.5rem, 2.4vw + 0.75rem, 2rem)/1.15 var(--serif); letter-spacing: -0.02em; }
+    svg { display: block; width: 100%; min-width: 900px; }
+    .id-text, .tag-text, .arrow-label, .annotation, .legend-label { font-family: var(--mono); }
+    .id-text { fill: var(--muted); font-size: 6px; font-weight: 600; text-anchor: middle; letter-spacing: 0.04em; }
+    .tag-text { fill: var(--muted); font-size: 6px; font-weight: 600; text-anchor: middle; letter-spacing: 0.06em; }
+    .node-title { fill: var(--ink); font: 600 9px var(--sans); text-anchor: middle; }
+    .node-sub { fill: var(--muted); font: 400 6.5px var(--mono); text-anchor: middle; }
+    .annotation { fill: var(--soft); font-size: 6.5px; text-anchor: middle; }
+    .terminal-text { fill: var(--ink); font: 600 9px var(--sans); text-anchor: middle; }
+    .decision-text { fill: var(--ink); font: 600 8px var(--sans); text-anchor: middle; }
+    .arrow-label { fill: var(--soft); font-size: 8px; text-anchor: middle; letter-spacing: 0.06em; }
+    .focal-text { fill: var(--accent); }
+    .legend-label { fill: var(--muted); font-size: 8px; font-weight: 500; letter-spacing: 0.14em; }
+    .legend-text { fill: var(--muted); font: 400 7px var(--sans); }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Flowchart · process detail · Automation Design</p>
+    <h1>1.2 · Email agent answers</h1>
+
+    <svg viewBox="0 0 1020 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="process-detail-title process-detail-desc">
+      <title id="process-detail-title">Email agent answers — process detail</title>
+      <desc id="process-detail-desc">A vendor email triggers the process; the sender is matched to a vendor, an answer agent drafts a reply, and a confidence gate either sends the reply automatically or escalates it to human review; every path is logged.</desc>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
+        <marker id="arr-accent" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#eb6c36"/></marker>
+      </defs>
+      <rect width="1020" height="340" fill="#f5f5f5"/>
+
+      <!-- Connectors first (z-order) -->
+      <path d="M96 120 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M224 120 H248" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M352 120 H368" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M440 120 H468" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M404 148 V208" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M572 120 H588" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arr-accent)"/>
+      <path d="M660 120 H684" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M624 148 V208" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M788 120 H812" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M676 232 H692 Q700 232 700 240 V280" fill="none" stroke="#4f5d75"/>
+      <path d="M404 256 V276 Q404 284 412 284 H696" fill="none" stroke="#4f5d75"/>
+      <path d="M704 284 H896 Q904 284 904 276 V144" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <circle cx="700" cy="284" r="4" fill="#2d3142"/>
+      <path d="M916 120 H940" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+
+      <!-- Branch labels (masked, 6-10px off the stroke) -->
+      <rect x="442" y="100" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="454" y="109" class="arrow-label">YES</text>
+      <rect x="412" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="424" y="173" class="arrow-label">NO</text>
+      <rect x="662" y="100" width="20" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="672" y="109" class="arrow-label">YES</text>
+      <rect x="632" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="644" y="173" class="arrow-label">NO</text>
+
+      <!-- Start -->
+      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <text x="68" y="124" class="terminal-text">Start</text>
+
+      <!-- 1.2.1 New email arrives -->
+      <rect x="120" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="120" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="138" y="107" class="id-text">1.2.1</text>
+      <rect x="192" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="206" y="107" class="tag-text">MAIL</text>
+      <text x="172" y="122" class="node-title">New email arrives</text>
+      <text x="172" y="134" class="node-sub">vendor support inbox</text>
+      <text x="172" y="158" class="annotation">event trigger · shared mailbox</text>
+
+      <!-- 1.2.2 Identify sender -->
+      <rect x="248" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="248" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="252" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="266" y="107" class="id-text">1.2.2</text>
+      <rect x="320" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="334" y="107" class="tag-text">API</text>
+      <text x="300" y="122" class="node-title">Identify sender</text>
+      <text x="300" y="134" class="node-sub">match to vendor</text>
+      <text x="300" y="158" class="annotation">GET /suppliers?email=…</text>
+
+      <!-- Decision: known vendor? -->
+      <path d="M404 92 L440 120 L404 148 L368 120 Z" fill="#f5f5f5" stroke="#4f5d75"/>
+      <text x="404" y="118" class="decision-text">Known</text>
+      <text x="404" y="128" class="decision-text">vendor?</text>
+
+      <!-- 1.2.3 Create review task (unknown sender) -->
+      <rect x="352" y="208" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="352" y="208" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="356" y="212" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="370" y="219" class="id-text">1.2.3</text>
+      <rect x="424" y="212" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="438" y="219" class="tag-text">HUMAN</text>
+      <text x="404" y="234" class="node-title">Create review task</text>
+      <text x="404" y="246" class="node-sub">unknown sender</text>
+
+      <!-- 1.2.4 Invoke answer agent (focal) -->
+      <rect x="468" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="468" y="96" width="104" height="48" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
+      <rect x="472" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="486" y="107" class="id-text focal-text">1.2.4</text>
+      <rect x="540" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="554" y="107" class="tag-text focal-text">AGENT</text>
+      <text x="520" y="122" class="node-title">Invoke answer agent</text>
+      <text x="520" y="134" class="node-sub">drafts a reply</text>
+      <text x="520" y="158" class="annotation">context: status · history · faq</text>
+
+      <!-- Decision: confidence gate -->
+      <path d="M624 92 L660 120 L624 148 L588 120 Z" fill="#f5f5f5" stroke="#4f5d75"/>
+      <text x="624" y="115" class="decision-text">Conf.</text>
+      <text x="624" y="125" class="decision-text">≥ 80%?</text>
+
+      <!-- 1.2.6 Escalate to review (low confidence) -->
+      <rect x="572" y="208" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="572" y="208" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="576" y="212" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="590" y="219" class="id-text">1.2.6</text>
+      <rect x="644" y="212" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="658" y="219" class="tag-text">HUMAN</text>
+      <text x="624" y="234" class="node-title">Escalate to review</text>
+      <text x="624" y="246" class="node-sub">low confidence</text>
+      <text x="624" y="268" class="annotation">task inbox · draft attached</text>
+
+      <!-- 1.2.5 Send automated reply -->
+      <rect x="684" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="684" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="688" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="702" y="107" class="id-text">1.2.5</text>
+      <rect x="756" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="770" y="107" class="tag-text">MAIL</text>
+      <text x="736" y="122" class="node-title">Send automated reply</text>
+      <text x="736" y="134" class="node-sub">to vendor thread</text>
+      <text x="736" y="158" class="annotation">mail connector · reply-to thread</text>
+
+      <!-- 1.2.7 Log query & response -->
+      <rect x="812" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="812" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="816" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="830" y="107" class="id-text">1.2.7</text>
+      <rect x="884" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="898" y="107" class="tag-text">APP</text>
+      <text x="864" y="122" class="node-title">Log query &amp; response</text>
+      <text x="864" y="134" class="node-sub">audit trail</text>
+      <text x="864" y="158" class="annotation">case entity</text>
+
+      <!-- End -->
+      <rect x="940" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <text x="968" y="124" class="terminal-text">End</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="300" x2="980" y2="300" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="40" y="320" class="legend-label">LEGEND</text>
+      <rect x="120" y="306" width="32" height="16" rx="8" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="318" class="legend-text">Start / End</text>
+      <rect x="240" y="306" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="276" y="318" class="legend-text">Step · id chip left, tag right</text>
+      <path d="M424 306 L436 314 L424 322 L412 314 Z" fill="#f5f5f5" stroke="#4f5d75"/><text x="444" y="318" class="legend-text">Decision · every exit labeled</text>
+      <rect x="588" y="306" width="28" height="16" rx="3" fill="rgba(235,108,54,0.07)" stroke="#eb6c36"/><text x="624" y="318" class="legend-text">Agent step (focal)</text>
+      <circle cx="716" cy="314" r="4" fill="#2d3142"/><text x="728" y="318" class="legend-text">Merge point</text>
+      <text x="804" y="318" class="legend-text">text under a box = annotation</text>
+    </svg>
+  </main>
+</body>
+</html>
