@@ -2,7 +2,7 @@
 
 Semantic patterns describe **what a system does**; the 11 visual types describe **how information is arranged**. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
 
-Patterns 8–18 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
+Patterns 8–19 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
 
 Use one primary pattern per figure. A second pattern may supply at most one supporting primitive; if both need full treatment, split overview and detail. Labels and outcomes must remain complete in a static frame.
 
@@ -28,6 +28,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 | How an agent improves from its own run history | **Agent memory and evaluation loop** | Loop |
 | What an automation is permitted to touch, and by which control | **Automation guardrails and boundaries** | Layer stack |
 | The end-to-end solution as named processes with decisions and handoffs | **RPA solution blueprint** | Flowchart |
+| One agent's charter, operating mode, I/O contract, grounding, tools, and escalation | **Agent card** | Architecture |
 
 ## 1. Fan-in queue / bottleneck
 
@@ -201,7 +202,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** An LLM agent reasons over a goal and acts through a bounded set of tools — functions, MCP servers, APIs, RPA workflows. What the agent can reach, and what it cannot, is the point.
 
-**Required primitives:** Agent (✦ AGENT) with its charter in the sublabel; LLM; named tools with type tags; the permission boundary around the permitted toolset; data stores the agent reads (memory, knowledge base) distinguished from tools it invokes; the human or system that receives the result.
+**Required primitives:** Agent (✦ AGENT) with its **operating-mode chip** (`AUTO`/`CONV`/`STEP`) and charter in the sublabel, plus a one-line I/O contract (`in: … → out: …`); LLM; named tools with type tags; the permission boundary around the permitted toolset; data stores the agent reads — drawn as dashed `RETRIEVE` grounding edges, visually distinct from link-blue tool calls, grouped in a grounding container when there are ≥2 sources ([automation-primitives.md § Agent anatomy](automation-primitives.md)); the human or system that receives the result.
 
 **Complexity budget:** 1 agent, ≤5 tools, ≤2 stores, ≤2 boundaries, ≤9 primary nodes. A second agent re-routes to **Supervisor and worker agents**.
 
@@ -280,6 +281,22 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 **Static fallback:** The full flow with all branch labels, step IDs, annotations, and both terminal outcomes readable in one frame.
 
 **Nearest visual type:** **Flowchart** (phased blueprint variant); use **Data flow** when role lanes matter more than workflow logic, or **Sequence** for the runtime message view of one transaction.
+
+## 19. Agent card
+
+**Selection triggers:** One agent must be documented as its architecture artifact — charter, operating mode, I/O contract, what it reads, what it may do, and where a human takes over. The client-facing solution annex for an agent built on any platform (UiPath, Copilot Studio, LangGraph, plain code — the vendor lexicon in [automation-primitives.md](automation-primitives.md) maps the terms).
+
+**Required primitives:** Page-context panel (`AGENT CARD` eyebrow; `CHARTER`, `MODE`, `GUARDRAILS` lines); the **I/O spine** — IN node → agent (✦ AGENT + operating-mode chip) → OUT node, ink strokes, payload labels (`EVENT`/`QUERY` → `RESULT`/`ANSWER`); LLM node with a `PROMPT` edge; **grounding container** with ≥1 source and dashed `RETRIEVE` edges in; **tool-permission boundary** with ≥1 tool and link-blue `TOOL CALL` edges out; ≤2 dashed-accent escalation edges to named human roles, each labeled with its condition; on-edge guardrail gates where a control bites. The fixed spatial grammar carries the meaning: *horizontal = data flow; lower-left = knowledge; lower-right = action; top = reasoning; bottom = the human.*
+
+**Conversational variant:** `CONV` chip; IN is the user's query (per turn), OUT the answer (+ source); escalation reads "human takes over the session"; the `MODE` panel line says turn-based. When turn timing or session dynamics are the story, draw that figure as a **Sequence directly** — reach for **Human-in-the-loop approval** only when a suspension or handoff is the story. The card stays the static architecture view.
+
+**Complexity budget:** 1 agent, ≤4 grounding sources, ≤5 tools, ≤2 escalation targets, ≤2 guardrail gates, 2 containers, **≤14 primary nodes total** (IN, OUT, LLM, and each human count; containers and gates don't). The two containers are the card's sanctioned zoning above the nine-node target — the same mechanism as the blueprint's phase banding — and the ceiling is absolute: category maxima are non-composable — the 14-node total always wins (4 sources + 5 tools forces dropping a human or gate-owner node). A busier agent splits its inventory into a linked Agent-with-tools or guardrails figure rather than growing the card.
+
+**Anti-patterns:** An escalation or guardrails *container*; grounding invisible so answers look like magic; grounding sources styled as tools; vendor product names in chips; a second accent (the agent is focal; the escalation edge may share the accent as its continuation); the operating-mode chip omitted so a copilot is indistinguishable from an autopilot; a `⚙`-class control drawn with the `◉` glyph (the gate glyph states the enforcing class, and ◉ means human).
+
+**Static fallback:** The card is static by definition — panel, spine, both containers, and every edge label readable in one frame.
+
+**Nearest visual type:** **Architecture**. As a page inside a detail set, the card is a non-flowchart annex page carrying the set's numbering and navigation ([type-flowchart.md § Detail set](type-flowchart.md)).
 
 ## Composition rules
 

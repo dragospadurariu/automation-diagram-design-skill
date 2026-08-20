@@ -76,3 +76,5 @@ Rules:
 - `assets/example-architecture.html` — minimal light
 - `assets/example-architecture-dark.html` — minimal dark
 - `assets/example-architecture-full.html` — full editorial
+- `assets/example-agent-card.html` — agent card (pattern 19: I/O spine, grounding container, tool boundary, guardrail gate, escalation)
+- `assets/example-agent-card-conversational.html` — conversational agent card (CONV chip, user query → answer, human takes over session)

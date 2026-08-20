@@ -1,6 +1,6 @@
 # Automation primitives
 
-The shared vocabulary for every automation diagram. Semantic patterns (rows 8–18 of the routing table) cite these primitives by name; this file defines what each one means, how it is drawn, and how edges between them are styled. Load it whenever an automation pattern routes.
+The shared vocabulary for every automation diagram. Semantic patterns (rows 8–19 of the routing table) cite these primitives by name; this file defines what each one means, how it is drawn, and how edges between them are styled. Load it whenever an automation pattern routes.
 
 **Vendor-neutral by design.** The internal concept is `Queue`, never `UiPath Orchestrator Queue`. Platform names (UiPath, Power Automate, Automation Anywhere, LangGraph, …) belong in the technical **sublabel** (Geist Mono), never in the node name or the type tag. This keeps one diagram language across every client stack.
 
@@ -76,6 +76,42 @@ The glyph is part of the tag text, not a separate icon. Widen the chip to fit (`
 - **Parametric types with their own chip geometry** — data flow defines an 18×10 three-letter role chip (`type-data-flow.md` §2.4) that cannot hold a glyph. There, carry the class on the **lane label** instead (`◉ BUSINESS USERS`, `⚙ RPA ROBOTS`), which is what patterns 9 and 11 require.
 
 A diagram uses one of these conventions throughout — never glyphed tags on some nodes and bare tags on others.
+
+## Agent anatomy — operating mode, I/O, grounding, guardrails
+
+Four conventions that make one agent legible on any platform. The **agent card** pattern ([semantic-patterns.md §19](semantic-patterns.md)) requires all of them; topology diagrams (pattern 13) use the compressed forms noted below.
+
+**Operating modes.** A closed set of three, drawn as a second chip beside the agent's `✦ AGENT` tag (same chip geometry; accent-tinted like the agent's other chips). The axes differ — `AUTO` describes triggering, `CONV` interaction, `STEP` invocation — so the chip names the *dominant engagement mode*; edge cases (a conversational agent that is also invokable) keep one chip and note the rest in the sublabel. Do not invent a fourth mode.
+
+| Chip | Mode | The reader may assume |
+|---|---|---|
+| `AUTO` | Autonomous | Triggered by schedule/event/queue; runs unattended; decides and acts within its guardrails |
+| `CONV` | Conversational | A human is in the loop each session; the agent answers turn by turn |
+| `STEP` | Invoked | Called as one step inside a workflow; returns a result and stops |
+
+**I/O contract.** On an agent card the contract is structural: an **IN node** (Input/User treatment, `IN` chip) and an **OUT node** (`OUT` chip, white fill, `ink` stroke) on a horizontal spine through the agent, ink-stroke arrows labeled with the payload kind (`EVENT`, `QUERY` → `RESULT`, `ANSWER`). In topology diagrams it compresses to one sublabel line: `in: email json → out: draft + log`.
+
+**Grounding is an edge kind, not a node kind.** Sources stay the existing primitives (KB, DOC, MEM, a read-only APP); what makes them *grounding* is the dashed muted edge labeled `RETRIEVE` running **into** the agent — visually distinct from the link-blue `TOOL CALL` edges running **out of** it. When an agent has ≥2 sources, group them in a **grounding container**: `ink @ 0.03` fill, `ink @ 0.30` dashed `4,4` stroke, `rx=8`, mono uppercase eyebrow `CONTEXT GROUNDING · N` — mirror-symmetric to the tool-permission boundary, which keeps its Security/Boundary treatment and *is* the permissions guardrail.
+
+**Guardrail gates.** A guardrail is a control on a path, never a region. Draw it where it bites: a `16×16 rx=3` chip (paper fill, `soft` stroke) sitting on the governed edge, with a mono label naming the control. The glyph inside names the **enforcing class**, consistent with the badge convention and pattern 17's enforcement actors: `◉` for a human gate (`APPROVAL`, `CONSENT`), `⚙` for an automated one (`PII FILTER`, `RATE LIMIT`). Plus one `GUARDRAILS · …` inventory line in the page-context panel. A full control inventory routes to the **Automation guardrails and boundaries** pattern — never a "guardrails" container.
+
+**Escalation.** ≤2 escalation edges per figure, each dashed-accent, labeled with its condition (`CONF < 70%`), targeting a *named human role*. Three or more routes are an escalation policy: link a dedicated decision **Flowchart** (conditions → owners); use Supervisor-and-workers only when the escalation belongs to a multi-agent topology. Never an escalation container — targets are alternative exits, not a shared boundary.
+
+### Vendor lexicon
+
+Translation guidance between the neutral vocabulary and common platforms. Platform names go in sublabels, never in chips or node names.
+
+| Concept (neutral) | UiPath | Microsoft (Copilot Studio / Power Automate) | LangChain / LangGraph | Plain code |
+|---|---|---|---|---|
+| Agent | Agent / Autopilot | Copilot Studio agent | agent graph / `create_agent` | agent loop |
+| Invoked unit (`STEP`) | agent activity in a workflow | topic / agent flow | node / subgraph | function call |
+| Tool | tool (workflow, API, activity) | action / connector / flow | tool, @tool function | function |
+| Context grounding | Context Grounding index | knowledge source | retriever / RAG chain | retrieval query |
+| Memory | agent memory | conversation history | checkpointer / memory | state store |
+| Trigger (AUTO) | Orchestrator trigger | Power Automate trigger | cron / event handler | scheduler |
+| Session (CONV) | conversation | conversation session | thread | chat session |
+| Guardrail | governance policy | content moderation / DLP | guardrail lib / validator | assertion / filter |
+| Escalation | Action Center task | handoff to (human) agent | interrupt / human-in-loop node | ticket / notification |
 
 ## Edge kinds
 

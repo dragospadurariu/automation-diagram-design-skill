@@ -73,6 +73,7 @@ Rules that make it one deliverable instead of N loose files:
 - **One fidelity ledger for the set**, reported once, listing what each page carries and what was cut — not one ledger per file.
 - **Consistency is part of the taste gate:** same skin, same size preset on detail pages, same chip geometry, same legend across the set.
 - **Verify the set, not just the pages:** `python3 <skill-dir>/scripts/self_check.py --set <base>-overview.html` crawls the links and checks every target exists, every fragment resolves, and no two files claim one canonical number.
+- **Annex pages may use another visual type.** A set may include non-flowchart annex pages — the first is the **agent card** ([semantic-patterns.md §19](semantic-patterns.md), Architecture layout) — carrying the same canonical numbering, colophon, `↑ parent` / `CALLED FROM` links, and `self_check.py --set` verification as every other page — the verifier checks link existence, fragments, and filename-number uniqueness only; concordance of in-page title, number, colophon, and `CALLED FROM` stays in the taste gate and the set-consistency rule. The invoking `AGENT`-tagged activity box is the forward SVG link to the card, exactly like a sub-process link, and the page-context panel defined here is reusable on annex pages.
 
 The set replaces — never accompanies — a single over-budget canvas. If a user insists on "everything on one page", the A3 blueprint at the extended budget above is the ceiling; past it, deliver the set and say why.
 
