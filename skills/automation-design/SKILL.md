@@ -121,6 +121,8 @@ Rules of thumb:
 
 Before rendering, state the plan in one short message: the chosen visual type (and semantic pattern, if routed), the size preset, and anything the complexity budget (§7) will force out. If the user is reachable, let them redirect before you draw; if not, proceed and note the assumptions beside the deliverable. Skip the pause only when the request already pins type, size, and content exactly.
 
+**When the source is a solution document (PDD, SDD, design doc), the plan is a *set*, not a page.** Enumerate everything the document's content calls for — the blueprint/overview, one numbered page per process the budget forces out ([type-flowchart.md § Detail set](references/type-flowchart.md)), **one agent card per named agent** (pattern 19), **one application card per application** (pattern 20) and its conditional companions — and confirm the whole list. "Draw the diagram" from a PDD about an agent means the overview *and* the agent card, not the overview alone.
+
 ---
 
 ## 4. Universal Anti-patterns

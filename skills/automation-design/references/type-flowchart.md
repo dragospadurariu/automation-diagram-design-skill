@@ -16,7 +16,7 @@
 
 Used by the **RPA solution blueprint** semantic pattern: the end-to-end automation split into named processes, drawn as one continuous flow. This variant changes three conventions:
 
-- **Flow runs left→right**, not top→down. Decision branches drop downward; rejoin via a right-then-up elbow into the bottom edge of the merge target.
+- **Flow runs left→right**, not top→down. Decision branches drop downward; rejoin via a right-then-up elbow into the bottom edge of the merge target. **A dropped branch activity keeps the left→right grammar:** the decision's branch exit elbows down and then right, entering the activity's **left edge**, and the activity's outbound continues from its **right edge** — the **top edge is reserved for loop-back re-entry** (top = repetition, left = flow). When both exits of a decision drop to **sibling outcome branches**, place the siblings **symmetric about the diamond's vertical axis** — equal center offsets and equal widths, so neither outcome reads as an afterthought.
 - **Named phase bands**: each process gets an eyebrow label (`PROCESS 1 · MAIL INTAKE`, Geist Mono, uppercase, anchored at the band's left edge) and phases are separated by **dashed vertical dividers** (`ink @ 0.20`, dasharray `4,4`) spanning the content height. Dividers are decorative — connectors may cross them; that crossing *is* the handoff.
 - **Activity-tag chips**: every activity rectangle carries a chip naming the *executing system class* — `MAIL`, `DOC AI`, `AGENT`, `HUMAN`, `RPA`, `API`, `APP`, `QUEUE` — drawn from the closed set in [`automation-primitives.md` § Activity tags](automation-primitives.md). Tags are **bare here, not glyph-prefixed** (that convention belongs to topology diagrams; see the same file's badge section). Vendor product names go in the sublabel, never in the tag.
 
@@ -110,6 +110,8 @@ How to apply feedback to a delivered set without regenerating it wholesale:
 - **Loop-back edge label carrying the loop expression** — `YES · Skip += BatchSize` breaks the ≤14-char all-caps label budget; the expression is an under-box annotation.
 - **BE/SE code in an activity-tag chip** — exception codes name terminals, not executing systems.
 - **Page-context panel as an HTML `<div>`** — it must live inside the SVG viewBox or it vanishes from every export.
+- **A dropped branch activity entered from the top** — top entry means loop-back; branch flow enters the left edge and exits the right.
+- **Sibling outcome branches at unequal offsets or widths** under one decision — symmetry about the diamond's axis is the convention.
 
 ## Examples
 - `assets/example-flowchart.html` — minimal light
