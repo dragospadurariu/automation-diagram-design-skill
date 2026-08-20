@@ -1,6 +1,6 @@
 # Automation primitives
 
-The shared vocabulary for every automation diagram. Semantic patterns (rows 8–19 of the routing table) cite these primitives by name; this file defines what each one means, how it is drawn, and how edges between them are styled. Load it whenever an automation pattern routes.
+The shared vocabulary for every automation diagram. Semantic patterns (rows 8–20 of the routing table) cite these primitives by name; this file defines what each one means, how it is drawn, and how edges between them are styled. Load it whenever an automation pattern routes.
 
 **Vendor-neutral by design.** The internal concept is `Queue`, never `UiPath Orchestrator Queue`. Platform names (UiPath, Power Automate, Automation Anywhere, LangGraph, …) belong in the technical **sublabel** (Geist Mono), never in the node name or the type tag. This keeps one diagram language across every client stack.
 
@@ -112,6 +112,14 @@ Translation guidance between the neutral vocabulary and common platforms. Platfo
 | Session (CONV) | conversation | conversation session | thread | chat session |
 | Guardrail | governance policy | content moderation / DLP | guardrail lib / validator | assertion / filter |
 | Escalation | Action Center task | handoff to (human) agent | interrupt / human-in-loop node | ticket / notification |
+
+## Application vocabulary — screens, entities, operations
+
+The **Application card** pattern ([semantic-patterns.md §20](semantic-patterns.md)) documents apps with the same grammar agents use — `IN`/`OUT` nodes, gates, and containers come from Agent anatomy above. Three additions:
+
+- **App chips.** The app node carries `APP` plus a platform-class chip (`WEB`, `MOBILE`, `DESKTOP`). Screens carry `SCREEN` or `MODAL` plus a **state-ID chip** (`2.1`) that the screen-states figure, the screen contract, and any prose all reference — one numbering, many pages. Data nodes use `ENTITY`; triggered work uses `FLOW`, `RPA`, `API`, `QUEUE` as elsewhere; runtime tiers use `NET`, `CACHE`, `DB`, `OBJ`, `DWH`, `BI`.
+- **Logical operations.** Contracts name operations `VerbNoun` — `GetInvoice`, `SaveInvoice`, `ApproveInvoice` — never the physical implementation. The document's implementation profile maps each operation to a cloud flow, UiPath process, API route, or server action; the diagram stays conceptual.
+- **Event labels and responses.** UI events label trigger edges (`ON LOAD`, `ON SAVE`, `ON APPROVE`); every async trigger has a response edge back to the screen (`ACK QUEUED`, dashed). The queue node is the visible sync–async boundary: the screen's immediate outcome is *queued*, never the downstream result.
 
 ## Edge kinds
 

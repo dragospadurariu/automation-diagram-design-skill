@@ -8,7 +8,7 @@ A visual language for enterprise automation: robots, agents, humans, queues, orc
 
 *One numbered process at the depth a PDD is written: step IDs that match the document's sections, technical facts annotated under each box, and the agent step with its confidence gate as the focal decision. Source: [`example-process-detail.html`](skills/automation-design/assets/example-process-detail.html).*
 
-11 visual types, 18 semantic patterns — 11 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
+11 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
 
 Forked from [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design) (MIT) — the editorial design system, verification tooling, and import/export pipeline come from there; the automation vocabulary, patterns, and scope are new.
 
@@ -26,7 +26,7 @@ routes to `Dispatcher / queue / performer` + `Human-in-the-loop approval`, loads
 - **Vendor-neutral primitives** — the concept is `Queue`, never `UiPath Orchestrator Queue`; platform names live in sublabels, so one visual language covers every client stack.
 - **Automation boundaries** — network, credential, approval, and agent-permission boundaries are drawn explicitly, so a diagram never implies an agent can touch everything.
 
-The 11 automation patterns: dispatcher/queue/performer, attended automation handoff, transaction lifecycle with retry and exceptions, human-in-the-loop approval, document processing pipeline, agent with tools, agent→RPA handoff, supervisor and worker agents, agent memory and evaluation loop, automation guardrails and boundaries, and the RPA solution blueprint — the PDD/SDD high-level view: named processes, decisions, human validation, and queue handoffs on one canvas. Full definitions in [`semantic-patterns.md`](skills/automation-design/references/semantic-patterns.md) and [`automation-primitives.md`](skills/automation-design/references/automation-primitives.md).
+The 13 automation patterns: dispatcher/queue/performer, attended automation handoff, transaction lifecycle with retry and exceptions, human-in-the-loop approval, document processing pipeline, agent with tools, agent→RPA handoff, supervisor and worker agents, agent memory and evaluation loop, automation guardrails and boundaries, the RPA solution blueprint — the PDD/SDD high-level view: named processes, decisions, human validation, and queue handoffs on one canvas — plus the agent card and the application card, the per-agent and per-application architecture annexes. Full definitions in [`semantic-patterns.md`](skills/automation-design/references/semantic-patterns.md) and [`automation-primitives.md`](skills/automation-design/references/automation-primitives.md).
 
 ### Three altitudes, one visual language
 
@@ -47,6 +47,45 @@ A solution-design document needs the same automation drawn at more than one dept
 *Executive-overview altitude: the same class of automation by role lane rather than by workflow logic — useful when the audience cares who owns each stage, not which endpoint is called. Source: [`example-invoice-automation.html`](skills/automation-design/assets/example-invoice-automation.html).*
 
 All three are vendor-neutral: they work for UiPath, Power Automate, Automation Anywhere, or a hand-rolled stack, because the tag names the system *class* and the product name lives in the sublabel. Already have these as draw.io PDDs? `/automation-design:import-drawio` redraws them in this system, with a fidelity ledger.
+
+### Agent cards — one page per agent, on any platform
+
+An agent built in UiPath, Copilot Studio, LangGraph, or plain code gets the same one-page architecture artifact: a fixed spatial grammar where the I/O spine runs horizontally, knowledge sits lower-left (grounding container, dashed `RETRIEVE` edges), actions sit lower-right (tool-permission boundary, `TOOL CALL` edges), reasoning on top, and the human at the bottom. Operating-mode chips (`AUTO` autonomous / `CONV` conversational / `STEP` invoked) say how the agent is engaged; guardrail gates sit on the exact edge each control governs.
+
+![Agent card — autonomous invoice agent with grounding, tool boundary, approval gate, and escalation](docs/screenshots/agent-card.png)
+
+*An autonomous agent's card: charter, mode, and I/O contract in the panel; grounding sources feed the agent, permitted tools act for it, and low confidence escalates to a named human. Source: [`example-agent-card.html`](skills/automation-design/assets/example-agent-card.html).*
+
+![Conversational agent card — user query in, sourced answer out, human takes over the session](docs/screenshots/agent-card-conversational.png)
+
+*The conversational variant is the same card, not a different diagram: `CONV` chip, user query → answer, and escalation means a human takes over the session. Source: [`example-agent-card-conversational.html`](skills/automation-design/assets/example-agent-card-conversational.html).*
+
+### Application diagrams — app cards, screen flows, screen contracts
+
+Applications (UiPath Apps, Power Apps, Next.js, anything) get a family of pages with explicit selection conditions — defaults, never mandatory pages. Each fact lives canonically on exactly one page:
+
+| Page | Question it answers | Drawn when |
+|---|---|---|
+| **App card** | Who uses it, what data, what does it trigger? | standard for any documented app |
+| **Screen states** | Which screen is the user in; what event moves them? | the app has ≥2 connected states |
+| **Screen contract** | One screen's operations, responses, authorization | the screen is architecturally significant |
+| **Runtime deployment topology** | What it runs on, who operates it | deployment/ownership materially matters |
+
+![App card — users through an SSO gate, data container, automations boundary, decision event out](docs/screenshots/app-card.png)
+
+*The functional view: users enter through an identity gate, the app reads and writes its system of record, and approval emits a queued command — one implementation profile is named in the panel, the card itself stays platform-neutral. Source: [`example-app-card.html`](skills/automation-design/assets/example-app-card.html).*
+
+![Screen states — screens as states, clicks as events, roles as guards, async ack as its own transition](docs/screenshots/screen-states.png)
+
+*Navigation as a state machine: `event [guard]` transitions, transient modals, and the async acknowledgement (`ACK QUEUED`) drawn as its own transition — failure stays in place. Source: [`example-screen-states.html`](skills/automation-design/assets/example-screen-states.html).*
+
+![Screen contract — logical operations, auth gate on the governed edge, async command with ack back to the screen](docs/screenshots/screen-contract.png)
+
+*One architecturally significant screen's integration contract: logical operations (`GetInvoice`, `ApproveInvoice`) that the implementation profile maps to flows, processes, or routes; the role+amount gate on the edge it governs; and the queue as the visible sync–async boundary. Source: [`example-screen-contract.html`](skills/automation-design/assets/example-screen-contract.html).*
+
+![Runtime deployment topology — three layer zones, external browser, deployment facts panel](docs/screenshots/runtime-topology.png)
+
+*The conditional technical annex: edge, application, and data layers with the browser as an external node, and a deployment panel that makes `×2` auditable (model, ownership, environments, region/HA). Source: [`example-runtime-topology.html`](skills/automation-design/assets/example-runtime-topology.html).*
 
 ---
 

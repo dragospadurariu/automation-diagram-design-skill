@@ -72,9 +72,21 @@ Rules:
 - Bidirectional arrow when one direction is obvious from context.
 - Legend floating inside the diagram area.
 
+## Runtime deployment topology (conditional annex)
+
+The layered technical view of an application — the classic client → edge → tiers → data picture — drawn with this type's standard grammar:
+
+- **≤3 layer zones** (`EDGE / APPLICATION / DATA`); the browser/client is an **external node above the zones**, not a fourth zone.
+- A `DEPLOYMENT` context panel states `MODEL`, `OWNERSHIP`, `ENVIRONMENTS`, `REGION · HA` — so a `×2` on a tier means something auditable (two zones? two VMs?), and platform-managed vs. customer-managed is explicit.
+- **Conditional, not pro-code-only:** draw it when deployment, integration, network, residency, scaling, or operational ownership materially affects the solution. A Power Platform profile fills it with environments, connectors, and gateways; an IaaS profile with LB, VMs, and databases.
+- **Compression is declared:** collapsed services carry a `(collapsed)` sublabel and the fidelity ledger names exactly what was merged. "Preserves the primary request and asset paths" is the honest claim — never "loses nothing."
+
 ## Examples
 - `assets/example-architecture.html` — minimal light
 - `assets/example-architecture-dark.html` — minimal dark
 - `assets/example-architecture-full.html` — full editorial
 - `assets/example-agent-card.html` — agent card (pattern 19: I/O spine, grounding container, tool boundary, guardrail gate, escalation)
 - `assets/example-agent-card-conversational.html` — conversational agent card (CONV chip, user query → answer, human takes over session)
+- `assets/example-app-card.html` — application card (pattern 20: user spine, data container, automations boundary, SSO gate)
+- `assets/example-screen-contract.html` — screen contract (logical operations, auth gate on the governed edge, async ack back to the screen)
+- `assets/example-runtime-topology.html` — runtime deployment topology (3 layer zones, external browser, deployment panel)

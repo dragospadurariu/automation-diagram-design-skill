@@ -1,6 +1,6 @@
 ---
 name: automation-design
-description: Design branded architecture, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
+description: Design branded architecture, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
 license: MIT
 metadata:
   version: "0.1"
@@ -66,7 +66,7 @@ Before drawing, ask: *Would the reader learn more from this than from a well-wri
 
 When behavior, state, enforcement, or risk carries the meaning, first load [`references/semantic-patterns.md`](references/semantic-patterns.md) and choose one primary pattern. Then choose the nearest visual type for layout. If no pattern matches, choose the type directly.
 
-Whenever an automation pattern routes (rows 8–19), also load [`references/automation-primitives.md`](references/automation-primitives.md) — it defines the vendor-neutral vocabulary (robot, agent, human, queue, orchestrator, trigger, boundary), the activity tags, the badge convention that separates deterministic from agentic actors, and the edge kinds.
+Whenever an automation pattern routes (rows 8–20), also load [`references/automation-primitives.md`](references/automation-primitives.md) — it defines the vendor-neutral vocabulary (robot, agent, human, queue, orchestrator, trigger, boundary), the activity tags, the badge convention that separates deterministic from agentic actors, and the edge kinds.
 
 | Behavioral trigger | Semantic pattern → nearest type |
 |---|---|
@@ -89,6 +89,7 @@ Whenever an automation pattern routes (rows 8–19), also load [`references/auto
 | What an automation may touch: permissions, credentials, boundaries | **Automation guardrails and boundaries** → Layer stack |
 | End-to-end solution map: named processes, decisions, queue handoffs | **RPA solution blueprint** → Flowchart |
 | One agent's charter, operating mode (autonomous / conversational / invoked), I/O, context grounding, tools, escalation | **Agent card** → Architecture |
+| An application's users, data, screens, and triggered automations — app cards, screen contracts | **Application card** → Architecture |
 
 The pattern owns semantic primitives and its tighter budget; the type owns layout grammar. Use [`references/animation.md`](references/animation.md) only when motion is requested or materially clarifies ordered change; static remains the default.
 

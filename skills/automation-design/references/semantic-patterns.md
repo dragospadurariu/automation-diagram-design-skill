@@ -2,7 +2,7 @@
 
 Semantic patterns describe **what a system does**; the 11 visual types describe **how information is arranged**. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
 
-Patterns 8–19 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
+Patterns 8–20 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
 
 Use one primary pattern per figure. A second pattern may supply at most one supporting primitive; if both need full treatment, split overview and detail. Labels and outcomes must remain complete in a static frame.
 
@@ -29,6 +29,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 | What an automation is permitted to touch, and by which control | **Automation guardrails and boundaries** | Layer stack |
 | The end-to-end solution as named processes with decisions and handoffs | **RPA solution blueprint** | Flowchart |
 | One agent's charter, operating mode, I/O contract, grounding, tools, and escalation | **Agent card** | Architecture |
+| An application's users, data, screens, and triggered automations | **Application card** | Architecture |
 
 ## 1. Fan-in queue / bottleneck
 
@@ -297,6 +298,24 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 **Static fallback:** The card is static by definition — panel, spine, both containers, and every edge label readable in one frame.
 
 **Nearest visual type:** **Architecture**. As a page inside a detail set, the card is a non-flowchart annex page carrying the set's numbering and navigation ([type-flowchart.md § Detail set](type-flowchart.md)).
+
+## 20. Application card
+
+**Selection triggers:** An application — UiPath Apps, Power Apps, Next.js, anything — must be documented as its functional-context artifact: purpose, users and roles, the data it reads and writes, the identity gate, and the automations it triggers. The card is the *functional* view; the technical view is the conditional runtime-topology annex ([type-architecture.md](type-architecture.md)).
+
+**Required primitives:** *Main view (app card):* Page-context panel (`APP CARD · FUNCTIONAL VIEW`; `PURPOSE`, `USERS` with roles, `SCREENS · N + M modals`, `PROFILE · <implementation>` — one profile chosen per final document, the card itself platform-neutral); the user spine — `◉ USERS` node → app (focal, `APP` + platform-class chip) → OUT node naming the **decision/outcome event** (`Invoice approved · decision event`), never the entity; identity provider above with an automated gate (`⚙ SSO`) on the user edge; **DATA container** below-left — entities with `RW · system of record` / `read only` sublabels, READ dashed and WRITE solid ink, the write landing on the RW entity; **AUTOMATIONS · BY EVENT boundary** below-right — link-blue `COMMAND` edges whose immediate outcome is `queued`, never completed.
+
+**Drill-down variant (screen contract) — conditional, never a mandatory page per screen.** A screen earns its own page only when it has at least one of: writes data; triggers a flow/RPA/API; crosses a sync–async boundary; carries authorization or business thresholds; needs audit, retry, or error handling; combines multiple data sources. Read-only screens live in the screen-states figure only ([type-state.md § Screen states](type-state.md)). Required primitives: panel (`SCREEN CONTRACT · <state-id>`; `REACHED FROM` matching the screen-states IDs; `OPERATIONS` as **logical operation names** — `GetInvoice`, `ApproveInvoice` — the profile decides the physical form; `GUARDRAILS` naming the enforcement layer; `AUDIT` as a link, not a claim); the screen focal with its state-ID chip; `DATA · FOR THE SCREEN` container (reads dashed, sync writes solid); `TRIGGERED OPERATIONS` boundary with the async queue visible and **response edges back to the screen** (`ACK QUEUED`, dashed) — a contract without responses is half a contract; automated auth gates (`⚙ ROLE + AMOUNT`) on the governed edge.
+
+**Information ownership (anti-drift rule):** each fact is canonical on exactly one page — app card owns users/identity/aggregated entities and automations; screen states own navigation, events, guards; the screen contract owns reads/writes, commands, immediate responses, authorization; a Sequence figure owns chronology, retries, timeouts, failures. Other pages may reference but never restate differently.
+
+**Complexity budget:** App card ≤12 primary nodes, 2 containers. Screen contract: 1 screen, ≤3 data dependencies, ≤3 events, ≤2 downstream steps, exactly 1 async boundary — past that, the downstream moves to a Sequence figure. Category maxima are non-composable; the total always wins.
+
+**Anti-patterns:** A mandatory contract page per screen; outcome and entity conflated on the spine; a screen "posting to ERP" (it enqueues a command — the immediate result is queued); guardrails declared only in the panel with no gate on the governed edge; physical implementations as node names where a logical operation belongs; the same behavior stated differently on two pages.
+
+**Static fallback:** Both cards are static by definition — panel, spine, containers, and every edge label readable in one frame.
+
+**Nearest visual type:** **Architecture**; screen navigation routes to **State machine** (screen-states flavor); runtime deep-dives route to **Sequence**. All family pages may join a detail set as annex pages.
 
 ## Composition rules
 

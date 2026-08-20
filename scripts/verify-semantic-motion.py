@@ -42,6 +42,7 @@ PATTERN_NAMES = (
     "Automation guardrails and boundaries",
     "RPA solution blueprint",
     "Agent card",
+    "Application card",
 )
 PATTERN_FIELDS = (
     "Selection triggers:",
@@ -431,7 +432,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     if not args.example_only:
-        print("OK: 19 semantic patterns route independently to the preserved 11 visual types")
+        print("OK: 20 semantic patterns route independently to the preserved 11 visual types")
         print("OK: animation modes, primitives, static fallback, and accessibility contract")
     if not args.markdown_only:
         print("OK: policy-trace example controls, structure, reduced motion, and unique IDs")

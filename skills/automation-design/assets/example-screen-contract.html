@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Screen contract · Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
+      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36; --link: #2e5aa8;
+      --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
+      --mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    .frame { width: 100%; max-width: 1120px; }
+    .eyebrow { margin-bottom: 0.5rem; color: var(--muted); font: 500 0.66rem var(--mono); letter-spacing: 0.18em; text-transform: uppercase; }
+    h1 { margin-bottom: 1.5rem; font: 400 2rem/1.15 var(--serif); letter-spacing: -0.02em; }
+    svg { display: block; width: 100%; }
+    .tag-text { fill: var(--muted); font: 600 6px var(--mono); text-anchor: middle; letter-spacing: 0.06em; }
+    .screen-chip { fill: var(--accent); font: 600 6px var(--mono); text-anchor: middle; letter-spacing: 0.06em; }
+    .node-title { fill: var(--ink); font: 600 10px var(--sans); text-anchor: middle; }
+    .node-sub { fill: var(--muted); font: 400 6.5px var(--mono); text-anchor: middle; }
+    .arrow-label { fill: var(--soft); font: 400 8px var(--mono); text-anchor: middle; letter-spacing: 0.06em; }
+    .link-label { fill: var(--link); }
+    .boundary-label { fill: var(--accent); font: 500 7px var(--mono); letter-spacing: 0.14em; }
+    .ground-label { fill: var(--muted); font: 500 7px var(--mono); letter-spacing: 0.14em; }
+    .panel-eyebrow { fill: var(--muted); font: 500 7px var(--mono); letter-spacing: 0.14em; }
+    .panel-line { fill: var(--soft); font: 400 7px var(--mono); }
+    .legend-label { fill: var(--muted); font: 500 8px var(--mono); letter-spacing: 0.14em; }
+    .legend-text { fill: var(--muted); font: 400 7px var(--sans); }
+    .focal-text { fill: var(--accent); }
+    .colophon { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--rule); color: var(--soft); font: 400 0.62rem var(--mono); letter-spacing: 0.08em; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Architecture · screen contract · Automation Design</p>
+    <h1>2.1 · Invoice detail — screen contract</h1>
+
+    <svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="screen-contract-title screen-contract-desc">
+      <title id="screen-contract-title">Invoice detail — screen contract</title>
+      <desc id="screen-contract-desc">The integration contract of one screen, named as logical operations: GetInvoice loads it, SaveInvoice writes back, RejectInvoice starts a notification flow, and ApproveInvoice — gated by role and amount in the action layer — enqueues a command consumed asynchronously by an RPA process, acknowledging queued back to the screen.</desc>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
+        <marker id="arr-ink" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#2d3142"/></marker>
+        <marker id="arr-link" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="1040" height="620" fill="#f5f5f5"/>
+
+      <!-- Page-context panel -->
+      <rect x="40" y="16" width="656" height="80" rx="6" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+      <text x="52" y="34" class="panel-eyebrow">SCREEN CONTRACT · 2.1</text>
+      <text x="52" y="48" class="panel-line">REACHED FROM · 2.0 invoice list [SELECT ROW] · RETURNS · ack queued / cancel / back</text>
+      <text x="52" y="60" class="panel-line">OPERATIONS · GetInvoice · SaveInvoice · ApproveInvoice · RejectInvoice</text>
+      <text x="52" y="72" class="panel-line">GUARDRAILS · ApproveInvoice gated by role + amount in the action layer, not the UI</text>
+      <text x="52" y="84" class="panel-line">AUDIT · every operation audited — audit policy → governance page</text>
+
+      <!-- Containers first -->
+      <rect x="64" y="176" width="224" height="240" rx="8" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-dasharray="4,4"/>
+      <text x="80" y="196" class="ground-label">DATA · FOR THE SCREEN</text>
+      <rect x="688" y="144" width="288" height="344" rx="8" fill="rgba(235,108,54,0.05)" stroke="rgba(235,108,54,0.50)" stroke-dasharray="4,4"/>
+      <text x="704" y="164" class="boundary-label">TRIGGERED OPERATIONS</text>
+
+      <!-- Connectors -->
+      <!-- reads into the screen (dashed): GetInvoice -->
+      <path d="M264 232 H416" fill="none" stroke="#4f5d75" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+      <path d="M264 304 H384 Q392 304 392 296 V256 Q392 248 400 248 H416" fill="none" stroke="#4f5d75" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+      <!-- write back (solid ink): SaveInvoice -->
+      <path d="M424 268 H352 Q344 268 344 260 Q344 252 336 252 H272" fill="none" stroke="#2d3142" marker-end="url(#arr-ink)"/>
+      <!-- RejectInvoice: screen upper-right -> Notify (top row) -->
+      <path d="M616 232 H672 Q680 232 680 224 V208 Q680 200 688 200 H704" fill="none" stroke="#2e5aa8" marker-end="url(#arr-link)"/>
+      <!-- ApproveInvoice: screen lower-right -> command (middle row), through the auth gate -->
+      <path d="M616 256 H648 Q656 256 656 264 V296 Q656 304 664 304 H704" fill="none" stroke="#2e5aa8" marker-end="url(#arr-link)"/>
+      <!-- ACK QUEUED: command back to the screen -->
+      <path d="M712 320 H648 Q640 320 640 312 V288 Q640 280 632 280 H624" fill="none" stroke="#2e5aa8" stroke-dasharray="5,4" marker-end="url(#arr-link)"/>
+      <!-- async hop inside the boundary: command -> RPA consumer -->
+      <path d="M832 328 V392" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+
+      <!-- Auth gate on the ApproveInvoice edge (automated · action layer) -->
+      <rect x="624" y="248" width="16" height="16" rx="3" fill="#f5f5f5" stroke="#7a8399"/>
+      <text x="632" y="260" class="tag-text">⚙</text>
+      <rect x="664" y="268" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="716" y="277" class="arrow-label">ROLE + AMOUNT</text>
+
+      <!-- Arrow labels -->
+      <rect x="304" y="212" width="60" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="334" y="221" class="arrow-label">GET · LOAD</text>
+      <rect x="304" y="284" width="60" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="334" y="293" class="arrow-label">GET · LOAD</text>
+      <rect x="356" y="240" width="68" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="390" y="249" class="arrow-label">SAVE · SYNC</text>
+      <rect x="608" y="180" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="640" y="189" class="arrow-label link-label">REJECT</text>
+      <rect x="644" y="312" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="676" y="321" class="arrow-label link-label">APPROVE</text>
+      <rect x="552" y="296" width="80" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="592" y="305" class="arrow-label link-label">ACK QUEUED</text>
+      <rect x="844" y="348" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="868" y="357" class="arrow-label">ASYNC</text>
+
+      <!-- Data nodes (left) -->
+      <rect x="88" y="208" width="176" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+      <rect x="92" y="212" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="110" y="219" class="tag-text">ENTITY</text>
+      <text x="176" y="232" class="node-title">Invoice · by id</text>
+      <text x="176" y="244" class="node-sub">GetInvoice · SaveInvoice</text>
+
+      <rect x="88" y="280" width="176" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+      <rect x="92" y="284" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="106" y="291" class="tag-text">DOC</text>
+      <text x="176" y="304" class="node-title">Attachments</text>
+      <text x="176" y="316" class="node-sub">read only · pdf previews</text>
+
+      <!-- THE SCREEN (focal) -->
+      <rect x="424" y="216" width="192" height="72" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
+      <rect x="432" y="222" width="44" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="454" y="229" class="screen-chip">SCREEN</text>
+      <rect x="564" y="222" width="44" height="10" rx="3" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/><text x="586" y="229" class="screen-chip">2.1</text>
+      <text x="520" y="252" class="node-title">Invoice detail</text>
+      <text x="520" y="266" class="node-sub">approve / reject / edit</text>
+      <text x="520" y="278" class="node-sub">ops named · profile decides impl</text>
+
+      <!-- Triggered operations (right): Notify top, command middle, RPA bottom -->
+      <rect x="712" y="176" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="716" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="730" y="187" class="tag-text">FLOW</text>
+      <text x="832" y="200" class="node-title">RejectInvoice</text>
+      <text x="832" y="212" class="node-sub">notify AP lead · reject reason</text>
+
+      <rect x="712" y="280" width="240" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+      <rect x="716" y="284" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="734" y="291" class="tag-text">QUEUE</text>
+      <text x="832" y="304" class="node-title">ApproveInvoice</text>
+      <text x="832" y="316" class="node-sub">command · queued · ack to UI</text>
+
+      <rect x="712" y="392" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="716" y="396" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="730" y="403" class="tag-text">RPA</text>
+      <text x="832" y="416" class="node-title">Post to ERP</text>
+      <text x="832" y="428" class="node-sub">unattended · consumes queue</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="536" x2="1000" y2="536" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="40" y="556" class="legend-label">LEGEND</text>
+      <line x1="120" y1="552" x2="160" y2="552" stroke="#4f5d75" stroke-dasharray="5,4"/><text x="168" y="555" class="legend-text">Data in (GetInvoice)</text>
+      <line x1="296" y1="552" x2="336" y2="552" stroke="#2d3142"/><text x="344" y="555" class="legend-text">Sync write (SaveInvoice)</text>
+      <line x1="480" y1="552" x2="520" y2="552" stroke="#2e5aa8"/><text x="528" y="555" class="legend-text">Operation trigger · dashed = response</text>
+      <rect x="720" y="545" width="16" height="14" rx="3" fill="#f5f5f5" stroke="#7a8399"/><text x="728" y="556" class="tag-text">⚙</text><text x="744" y="555" class="legend-text">Auth gate (action layer)</text>
+      <rect x="888" y="545" width="28" height="14" rx="3" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/><text x="924" y="555" class="legend-text">Queue = async</text>
+    </svg>
+
+    <p class="colophon">screen contract · only for architecturally significant screens — in a detail set: app card → screen states → this page, linked from state 2.1</p>
+  </main>
+</body>
+</html>
