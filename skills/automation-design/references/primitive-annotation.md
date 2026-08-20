@@ -20,6 +20,7 @@ Use for editorial asides — the "italic pointer" that marks a detail without co
 - Dashed path (`stroke-dasharray="4,3"`) distinguishes the callout leader from primary arrows (which are solid).
 - Place callouts in margins (top-right, bottom-left). Never inside the active diagram area.
 - Max 2 callouts per diagram. More becomes commentary, not signal.
+- A fact about the *whole page* (trigger, schedule, inputs) is not a callout — that's the **page-context panel** in [`type-flowchart.md`](type-flowchart.md), an SVG-internal top band. Callouts always point at one element.
 
 ## Colors
 

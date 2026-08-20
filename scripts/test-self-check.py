@@ -126,6 +126,92 @@ def main() -> int:
         "ASCII decimal",
     )
 
+    # ---- set-scoped link verification (--set mode) ----
+
+    def minimal_page(slug: str, body_svg: str, footer: str = "") -> str:
+        return (
+            "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n"
+            f"<title>{slug}</title>\n</head>\n<body>\n"
+            f"<svg viewBox=\"0 0 96 48\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" "
+            f"aria-labelledby=\"{slug}-title {slug}-desc\">\n"
+            f"<title id=\"{slug}-title\">{slug}</title>\n"
+            f"<desc id=\"{slug}-desc\">Test fixture page.</desc>\n"
+            f"{body_svg}\n</svg>\n{footer}\n</body>\n</html>\n"
+        )
+
+    def check_set(label: str, files: dict[str, str], overview: str, needle: str | None) -> None:
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            for name, source in files.items():
+                (root / name).write_text(source, encoding="utf-8")
+            errors = module.verify_set(root / overview)
+        if needle is None:
+            if errors:
+                failures.append(f"{label}: expected clean set, got {errors}")
+            else:
+                print(f"OK: {label} passes")
+        elif not any(needle in error for error in errors):
+            failures.append(f"{label}: expected an error containing {needle!r}, got {errors}")
+        else:
+            print(f"OK: {label} rejected")
+
+    check_set(
+        "valid linked set",
+        {
+            "mini-overview.html": minimal_page(
+                "ov",
+                '<a href="mini-p2-catch.html"><rect width="96" height="48" id="ov-n1"/></a>',
+            ),
+            "mini-p2-catch.html": minimal_page(
+                "p2",
+                '<a href="mini-p2.2.1-readsheet.html#p21-start"><rect width="96" height="48"/></a>',
+                '<footer><a href="mini-overview.html">parent</a></footer>',
+            ),
+            "mini-p2.2.1-readsheet.html": minimal_page(
+                "p21",
+                '<rect id="p21-start" width="96" height="48"/>',
+                '<footer><a href="mini-p2-catch.html">parent</a></footer>',
+            ),
+        },
+        "mini-overview.html",
+        None,
+    )
+    check_set(
+        "missing link target",
+        {
+            "mini-overview.html": minimal_page(
+                "ov", '<a href="mini-p9-ghost.html"><rect width="96" height="48"/></a>'
+            ),
+        },
+        "mini-overview.html",
+        "does not exist",
+    )
+    check_set(
+        "missing fragment",
+        {
+            "mini-overview.html": minimal_page(
+                "ov", '<a href="mini-p2-catch.html#no-such-id"><rect width="96" height="48"/></a>'
+            ),
+            "mini-p2-catch.html": minimal_page("p2", '<rect width="96" height="48"/>'),
+        },
+        "mini-overview.html",
+        "fragment",
+    )
+    check_set(
+        "duplicate canonical number",
+        {
+            "mini-overview.html": minimal_page(
+                "ov",
+                '<a href="mini-p2-catch.html"><rect width="96" height="48"/></a>'
+                '<a href="mini-p2-other.html"><rect y="0" width="96" height="48"/></a>',
+            ),
+            "mini-p2-catch.html": minimal_page("p2", '<rect width="96" height="48"/>'),
+            "mini-p2-other.html": minimal_page("p2b", '<rect width="96" height="48"/>'),
+        },
+        "mini-overview.html",
+        "canonical number",
+    )
+
     if failures:
         for failure in failures:
             print(f"FAIL: {failure}")

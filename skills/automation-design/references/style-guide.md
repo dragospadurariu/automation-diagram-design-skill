@@ -26,6 +26,8 @@ Every token is referred to by **semantic role**, not by its hex value. Type refe
 | `accent` | Focal / 1–2 max per diagram | `#eb6c36` (atomic-tangerine) | `#f08a59` |
 | `accent-tint` | Fill for accent-bordered boxes | `rgba(235,108,54,0.08)` | `rgba(240,138,89,0.10)` |
 | `link` | HTTP/API calls, external arrows | `#2e5aa8` | `#6a95d8` |
+| `danger` | Exception terminals (BE/SE) and failure marking only | `#a63d40` (brick) | `#c96b6d` |
+| `danger-tint` | Fill for danger-bordered boxes | `rgba(166,61,64,0.06)` | `rgba(201,107,109,0.10)` |
 
 > **Brand palette source:** this skin maps to a five-color brand palette — `jet-black #2d3142`, `silver #bfc0c0`, `white-smoke #f5f5f5`, `atomic-tangerine #eb6c36`, `blue-slate #4f5d75`. The `soft`, `rule`, and `link` tokens are derived (lighter slate, ink-at-opacity, and a saturated variant in the blue-slate hue family) to cover roles the brand palette doesn't name directly.
 
@@ -117,6 +119,7 @@ Semantic role combinations — reference these by name in type specs.
 | `input` | `muted @ 0.10` | `soft` |
 | `optional` | `ink @ 0.02` | `ink @ 0.20` dashed `4,3` |
 | `security` | `accent @ 0.05` | `accent @ 0.50` dashed `4,4` |
+| `exception-terminal` | `danger-tint` | `danger` solid (BE) · `danger` dashed `4,3` (SE) |
 
 ---
 
@@ -133,6 +136,7 @@ Four options:
 
 - **Contrast**: `ink` must hit WCAG AA on `paper`. `muted` must hit AA on `paper` for 11px+ text.
 - **One accent**: pick one color for `accent`. Two accents erases the focal signal.
+- **`danger` is not a second accent**: it marks exception terminals (BE/SE) and failure states only — never emphasis, never a focal element, never an arrow that isn't a failure path. It is budgeted by the exception-terminal cap (≤4 per page, [type-flowchart.md](type-flowchart.md)), not by the accent cap. Keep it desaturated so the accent still wins the eye; when onboarding a brand, derive it from the brand's error/negative color if one exists.
 - **No rainbow palette**: if your brand ships 8 colors, pick 3 (paper, ink, accent). The rest become `muted` variants.
 - **Serif + sans + mono**: three families, not more. If brand typography is all sans, keep Instrument Serif for `title` and `callout` anyway — the contrast is load-bearing.
 - **Paper is warm-neutral, not pure white**: pure white turns the design sterile. Pick a cream, bone, or light grey with a hint of warmth.

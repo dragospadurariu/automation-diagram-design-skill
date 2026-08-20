@@ -165,6 +165,7 @@ Type-specific anti-patterns live in each `references/type-*.md`.
 | `rule`, `rule-solid` | Hairline borders |
 | `accent`, `accent-tint` | 1–2 focal elements per diagram |
 | `link` | HTTP/API calls, external arrows |
+| `danger`, `danger-tint` | Exception terminals (BE/SE) and failure marking only — never emphasis |
 
 **Focal rule:** `accent` goes on 1–2 elements max. Everything else is `ink` / `muted` / `soft`. If you're tempted to accent 4 things, you haven't decided what's focal yet.
 

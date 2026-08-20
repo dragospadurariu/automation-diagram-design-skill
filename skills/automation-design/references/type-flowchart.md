@@ -47,23 +47,55 @@ The level at which a solution-design document is written: one process per diagra
 
 Budget: 1 process, ≤8 activities, ≤3 decisions, ≤6 annotations, one Start, ≤2 Ends. More than 8 steps means the PDD section needs splitting too.
 
-### Detail set (overview + numbered process pages)
+### Detail set (canonical hierarchy of numbered pages)
 
-The deliverable for a detailed end-to-end process that exceeds any single-diagram budget — a 40-step automation is a *set of pages*, never one canvas. The set is:
+The deliverable for a detailed end-to-end process that exceeds any single-diagram budget — a 40-step automation is a *set of pages*, never one canvas. The set is a **canonical hierarchy with caller links** — a DAG, not a tree, because one page may be invoked from several call sites:
 
-1. **One overview** — the phased blueprint variant, each phase carrying its process number in the eyebrow (`PROCESS 1.2 · EMAIL AGENT`). Default size `print-a3-landscape` when the process has 4–5 phases; `print-a4-landscape` or `doc-wide` for 3 or fewer. Above 5 phases the overview compresses to phases-as-nodes (ladder rung 3 above) instead of full blueprint grammar — never a wider canvas.
-2. **One process-detail page per phase** — the process-detail flavor above, its title number matching the overview eyebrow (`1.2 · Email agent answers`), step-ID chips continuing that numbering (`1.2.1`, `1.2.2`, …). Same size preset across all detail pages.
+- **Canonical parent** — the page whose call site assigned this page its number. Exactly one per page, always; the page's number, file name, and `↑ parent` link derive from it.
+- **Callers** — every page that links here, including the canonical parent. A reusable sub-routine (an `Excel_ReadSheet` invoked from two steps) has several; it is still drawn **once**, under its one canonical number, and every other call site links to that same file. Never duplicate a page under a second number.
+
+The set contains:
+
+1. **One overview** — the phased blueprint variant, each phase carrying its process number in the eyebrow (`PROCESS 2 · CATCH WEBHOOK`). Default size `print-a3-landscape` when the process has 4–5 phases; `print-a4-landscape` or `doc-wide` for 3 or fewer. Above 5 phases the overview compresses to phases-as-nodes (ladder rung 3 above) — never a wider canvas.
+2. **One numbered page per sub-process, at any depth** — the process-detail flavor above, its title number matching the caller's reference (`2.0 · Catch webhook data`), step-ID chips continuing that numbering (`2.1`, `2.2`, …). A step that is itself a sub-process gets its own page one level deeper (`2.2.1`), recursively. Same size preset across all detail pages.
+
+**Navigation is real hyperlinks, in two distinct mechanisms:**
+
+- **Forward** (into a sub-process): the activity box whose action *is* "run sub-process N" is wrapped in an SVG `<a href="<file>">` around its shapes — diagram content, so it survives SVG/PNG export as part of the figure. Wrap the box, never a separate "go to" affordance.
+- **Backward** (up and across): plain HTML links in the footer colophon — `↑ 2.0 · catch webhook data` to the canonical parent, and, on a page with several callers, a `CALLED FROM · 2.2 · 2.3` list linking each call site. This is meta-navigation about the deliverable, so it lives beside the existing `part N of M` colophon rather than inside the SVG. Word it as "called from", never "returns to" — a static link cannot know which caller the reader arrived from. End ovals are never wrapped in either direction; a page that terminates the whole process keeps a plain End.
 
 Rules that make it one deliverable instead of N loose files:
 
-- **Numbering is the navigation.** Overview phase eyebrow ↔ detail-page title ↔ step-ID chips share one scheme, aligned to the PDD's section numbering when one exists. Never renumber between pages.
-- **File naming:** `<base>-overview.html`, then `<base>-p<N>-<slug>.html` (e.g. `invoice-intake-p2-email-agent.html`) — the same overview-plus-parts shape as the faithful-import split in [output-spec.md §3](output-spec.md), with the process number in place of the zone name so filenames sort in PDD order.
-- **Each page's footer colophon names the set**: `part 2 of 4 · invoice-intake` in the existing Geist Mono colophon slot, so a printed page still says where it belongs.
-- **Handoffs stay visible.** A queue bridge or handoff at a phase boundary appears on *both* sides: as the outbound edge on the overview, and as the Start context on the consuming detail page (a muted, tagless entry node naming the source, e.g. `from 1.1 · intake queue`). Entry/exit context nodes don't count against the detail page's activity budget.
+- **Numbering is canonical across the set** and extends to arbitrary depth, aligned to the PDD's section numbering when one exists. Pages must never disagree about a number. Renumbering is forbidden except as an explicit structural revision (§ Revising a set), never as a side effect of a content edit.
+- **File naming:** `<base>-overview.html`, then `<base>-p<number>-<slug>.html` with the dotted canonical number (`invoice-intake-p2-catch-webhook.html`, `invoice-intake-p2.2.1-excel-readsheet.html`) so filenames sort in PDD order — the same overview-plus-parts shape as the faithful-import split in [output-spec.md §3](output-spec.md).
+- **Each page's footer colophon names the set**: `part 2 of 4 · invoice-intake` in the existing Geist Mono colophon slot, plus the `↑ parent` link and any `CALLED FROM` list (above).
+- **Handoffs stay visible.** A queue bridge or handoff at a boundary appears on *both* sides: as the outbound edge on the caller, and as the Start context on the consuming page (a muted, tagless entry node naming the source, e.g. `from 1.1 · intake queue`). Entry/exit context nodes don't count against the page's activity budget.
 - **One fidelity ledger for the set**, reported once, listing what each page carries and what was cut — not one ledger per file.
 - **Consistency is part of the taste gate:** same skin, same size preset on detail pages, same chip geometry, same legend across the set.
+- **Verify the set, not just the pages:** `python3 <skill-dir>/scripts/self_check.py --set <base>-overview.html` crawls the links and checks every target exists, every fragment resolves, and no two files claim one canonical number.
 
 The set replaces — never accompanies — a single over-budget canvas. If a user insists on "everything on one page", the A3 blueprint at the extended budget above is the ceiling; past it, deliver the set and say why.
+
+### Loop-back, exception terminals, and the page-context panel
+
+Three primitives that PDD-depth pages need; all live inside the existing Flowchart grammar.
+
+**Loop-back (pagination / retry).** A decision whose "more remain" exit re-enters an earlier step — batch inserts, offset pagination, bounded retries. Route the exit **above** the main left→right row via rounded elbows, re-entering the **top edge** of the repeated node; the arc must clear every box and label it passes by the §6 connector margins — reroute rather than graze. The edge label obeys the standard budget (≤14 chars, all-caps): `YES · +BATCH`, `MORE · +OFFSET`. The exact expression (`Skip += BatchSize`) goes in the repeated node's **under-box annotation**, never in the edge label. A loop-back counts against the page's decision budget; it does not get its own budget line.
+
+**Exception terminal (BE / SE).** A branch end that is not the process's true End: a rectangle (not an oval) named by a short mono code (`BE001`, `SE003`) with a one-line message below. Both use the `danger` role from [`style-guide.md`](style-guide.md) — `danger-tint` fill, `danger` stroke — with stroke style separating the two classes: **BE** (business exception) solid, **SE** (system exception) dashed `4,3`. `danger` is reserved for exactly this (it is not a second accent; the focal element stays coral). Distinct from `EXC` in [`automation-primitives.md`](automation-primitives.md): `EXC` types an exception as an *actor/outcome* in topology diagrams and an edge kind; the BE/SE terminal is a flowchart branch terminus identified by a PDD code. BE/SE codes never appear in an activity-tag chip. Budget: **≤4 exception terminals per page**, on top of the ≤2 End ovals — more means the branches need consolidating or the page needs splitting.
+
+**Page-context panel.** A page-level fact box — trigger mechanism, schedule, inputs consumed — that describes the page as a whole rather than pointing at one node (that job belongs to the [annotation callout](primitive-annotation.md)). It lives **inside the SVG**, in a reserved top band of the `viewBox`, exactly as the legend strip reserves the bottom band — an HTML `<div>` above the SVG would silently vanish from every `.svg`/`.png` export. Draw it as a `paper-2`-filled, hairline-bordered rect with a Geist Mono uppercase eyebrow (`TRIGGER MECHANISM`, `INPUTS`) and up to ~5 short mono lines. Budget: at most one per page; more content than that belongs in the surrounding document, not the panel.
+
+### Revising a set
+
+How to apply feedback to a delivered set without regenerating it wholesale:
+
+1. **Locate, don't guess.** Map the feedback to the numbering (a phase/step reference or a quoted label) to find the exact file and node. If it doesn't resolve to one page unambiguously, ask.
+2. **Edit only the touched page(s).** The HTML is the source of truth; never hand-edit an exported `.drawio` or read one back — translate the words into an HTML edit.
+3. **Propagate only what must propagate.** A content edit (label fix, added step within budget) stays on its page and never touches numbering. A **structural** change (add/remove/reorder a phase or numbered process) is the only case where renumbering is allowed — and it is one atomic pass updating: overview eyebrows, the affected page's title and step-ID chips, every `↑ parent` / `CALLED FROM` link and file name pointing at the renumbered page, and the `part N of M` colophon on every page. Never leave two pages disagreeing about a number.
+4. **Re-verify at set scope.** Taste gate (SKILL.md §9) on the touched pages, then `self_check.py --set` across the whole set — a local edit is the easiest way to silently break a cross-page link.
+5. **Re-export what was regenerated.** If `.drawio`/`.png`/`.svg` existed for a touched page, regenerate them from the updated HTML ([export.md](export.md) / [export-drawio.md](export-drawio.md)). Never leave a stale export beside an updated HTML.
+6. **Report what changed** — which files, what rippled, what was re-exported. Short and specific, in the spirit of the fidelity ledger.
 
 ## Anti-patterns
 - Using fill color to signal node type (shape does that).
@@ -72,6 +104,11 @@ The set replaces — never accompanies — a single over-budget canvas. If a use
 - **Vendor product names as system tags** — the tag is the class (`HUMAN`), the sublabel is the product.
 - **Queue drawn as a cylinder** — this design system has no cylinders; the Store/State treatment carries that meaning.
 - **A phase without an eyebrow label** — an unlabeled dashed divider reads as decoration.
+- **"Returns to" wording on a caller link** — a static link cannot know the reader's path; the footer says `↑ parent` and `CALLED FROM`, never "returns to where you came from".
+- **A reused sub-routine duplicated under a second number** — one page, one canonical number, many callers.
+- **Loop-back edge label carrying the loop expression** — `YES · Skip += BatchSize` breaks the ≤14-char all-caps label budget; the expression is an under-box annotation.
+- **BE/SE code in an activity-tag chip** — exception codes name terminals, not executing systems.
+- **Page-context panel as an HTML `<div>`** — it must live inside the SVG viewBox or it vanishes from every export.
 
 ## Examples
 - `assets/example-flowchart.html` — minimal light
@@ -79,3 +116,6 @@ The set replaces — never accompanies — a single over-budget canvas. If a use
 - `assets/example-flowchart-full.html` — full editorial
 - `assets/example-rpa-blueprint.html` — phased blueprint variant (3-process document-intake automation)
 - `assets/example-process-detail.html` — process-detail flavor (numbered steps, under-box annotations, agent step with confidence gate)
+- `assets/example-detail-set-overview.html` — detail-set overview (phases-as-nodes, forward SVG link into 2.0)
+- `assets/example-detail-set-p2-catch-webhook.html` — numbered page: loop-back, BE/SE exception terminals, page-context panel, forward links to a reused sub-routine
+- `assets/example-detail-set-p2.2.1-excel-readsheet.html` — reused sub-routine page (`↑ parent` + `CALLED FROM · 2.2 · 2.3` colophon)

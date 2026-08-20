@@ -8,9 +8,11 @@ Ships inside the skill so an installed agent can verify its own output:
 Checks the accessible-SVG contract, the single-file safety rules (no remote
 assets beyond the approved Google Fonts stylesheet, no executable attributes,
 no scripts other than the one canonical motion controller), and — when motion
-markup is present — the structural motion contract. This is a distilled
-subset of the repository gates (`lint-skin.py`, `verify-motion.py`), which
-remain the authority for contributions to the repository itself.
+markup is present — the structural motion contract. With --set, the file is
+treated as a detail-set overview and every locally linked page is crawled and
+checked (existence, fragments, canonical-number uniqueness). This is a
+distilled subset of the repository gates (`lint-skin.py`, `verify-motion.py`),
+which remain the authority for contributions to the repository itself.
 """
 
 from __future__ import annotations
@@ -21,7 +23,7 @@ import sys
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
 MOTION_TEMPLATE = SKILL_DIR / "assets" / "template-motion.html"
@@ -365,14 +367,103 @@ def verify(path: Path) -> list[str]:
     return errors
 
 
+CANONICAL_NUMBER_RE = re.compile(r"-p(\d+(?:\.\d+)*)-")
+ID_ATTR_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
+
+
+def _is_local_target(value: str) -> bool:
+    stripped = value.strip()
+    if not stripped or stripped.startswith("#"):
+        return False
+    lowered = stripped.casefold()
+    if lowered.startswith(("http://", "https://", "//", "data:", "javascript:", "mailto:")):
+        return False
+    if ":" in stripped.split("/", 1)[0]:
+        return False
+    return True
+
+
+def verify_set(overview: Path) -> list[str]:
+    """Crawl local <a href> targets from *overview* and check set consistency.
+
+    Three checks, deliberately narrow (existence and consistency, not a
+    general crawler): every linked local file exists, every #fragment
+    resolves to an id in its target, and no two files claim the same
+    canonical page number (the -pN.N- segment of the detail-set naming
+    scheme). Each reached HTML file also gets the standard per-file verify().
+    """
+    errors: list[str] = []
+    seen: set[Path] = set()
+    numbers: dict[str, Path] = {}
+    queue: list[Path] = [overview.resolve()]
+    while queue:
+        path = queue.pop(0)
+        if path in seen:
+            continue
+        seen.add(path)
+        if not path.is_file():
+            errors.append(f"{path.name}: linked file does not exist")
+            continue
+        match = CANONICAL_NUMBER_RE.search(path.name)
+        if match:
+            number = match.group(1)
+            claimant = numbers.setdefault(number, path)
+            if claimant != path:
+                errors.append(
+                    f"canonical number {number} claimed by both "
+                    f"{claimant.name} and {path.name}"
+                )
+        try:
+            source = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            errors.append(f"{path.name}: {exc}")
+            continue
+        errors.extend(f"{path.name}: {error}" for error in verify(path))
+        parser = parsed_document(source)
+        ids = set(ID_ATTR_RE.findall(source))
+        for tag, _rel, value in parser.references:
+            if tag != "a":
+                continue
+            stripped = value.strip()
+            if stripped.startswith("#"):
+                if stripped[1:] not in ids:
+                    errors.append(
+                        f"{path.name}: fragment {stripped} has no matching id"
+                    )
+                continue
+            if not _is_local_target(stripped):
+                continue
+            target, _, fragment = stripped.partition("#")
+            resolved = (path.parent / unquote(target)).resolve()
+            if not resolved.is_file():
+                errors.append(
+                    f"{path.name}: link target {target!r} does not exist"
+                )
+                continue
+            if fragment:
+                target_source = resolved.read_text(encoding="utf-8")
+                if fragment not in set(ID_ATTR_RE.findall(target_source)):
+                    errors.append(
+                        f"{path.name}: fragment #{fragment} not found in {resolved.name}"
+                    )
+            if resolved.suffix.casefold() in {".html", ".htm"}:
+                queue.append(resolved)
+    return errors
+
+
 def main() -> int:
     argument_parser = argparse.ArgumentParser(description=__doc__)
     argument_parser.add_argument("files", nargs="+", type=Path)
+    argument_parser.add_argument(
+        "--set",
+        action="store_true",
+        help="treat each file as a detail-set overview and verify the whole linked set",
+    )
     args = argument_parser.parse_args()
     failed = False
     for path in args.files:
         try:
-            errors = verify(path)
+            errors = verify_set(path) if getattr(args, "set") else verify(path)
         except (OSError, UnicodeError) as exc:
             errors = [str(exc)]
         if errors:

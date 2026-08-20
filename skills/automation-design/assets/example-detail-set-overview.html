@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail set overview · Flowchart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
+      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
+      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8;
+      --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
+      --mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    .frame { width: 100%; max-width: 880px; }
+    .eyebrow { margin-bottom: 0.5rem; color: var(--muted); font: 500 0.66rem var(--mono); letter-spacing: 0.18em; text-transform: uppercase; }
+    h1 { margin-bottom: 1.5rem; color: var(--ink); font: 400 clamp(1.5rem, 2.4vw + 0.75rem, 2rem)/1.15 var(--serif); letter-spacing: -0.02em; }
+    svg { display: block; width: 100%; min-width: 640px; }
+    .id-text, .tag-text, .arrow-label, .legend-label { font-family: var(--mono); }
+    .id-text { fill: var(--muted); font-size: 6px; font-weight: 600; text-anchor: middle; letter-spacing: 0.04em; }
+    .tag-text { fill: var(--muted); font-size: 6px; font-weight: 600; text-anchor: middle; letter-spacing: 0.06em; }
+    .node-title { fill: var(--ink); font: 600 9px var(--sans); text-anchor: middle; }
+    .node-sub { fill: var(--muted); font: 400 6.5px var(--mono); text-anchor: middle; }
+    .terminal-text { fill: var(--ink); font: 600 9px var(--sans); text-anchor: middle; }
+    .focal-text { fill: var(--accent); }
+    .legend-label { fill: var(--muted); font-size: 8px; font-weight: 500; letter-spacing: 0.14em; }
+    .legend-text { fill: var(--muted); font: 400 7px var(--sans); }
+    .colophon { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--rule); color: var(--soft); font: 400 0.62rem var(--mono); letter-spacing: 0.08em; }
+    .colophon a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Flowchart · detail set · Automation Design</p>
+    <h1>Timesheet receiver — overview</h1>
+
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="detail-set-overview-title detail-set-overview-desc">
+      <title id="detail-set-overview-title">Timesheet receiver — detail set overview</title>
+      <desc id="detail-set-overview-desc">Two numbered processes drawn as nodes: environment initialization, then webhook data capture; the capture node links to its own numbered detail page.</desc>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
+      </defs>
+      <rect width="720" height="280" fill="#f5f5f5"/>
+
+      <!-- Connectors first (z-order) -->
+      <path d="M96 120 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M264 120 H288" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M432 120 H456" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+
+      <!-- Start -->
+      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <text x="68" y="124" class="terminal-text">Start</text>
+
+      <!-- 1.0 Init environment (no detail page in this mini-set, so no link) -->
+      <rect x="120" y="96" width="144" height="48" rx="6" fill="#f5f5f5"/>
+      <rect x="120" y="96" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
+      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="138" y="107" class="id-text">1.0</text>
+      <rect x="232" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="246" y="107" class="tag-text">RPA</text>
+      <text x="192" y="122" class="node-title">Init environment</text>
+      <text x="192" y="134" class="node-sub">temp folder · templates</text>
+
+      <!-- 2.0 Catch webhook data (focal, links to its numbered page) -->
+      <a href="example-detail-set-p2-catch-webhook.html">
+        <rect x="288" y="96" width="144" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="288" y="96" width="144" height="48" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
+        <rect x="292" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="306" y="107" class="id-text focal-text">2.0</text>
+        <rect x="400" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="414" y="107" class="tag-text focal-text">API</text>
+        <text x="360" y="122" class="node-title">Catch webhook data</text>
+        <text x="360" y="134" class="node-sub">parse · insert bundle</text>
+      </a>
+
+      <!-- End -->
+      <rect x="456" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <text x="484" y="124" class="terminal-text">End</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="216" x2="680" y2="216" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="40" y="236" class="legend-label">LEGEND</text>
+      <rect x="120" y="224" width="32" height="14" rx="7" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="234" class="legend-text">Start / End</text>
+      <rect x="240" y="222" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="276" y="234" class="legend-text">Process · id chip left, tag right</text>
+      <rect x="424" y="222" width="28" height="16" rx="3" fill="rgba(235,108,54,0.07)" stroke="#eb6c36"/><text x="460" y="234" class="legend-text">Linked process · opens its numbered page</text>
+    </svg>
+
+    <p class="colophon">part 1 of 3 · timesheet-receiver</p>
+  </main>
+</body>
+</html>

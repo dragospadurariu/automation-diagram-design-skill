@@ -52,6 +52,7 @@ The emitter reads the inline SVG and the page's CSS cascade, classifies every el
 - **Pattern fills** — the dotted paper texture has no draw.io equivalent; a page has a background color, not a background pattern.
 - **Motion** — `data-motion-*` steps flatten to the final static frame.
 - **Custom arrowheads** — the 6×6 marker becomes `blockThin`; close, not identical.
+- **Hyperlinks** — SVG `<a href>` navigation wraps (detail-set forward links) are dropped; the vertex is emitted without a link. Tell the user when exporting a linked detail-set page.
 
 Every deliberate drop is counted in the delta ledger the emitter prints. A source element missing from the output *without* a ledger line is a bug — report it, don't shrug.
 

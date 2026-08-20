@@ -31,6 +31,8 @@ Each primitive maps to a node treatment from the design system (SKILL.md §5) pl
 
 Naming: the node name states the business role (`Invoice Performer`, `Exception Analyst`, `Finance Approver`); the sublabel states the technical detail (`unattended`, `gpt · tool-enabled`, `SAP FI`).
 
+> **`EXC` vs. BE/SE codes.** `EXC` types an exception as an actor/outcome in topology diagrams (and `SYS EXC` / `ESCALATE` as edge labels). A PDD-style coded branch terminus inside a numbered flowchart page (`BE001`, `SE003`) is a different primitive — the **exception terminal** in [`type-flowchart.md`](type-flowchart.md) — and its codes never appear in an activity-tag chip.
+
 ## Activity tags — who executes this step
 
 The table above types **actors and stores** in a topology diagram, where a node *is* a robot, a queue, an agent. A workflow diagram (flowchart, process, swimlane) is different: every box is a *step*, and the tag answers "which system performs it". That is a closed set, and it maps onto the primitives above:
