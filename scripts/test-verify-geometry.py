@@ -123,10 +123,144 @@ def main() -> int:
         0,
     )
 
+    # --- Connector geometry checks (SKILL.md §6 rules 2, 3, 4) ---
+
+    stroke = 'fill="none" stroke="#4f5d75"'
+
+    # Rule 3: two connectors running parallel closer than 12px are not
+    # independently traceable.
+    check(
+        "parallel connectors 4px apart",
+        document(
+            f'<path d="M20 150 H380" {stroke}/>'
+            f'<path d="M40 154 H360" {stroke}/>'
+        ),
+        1,
+    )
+    check(
+        "parallel connectors 16px apart are legal",
+        document(
+            f'<path d="M20 150 H380" {stroke}/>'
+            f'<path d="M40 166 H360" {stroke}/>'
+        ),
+        0,
+    )
+    check(
+        "a single connector doubling back on itself is legal",
+        document(f'<path d="M20 150 H380 Q388 150 388 154 H20" {stroke}/>'),
+        0,
+    )
+    check(
+        "collinear overlapping connectors",
+        document(
+            f'<path d="M20 150 H200" {stroke}/>'
+            f'<path d="M100 150 H300" {stroke}/>'
+        ),
+        1,
+    )
+
+    # Rule from §5 paint order: a stroke through a node painted later is
+    # hidden under the node fill. The arrow lands on the node's far border,
+    # so only the burial is reported.
+    check(
+        "stroke buried under a later node",
+        document(f'<path d="M20 92 H260" {stroke} marker-end="url(#arr)"/>' + node),
+        1,
+    )
+    check(
+        "stroke over an earlier zone is legal",
+        document(zone + f'<path d="M20 92 H320" {stroke} marker-end="url(#arr)"/>'),
+        0,
+    )
+    # Undirected furniture (lane dividers, lifelines) is exempt from routing
+    # checks even when it runs under later nodes.
+    check(
+        "undirected lifeline under a later frame is legal",
+        document(f'<path d="M20 92 H380" {stroke}/>' + node),
+        0,
+    )
+
+    # Rule 2 extended: a label mask must stay 6px clear of every stroke.
+    target = '<rect x="368" y="80" width="24" height="24" rx="3" fill="#f5f5f5" stroke="#7a8399"/>'
+    check(
+        "mask sitting on a stroke",
+        document(
+            f'<path d="M20 92 H368" {stroke} marker-end="url(#arr)"/>'
+            '<rect x="20" y="86" width="48" height="12" rx="2" fill="#f5f5f5"/>'
+            + target
+        ),
+        1,
+    )
+    check(
+        "mask 4px from a stroke",
+        document(
+            f'<path d="M20 92 H368" {stroke} marker-end="url(#arr)"/>'
+            '<rect x="20" y="96" width="48" height="12" rx="2" fill="#f5f5f5"/>'
+            + target
+        ),
+        1,
+    )
+    check(
+        "mask 8px from a stroke is legal",
+        document(
+            f'<path d="M20 92 H368" {stroke} marker-end="url(#arr)"/>'
+            '<rect x="20" y="100" width="48" height="12" rx="2" fill="#f5f5f5"/>'
+            + target
+        ),
+        0,
+    )
+    check(
+        "badge chip inside a node ignores nearby attach strokes",
+        document(
+            f'<path d="M20 72 H100" {stroke} marker-end="url(#arr)"/>'
+            + node
+            + '<rect x="104" y="66" width="32" height="12" rx="2" fill="#f5f5f5"/>'
+        ),
+        0,
+    )
+
+    # Rule 4 / landing: an arrowhead must land on a shape border, not float.
+    check(
+        "arrowhead landing on a node border",
+        document(f'<path d="M20 92 H100" {stroke} marker-end="url(#arr)"/>' + node),
+        0,
+    )
+    check(
+        "arrowhead floating 12px short of the node",
+        document(f'<path d="M20 92 H88" {stroke} marker-end="url(#arr)"/>' + node),
+        1,
+    )
+    check(
+        "arrowhead landing on a lifeline segment",
+        document(
+            '<line x1="300" y1="20" x2="300" y2="180" stroke="#4f5d75"/>'
+            f'<path d="M20 92 H299" {stroke} marker-end="url(#arr)"/>'
+        ),
+        0,
+    )
+    check(
+        "legend samples below the LEGEND label are exempt",
+        document(
+            '<text x="20" y="170" class="legend-label">LEGEND</text>'
+            '<line x1="20" y1="180" x2="60" y2="180" stroke="#4f5d75" marker-end="url(#arr)"/>'
+        ),
+        0,
+    )
+
     check_file("shipped architecture example", ARCHITECTURE, 0)
     check_file("shipped swimlane example", SWIMLANE, 0)
     check_file("shipped zoned example", ZONED, 0)
     check_file("shipped sequence-oauth example", SEQUENCE_OAUTH, 0)
+    check_file(
+        "shipped screen-contract example",
+        ASSET_DIR / "example-screen-contract.html",
+        0,
+    )
+    check_file(
+        "shipped runtime-topology example",
+        ASSET_DIR / "example-runtime-topology.html",
+        0,
+    )
 
     if failures:
         print("\nFAILURES:")
