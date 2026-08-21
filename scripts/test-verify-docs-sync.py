@@ -119,9 +119,38 @@ def main() -> int:
         if errors != [expected]:
             raise AssertionError(f"stale Pi prompt was not reported: {errors}")
 
+        errors = []
+        patterns = "# Patterns\n\n## 1. One\n\n## 2. Two\n"
+        verify.check_pattern_counts(errors, "2 semantic patterns. 2 routed patterns.", patterns)
+        if errors:
+            raise AssertionError(f"valid pattern counts failed: {errors}")
+
+        errors = []
+        verify.check_pattern_counts(errors, "3 semantic patterns.", patterns)
+        expected = "README declares 3 semantic patterns; catalog contains 2"
+        if errors != [expected]:
+            raise AssertionError(f"stale pattern count was not reported: {errors}")
+
+        skill_version = verify.skill_metadata_version(
+            '---\nname: example\nmetadata:\n  version: "1.2.3"\n---\n'
+        )
+        if skill_version != "1.2.3":
+            raise AssertionError(f"skill metadata version was not parsed: {skill_version!r}")
+
+        palette_markdown = "\n".join(
+            f"| `{role}` | use | `#{index:06x}` | dark |"
+            for index, role in enumerate(verify.PALETTE_ROLES, start=1)
+        )
+        palette_css = ":root { " + " ".join(
+            f"--{role}: #{index:06x};"
+            for index, role in enumerate(verify.PALETTE_ROLES, start=1)
+        ) + " }"
+        if verify.style_guide_palette(palette_markdown) != verify.gallery_palette(palette_css):
+            raise AssertionError("gallery and style-guide palette parsers disagree")
+
     print(
         "PASS: docs sync checks reference links, references/ cross-links and "
-        "Claude/Pi profile-surface parity"
+        "Claude/Pi profile-surface parity, semantic counts, versions, and palette parsing"
     )
     return 0
 

@@ -3,7 +3,7 @@ name: automation-design
 description: Design branded architecture, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
 license: MIT
 metadata:
-  version: "0.1"
+  version: "0.4.1"
 ---
 
 # Automation Design
@@ -14,21 +14,22 @@ Eleven visual types. Semantic patterns describe behavior independently; type ref
 
 ---
 
-## 0. First-time setup — style guide gate
+## 0. First-time setup — style guide resolution
 
-**Before generating your first diagram in a new project, verify the style guide has been customized.**
+**Before generating your first diagram in a project, resolve the active style guide.**
 
-Don't silently ship default-skinned diagrams into a branded project.
+Don't claim a brand match when the shipped skin is active, and don't block an ordinary first draft on customization.
 
 First check the project root for a `.automation-design` marker and resolve it per [`references/profiles.md`](references/profiles.md). A valid marker whose profile exists selects that file directly and skips this gate; `profile: default` also skips it. A malformed or missing-profile marker follows the visible failure handling in that reference. Never copy a marker-selected profile over the installed working copy.
 
-Open [`references/style-guide.md`](references/style-guide.md) and check the default tokens. If they're still the shipped defaults (paper `#f5f5f5`, ink `#2d3142`, accent `#eb6c36` atomic-tangerine), **pause and ask the user**:
+Open [`references/style-guide.md`](references/style-guide.md) and check the default tokens. If they are still the shipped defaults (paper `#f5f5f5`, ink `#2d3142`, accent `#eb6c36` atomic-tangerine), branch by intent:
 
-> *"This is your first diagram in this project. The style guide is still at the default (neutral white-smoke + atomic-tangerine). Do you want to customize it to match your brand first? Options: (a) pull from your website URL, (b) extract from an installed skill, (c) extract from a local folder / design-system directory, (d) paste tokens manually, (e) proceed with the default for now, (f) load a saved client profile."*
+- **Explicit brand intent** — the user asks to match a brand, supplies a website/design system, or says the output is for a named client. Pause before drawing and ask for the source if it is missing. Then branch through [`references/onboarding.md`](references/onboarding.md).
+- **Ordinary first draft** — proceed with the shipped skin. When delivering the result, label the skin `default` and offer brand onboarding as the next step. Do not force a configuration choice before the user sees the first useful diagram.
 
-Then branch per the matching section of [`references/onboarding.md`](references/onboarding.md); for **(f)** follow [`references/profiles.md`](references/profiles.md).
+If the user chooses a saved profile, follow [`references/profiles.md`](references/profiles.md). If they explicitly choose to persist the shipped skin for the project, offer a `.automation-design` marker containing `profile: default`; write it only with consent.
 
-**Once the style guide has been customized** (or the user explicitly opted for default), skip this gate on subsequent runs. A leading profile header names the copied-in active profile. Without a header, any semantic-role value or typography family differing from shipped defaults means **custom-unsaved**: skip the gate and offer to save it as a profile. All-default tokens with no marker/header trigger the gate. At the end of every onboarding method, offer to save the result as a named client profile per `references/profiles.md`.
+**Once the style guide has been customized** (or a marker selects the default), skip the offer on subsequent runs. A leading profile header names the copied-in active profile. Without a header, any semantic-role value or typography family differing from shipped defaults means **custom-unsaved**: use it and offer to save it as a profile. All-default tokens with no marker/header remain eligible for the post-delivery onboarding offer. At the end of every onboarding method, offer to save the result as a named client profile per `references/profiles.md`.
 
 ---
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Verify that routing and browsing surfaces stay in sync with the skill.
+"""Verify that routing, product metadata, and browsing surfaces stay in sync.
 
-Seven drift classes, each of which has shipped before:
+Ten drift classes, each of which has shipped before or is easy to reintroduce:
 
 1. The SKILL.md frontmatter description is the only text an agent sees before
    deciding to load the skill — every visual type in the selection table must
@@ -19,6 +19,9 @@ Seven drift classes, each of which has shipped before:
    Reference files cite each other as bare siblings (`type-sequence.md`), so a
    deleted reference leaves a dead link that check 4 never sees: it only reads
    SKILL.md, where every path is prefixed `references/`.
+8. README pattern counts must match the numbered semantic-pattern catalog.
+9. SKILL.md metadata version must match both plugin manifests.
+10. The gallery shell must use the shipped semantic palette from style-guide.md.
 """
 
 from __future__ import annotations
@@ -33,6 +36,8 @@ SKILL = ROOT / "skills/automation-design/SKILL.md"
 GALLERY = ROOT / "skills/automation-design/assets/index.html"
 ASSET_DIR = ROOT / "skills/automation-design/assets"
 REFERENCE_DIR = ROOT / "skills/automation-design/references"
+SEMANTIC_PATTERNS = REFERENCE_DIR / "semantic-patterns.md"
+STYLE_GUIDE = REFERENCE_DIR / "style-guide.md"
 README = ROOT / "README.md"
 VARIANTS = ("", "-dark", "-full")
 PROFILE_SURFACES = (
@@ -99,6 +104,88 @@ def check_gallery(errors: list[str]) -> None:
     for name in sorted(types):
         if f"example-{name}.html" not in on_disk:
             errors.append(f"gallery tab {name!r} points at a missing example-{name}.html")
+
+    if len(types) != len(set(types)):
+        errors.append("gallery data-type values must be unique")
+
+    option_tags = re.findall(r'<button\s+class="example-option"[^>]*>', source)
+    for tag in option_tags:
+        name = re.search(r'data-type="([^"]+)"', tag)
+        label = name.group(1) if name else "unknown"
+        for attribute in ("data-description", "data-prompt"):
+            if not re.search(rf'{attribute}="[^"]+"', tag):
+                errors.append(f"gallery option {label!r} has no {attribute}")
+
+
+def semantic_pattern_count(markdown: str) -> int:
+    return len(re.findall(r"^##\s+\d+\.\s+", markdown, re.MULTILINE))
+
+
+def check_pattern_counts(errors: list[str], readme: str, patterns: str) -> None:
+    actual = semantic_pattern_count(patterns)
+    declared = [int(value) for value in re.findall(r"\b(\d+)\s+(?:semantic|routed) patterns\b", readme)]
+    if not declared:
+        errors.append("README has no numeric semantic-pattern count")
+        return
+    for value in declared:
+        if value != actual:
+            errors.append(f"README declares {value} semantic patterns; catalog contains {actual}")
+
+
+def skill_metadata_version(markdown: str) -> str | None:
+    frontmatter = markdown.split("---", 2)
+    if len(frontmatter) < 3:
+        return None
+    match = re.search(r'^\s*version:\s*["\']?([^"\'\s]+)', frontmatter[1], re.MULTILINE)
+    return match.group(1) if match else None
+
+
+def check_skill_version(errors: list[str], root: Path) -> None:
+    skill_path = root / "skills/automation-design/SKILL.md"
+    skill_version = skill_metadata_version(skill_path.read_text(encoding="utf-8"))
+    if not skill_version:
+        errors.append("SKILL.md metadata version is missing")
+        return
+    for relative in (Path(".claude-plugin/plugin.json"), Path(".codex-plugin/plugin.json")):
+        document = json.loads((root / relative).read_text(encoding="utf-8"))
+        if document.get("version") != skill_version:
+            errors.append(
+                f"SKILL.md metadata version {skill_version!r} does not match "
+                f"{relative.as_posix()} version {document.get('version')!r}"
+            )
+
+
+PALETTE_ROLES = ("paper", "paper-2", "ink", "muted", "soft", "accent")
+
+
+def style_guide_palette(markdown: str) -> dict[str, str]:
+    palette: dict[str, str] = {}
+    for role in PALETTE_ROLES:
+        match = re.search(rf"^\| `{re.escape(role)}`\s*\|[^|]*\|\s*`(#[0-9a-fA-F]{{6}})", markdown, re.MULTILINE)
+        if match:
+            palette[role] = match.group(1).casefold()
+    return palette
+
+
+def gallery_palette(source: str) -> dict[str, str]:
+    return {
+        role: match.group(1).casefold()
+        for role in PALETTE_ROLES
+        if (match := re.search(rf"--{re.escape(role)}:\s*(#[0-9a-fA-F]{{6}})", source))
+    }
+
+
+def check_gallery_palette(errors: list[str]) -> None:
+    expected = style_guide_palette(STYLE_GUIDE.read_text(encoding="utf-8"))
+    actual = gallery_palette(GALLERY.read_text(encoding="utf-8"))
+    for role in PALETTE_ROLES:
+        if role not in expected:
+            errors.append(f"style guide has no parseable light token for {role!r}")
+        elif actual.get(role) != expected[role]:
+            errors.append(
+                f"gallery token {role!r} is {actual.get(role)!r}; "
+                f"style guide ships {expected[role]!r}"
+            )
 
 
 def readme_tree_tokens(markdown: str) -> list[str]:
@@ -241,7 +328,14 @@ def main() -> int:
     errors: list[str] = []
     check_description(errors)
     check_manifest_descriptions(errors, ROOT)
+    check_skill_version(errors, ROOT)
     check_gallery(errors)
+    check_gallery_palette(errors)
+    check_pattern_counts(
+        errors,
+        README.read_text(encoding="utf-8"),
+        SEMANTIC_PATTERNS.read_text(encoding="utf-8"),
+    )
     check_readme_tree(errors)
     check_skill_reference_links(
         errors,
@@ -258,7 +352,7 @@ def main() -> int:
     print(
         "OK docs sync: description hooks, gallery reachability, README tree, "
         "SKILL.md reference links, references/ cross-links, profile surfaces, "
-        "manifest descriptions"
+        "manifest descriptions, versions, semantic counts, gallery metadata and palette"
     )
     return 0
 

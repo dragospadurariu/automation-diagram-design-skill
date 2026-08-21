@@ -31,7 +31,7 @@ Every token is referred to by **semantic role**, not by its hex value. Type refe
 
 > **Brand palette source:** this skin maps to a five-color brand palette — `jet-black #2d3142`, `silver #bfc0c0`, `white-smoke #f5f5f5`, `atomic-tangerine #eb6c36`, `blue-slate #4f5d75`. The `soft`, `rule`, and `link` tokens are derived (lighter slate, ink-at-opacity, and a saturated variant in the blue-slate hue family) to cover roles the brand palette doesn't name directly.
 
-> **Note:** The pre-baked example HTML files in `assets/` were built under an earlier skin. Regenerating them against the current `style-guide.md` is a v5.1 task. New diagrams the skill produces will use the tokens above.
+> **Note:** The pre-baked example HTML files in `assets/` use these shipped defaults. The gallery shell reads the same semantic palette so browsing examples does not introduce a second visual skin.
 
 ### Inversion rule (light → dark)
 
