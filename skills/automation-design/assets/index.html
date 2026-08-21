@@ -3,389 +3,329 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Automation Design · Gallery</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <title>Automation Design · Example gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       :root {
-        --paper: #f5f4ed;
-        --paper-2: #efeee5;
-        --ink: #0b0d0b;
-        --muted: #52534e;
-        --soft: #65655c;
-        --rule: rgba(11, 13, 11, 0.12);
-        --rule-strong: rgba(11, 13, 11, 0.25);
-        --accent: #f7591f;
-        --sans: "Geist", system-ui, sans-serif;
-        --serif: "Instrument Serif", serif;
-        --mono: "Geist Mono", ui-monospace, monospace;
+        --paper: #f5f5f5; --paper-2: #ececec; --surface: #ffffff;
+        --ink: #2d3142; --muted: #4f5d75; --soft: #7a8399;
+        --rule: rgba(45, 49, 66, 0.12); --rule-strong: rgba(45, 49, 66, 0.28);
+        --accent: #eb6c36; --accent-tint: rgba(235, 108, 54, 0.08); --focus: #2e5aa8;
+        --sans: "Geist", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, monospace;
+        --header-height: 64px; --sidebar-width: 304px; --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
       }
-      html,
-      body {
-        height: 100%;
+      html, body { width: 100%; height: 100%; }
+      body { background: var(--paper); color: var(--ink); font-family: var(--sans); overflow: hidden; }
+      button, input, select { font: inherit; }
+      button, a, input, select { -webkit-tap-highlight-color: transparent; }
+      :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+      .app { display: grid; grid-template-rows: var(--header-height) minmax(0, 1fr); height: 100dvh; }
+      .app-header {
+        align-items: center; background: var(--paper); border-bottom: 1px solid var(--rule);
+        display: flex; gap: 20px; justify-content: space-between; padding: 0 20px;
       }
-      body {
-        font-family: var(--sans);
-        background: var(--paper);
-        color: var(--ink);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+      .brand { align-items: center; display: flex; gap: 10px; min-width: 0; }
+      .brand-mark {
+        align-items: center; background: var(--ink); border-radius: 6px; color: var(--paper);
+        display: inline-flex; flex: 0 0 32px; font-family: var(--mono); font-size: 0.72rem;
+        font-weight: 600; height: 32px; justify-content: center; letter-spacing: -0.04em;
       }
-
-      .topbar {
-        padding: 1rem 1.25rem 0.625rem;
-        border-bottom: 1px solid var(--rule);
-        flex: 0 0 auto;
+      .brand-copy { min-width: 0; }
+      .brand-name { font-size: 0.94rem; font-weight: 600; line-height: 1.2; }
+      .brand-subtitle { color: var(--muted); font-family: var(--mono); font-size: 0.66rem; line-height: 1.3; }
+      .header-link, .toolbar-action {
+        align-items: center; background: transparent; border: 1px solid var(--rule-strong);
+        border-radius: 6px; color: var(--ink); cursor: pointer; display: inline-flex;
+        font-size: 0.78rem; font-weight: 500; gap: 6px; min-height: 36px; padding: 0 12px;
+        text-decoration: none; transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out), color 180ms var(--ease-out);
+        white-space: nowrap;
       }
-      .title-row {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-        gap: 1rem;
+      .header-link:hover, .toolbar-action:hover { background: var(--surface); border-color: var(--ink); }
+      .toolbar-action:active { background: var(--paper-2); }
+      .toolbar-action[data-state="copied"] { background: var(--accent-tint); border-color: var(--accent); color: #9a3b18; }
+      .workspace { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); min-height: 0; }
+      .sidebar {
+        background: var(--paper); border-right: 1px solid var(--rule); min-height: 0;
+        overflow-y: auto; padding: 16px 12px 24px; scrollbar-gutter: stable;
       }
-      .title-row h1 {
-        font-family: var(--serif);
-        font-size: 1.5rem;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-        line-height: 1;
+      .search-label { color: var(--muted); display: block; font-size: 0.72rem; font-weight: 500; margin: 0 4px 6px; }
+      .search-input {
+        appearance: none; background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 6px;
+        color: var(--ink); font-size: 0.84rem; height: 40px; margin-bottom: 18px; padding: 0 12px; width: 100%;
       }
-      .title-row .meta {
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--muted);
+      .search-input::placeholder { color: var(--muted); opacity: 1; }
+      .catalog-group + .catalog-group { border-top: 1px solid var(--rule); margin-top: 16px; padding-top: 16px; }
+      .catalog-heading { color: var(--muted); font-family: var(--mono); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.05em; margin: 0 8px 7px; }
+      .catalog-list { display: flex; flex-direction: column; gap: 2px; }
+      .example-option {
+        align-items: flex-start; background: transparent; border: 0; border-radius: 6px; color: var(--muted);
+        cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: 8px;
+        text-align: left; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out); width: 100%;
       }
-      .title-row .open-raw {
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.06em;
-        color: var(--muted);
-        text-decoration: none;
-        padding: 0.3rem 0.625rem;
-        border: 1px solid var(--rule);
-        border-radius: 4px;
-        transition:
-          color 0.15s,
-          border-color 0.15s;
+      .example-option:hover { background: rgba(45, 49, 66, 0.06); color: var(--ink); }
+      .example-option[aria-checked="true"] { background: var(--ink); color: var(--paper); }
+      .option-name { font-size: 0.82rem; font-weight: 500; line-height: 1.25; }
+      .option-meta { color: inherit; font-family: var(--mono); font-size: 0.64rem; line-height: 1.3; opacity: 0.72; }
+      .empty-results { color: var(--muted); display: none; font-size: 0.8rem; line-height: 1.5; padding: 8px; }
+      .empty-results.visible { display: block; }
+      .content { background: var(--paper-2); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+      .toolbar {
+        align-items: center; background: var(--paper); border-bottom: 1px solid var(--rule); display: flex;
+        flex: 0 0 auto; gap: 12px; min-height: 72px; padding: 10px 16px;
       }
-      .open-raw:hover {
-        color: var(--accent);
-        border-color: var(--accent);
+      .selection-copy { flex: 1 1 240px; min-width: 0; }
+      .selection-title { font-size: 0.88rem; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .selection-description { color: var(--muted); font-size: 0.72rem; line-height: 1.35; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .variant-tabs { align-items: center; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; display: flex; padding: 2px; }
+      .variant-tab {
+        background: transparent; border: 0; border-radius: 4px; color: var(--muted); cursor: pointer;
+        font-size: 0.74rem; font-weight: 500; min-height: 32px; padding: 0 10px;
+        transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out);
       }
-
-      .tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.375rem;
-        margin-bottom: 0.5rem;
+      .variant-tab:hover:not(:disabled) { color: var(--ink); }
+      .variant-tab[aria-checked="true"] { background: var(--surface); color: var(--ink); }
+      .variant-tab:disabled { cursor: not-allowed; opacity: 0.38; }
+      .toolbar-actions { display: flex; gap: 8px; }
+      .mobile-picker { display: none; }
+      .preview-shell { flex: 1 1 auto; min-height: 0; min-width: 0; position: relative; }
+      .preview { background: var(--paper); border: 0; display: block; height: 100%; inset: 0; position: absolute; width: 100%; }
+      .status { clip: rect(0 0 0 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
+      [hidden] { display: none !important; }
+      @media (max-width: 980px) {
+        :root { --sidebar-width: 264px; }
+        .selection-description, .toolbar-action-label-secondary { display: none; }
       }
-      .tabs.variants {
-        margin-bottom: 0;
-        padding-top: 0.5rem;
-        border-top: 1px solid var(--rule);
+      @media (max-width: 760px) {
+        :root { --header-height: 60px; }
+        .app-header { gap: 10px; padding: 0 12px; }
+        .brand-subtitle, .header-link-label { display: none; }
+        .header-link { min-height: 44px; padding: 0 12px; }
+        .workspace { display: block; min-height: 0; }
+        .sidebar { display: none; }
+        .content { height: 100%; }
+        .toolbar { align-items: stretch; flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+        .selection-copy { display: none; }
+        .mobile-picker {
+          appearance: none; background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 6px;
+          color: var(--ink); display: block; flex: 1 1 100%; font-size: 0.86rem; height: 44px; padding: 0 36px 0 12px;
+        }
+        .variant-tabs { flex: 1 1 auto; }
+        .variant-tab { min-height: 40px; padding: 0 8px; }
+        .toolbar-actions { flex: 0 0 auto; }
+        .toolbar-action { min-height: 44px; padding: 0 11px; }
       }
-      .tab {
-        font-family: var(--sans);
-        font-size: 0.8125rem;
-        font-weight: 500;
-        padding: 0.375rem 0.75rem;
-        background: transparent;
-        color: var(--muted);
-        border: 1px solid var(--rule);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.12s;
-        letter-spacing: -0.005em;
+      @media (max-width: 430px) {
+        .brand-mark { display: none; }
+        .brand-name { font-size: 0.9rem; }
+        .variant-tab { font-size: 0.7rem; padding: 0 7px; }
+        .toolbar-action-label { display: none; }
       }
-      .tab:hover {
-        color: var(--ink);
-        border-color: var(--rule-strong);
-      }
-      .tab:disabled {
-        opacity: 0.35;
-        cursor: not-allowed;
-      }
-      .tab.active {
-        background: var(--ink);
-        color: var(--paper);
-        border-color: var(--ink);
-      }
-      .tab .eyebrow {
-        display: inline-block;
-        margin-right: 0.25rem;
-        font-family: var(--mono);
-        font-size: 0.56rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: inherit;
-        opacity: 0.5;
-      }
-      .tab.new::after {
-        content: "NEW";
-        display: inline-block;
-        margin-left: 0.35rem;
-        font-family: var(--mono);
-        font-size: 0.54rem;
-        letter-spacing: 0.12em;
-        color: var(--accent);
-        vertical-align: 1px;
-      }
-      .tab.active.new::after {
-        color: var(--paper);
-      }
-
-      main {
-        flex: 1 1 auto;
-        position: relative;
-        background: var(--paper-2);
-        overflow: hidden;
-      }
-      iframe {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        background: var(--paper);
-        display: block;
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
       }
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <div class="title-row">
-        <h1>
-          Automation Design
-          <span
-            class="meta"
-            style="
-              font-family: var(--mono);
-              font-size: 0.66rem;
-              margin-left: 0.5rem;
-            "
-            >· gallery</span
-          >
-        </h1>
-        <div style="display: flex; gap: 0.5rem">
-          <a class="open-raw" href="icons.html" target="_blank" rel="noopener"
-            >icon library ↗</a
-          >
-          <a
-            class="open-raw"
-            id="open-raw"
-            href="#"
-            target="_blank"
-            rel="noopener"
-            >open in new tab ↗</a
-          >
+    <div class="app">
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">AD</span>
+          <div class="brand-copy"><p class="brand-name">Automation Design</p><p class="brand-subtitle">Example gallery</p></div>
         </div>
-      </div>
+        <a class="header-link" href="icons.html" target="_blank" rel="noopener" aria-label="Open icon library"><span class="header-link-label">Icon library</span><span aria-hidden="true">↗</span></a>
+      </header>
 
-      <div class="tabs" id="type-tabs" role="radiogroup" aria-label="Diagram type">
-        <button class="tab active" data-type="architecture">
-          <span class="eyebrow">01</span>Architecture
-        </button>
-        <button class="tab" data-type="flowchart">
-          <span class="eyebrow">02</span>Flowchart
-        </button>
-        <button class="tab" data-type="sequence">
-          <span class="eyebrow">03</span>Sequence
-        </button>
-        <button class="tab" data-type="state">
-          <span class="eyebrow">04</span>State
-        </button>
-        <button class="tab" data-type="swimlane">
-          <span class="eyebrow">05</span>Swimlane
-        </button>
-        <button class="tab" data-type="org-chart">
-          <span class="eyebrow">06</span>Org chart
-        </button>
-        <button class="tab" data-type="layers">
-          <span class="eyebrow">07</span>Layers
-        </button>
-        <button class="tab" data-type="loop">
-          <span class="eyebrow">08</span>Loop
-        </button>
-        <button class="tab" data-type="process">
-          <span class="eyebrow">09</span>Process
-        </button>
-        <button class="tab" data-type="data-flow">
-          <span class="eyebrow">10</span>Data flow
-        </button>
-        <button class="tab" data-type="it-state">
-          <span class="eyebrow">11</span>IT current-state
-        </button>
-        <button class="tab" data-type="sequence-oauth">
-          <span class="eyebrow">12</span>Sequence · OAuth
-        </button>
-        <button class="tab" data-type="invoice-automation" data-single>
-          <span class="eyebrow">13</span>Invoice automation · flagship
-        </button>
-        <button class="tab" data-type="rpa-blueprint" data-single>
-          <span class="eyebrow">13b</span>RPA blueprint · flagship
-        </button>
-        <button class="tab" data-type="process-detail" data-single>
-          <span class="eyebrow">13c</span>Process detail · PDD
-        </button>
-        <button class="tab" data-type="detail-set-overview" data-single>
-          <span class="eyebrow">13d</span>Detail set · overview
-        </button>
-        <button class="tab" data-type="detail-set-p2-catch-webhook" data-single>
-          <span class="eyebrow">13e</span>Detail set · 2.0 page
-        </button>
-        <button class="tab" data-type="detail-set-p2.2.1-excel-readsheet" data-single>
-          <span class="eyebrow">13f</span>Detail set · 2.2.1 sub-routine
-        </button>
-        <button class="tab" data-type="agent-card" data-single>
-          <span class="eyebrow">13g</span>Agent card · autonomous
-        </button>
-        <button class="tab" data-type="agent-card-conversational" data-single>
-          <span class="eyebrow">13h</span>Agent card · conversational
-        </button>
-        <button class="tab" data-type="app-card" data-single>
-          <span class="eyebrow">13i</span>App card · functional view
-        </button>
-        <button class="tab" data-type="screen-states" data-single>
-          <span class="eyebrow">13j</span>Screen states · navigation
-        </button>
-        <button class="tab" data-type="screen-contract" data-single>
-          <span class="eyebrow">13k</span>Screen contract · 2.1
-        </button>
-        <button class="tab" data-type="runtime-topology" data-single>
-          <span class="eyebrow">13l</span>Runtime topology · layers
-        </button>
-        <button class="tab" data-type="import-drawio" data-single>
-          <span class="eyebrow">13</span>Import · draw.io
-        </button>
-        <button class="tab" data-type="import-mermaid" data-single>
-          <span class="eyebrow">14</span>Import · Mermaid
-        </button>
-        <button class="tab" data-type="loop-terminal" data-single>
-          <span class="eyebrow">15</span>Loop · terminal
-        </button>
-        <button class="tab" data-type="policy-trace-animated" data-single>
-          <span class="eyebrow">16</span>Policy trace · animated
-        </button>
-        <button class="tab" data-type="queue-animated" data-single>
-          <span class="eyebrow">17</span>Fan-in queue · animated
-        </button>
-        <button class="tab" data-type="paved-road-animated" data-single>
-          <span class="eyebrow">18</span>Secure paved road · animated
-        </button>
-      </div>
+      <div class="workspace">
+        <aside class="sidebar" aria-label="Example catalog">
+          <label class="search-label" for="example-search">Find an example</label>
+          <input class="search-input" id="example-search" type="search" placeholder="Search diagrams and use cases" autocomplete="off" />
+          <nav id="example-catalog" aria-label="Diagram examples">
+            <section class="catalog-group" data-group="Visual types">
+              <h2 class="catalog-heading">Visual types</h2>
+              <div class="catalog-list">
+                <button class="example-option" data-type="architecture" data-description="Components and connections in a system." data-prompt="Draw a system architecture showing users, edge services, application services, data stores, and their labeled connections."><span class="option-name">Architecture</span><span class="option-meta">Components and connections</span></button>
+                <button class="example-option" data-type="flowchart" data-description="Decision logic with explicit branches." data-prompt="Create a flowchart for a business process with explicit decisions, labeled exits, exception paths, and a clear end state."><span class="option-name">Flowchart</span><span class="option-meta">Decision logic</span></button>
+                <button class="example-option" data-type="sequence" data-description="Time-ordered messages between actors." data-prompt="Create a sequence diagram showing the time-ordered messages between a user, an application, an automation, and a downstream system."><span class="option-name">Sequence</span><span class="option-meta">Messages over time</span></button>
+                <button class="example-option" data-type="state" data-description="States, transitions, retries, and terminals." data-prompt="Create a state-machine diagram for an automation transaction, including retries, business exceptions, system exceptions, and terminal states."><span class="option-name">State machine</span><span class="option-meta">Lifecycle and retries</span></button>
+                <button class="example-option" data-type="swimlane" data-description="Ownership and handoffs across roles." data-prompt="Create a swimlane diagram showing the handoffs between a business user, an attended robot, and an operations team."><span class="option-name">Swimlane</span><span class="option-meta">Ownership and handoffs</span></button>
+                <button class="example-option" data-type="org-chart" data-description="Supervision, routing, and escalation." data-prompt="Create an org chart for a supervisor agent that routes work to specialist agents and escalates unresolved work to named human owners."><span class="option-name">Org chart</span><span class="option-meta">Supervision and escalation</span></button>
+                <button class="example-option" data-type="layers" data-description="Controls grouped by enforcement layer." data-prompt="Create a layered diagram of automation guardrails grouped by identity, permissions, execution, monitoring, and human oversight."><span class="option-name">Layer stack</span><span class="option-meta">Controls and governance</span></button>
+                <button class="example-option" data-type="loop" data-description="A reinforcing cycle with accumulated state." data-prompt="Create a loop diagram showing how an agent acts, observes outcomes, evaluates results, updates memory, and improves on the next cycle."><span class="option-name">Loop</span><span class="option-meta">Feedback and memory</span></button>
+                <button class="example-option" data-type="process" data-description="A sequential, multi-actor business process." data-prompt="Create a process diagram showing the sequence, responsible actor, input, output, and tool used at every stage."><span class="option-name">Process</span><span class="option-meta">Multi-actor workflow</span></button>
+                <button class="example-option" data-type="data-flow" data-description="How typed data crosses ownership boundaries." data-prompt="Create a data-flow diagram showing where data enters, changes type, crosses an ownership boundary, and is stored or consumed."><span class="option-name">Data flow</span><span class="option-meta">Data and boundaries</span></button>
+                <button class="example-option" data-type="it-state" data-description="The current landscape before automation." data-prompt="Create an IT current-state diagram showing the existing applications, manual handoffs, documents, integrations, and pain points before automation."><span class="option-name">IT current-state</span><span class="option-meta">Landscape before automation</span></button>
+              </div>
+            </section>
 
-      <div
-        class="tabs variants"
-        id="variant-tabs"
-        role="radiogroup"
-        aria-label="Variant"
-      >
-        <button class="tab active" data-variant="">Minimal light</button>
-        <button class="tab" data-variant="-dark">Minimal dark</button>
-        <button class="tab" data-variant="-full">Full editorial</button>
-      </div>
-    </header>
+            <section class="catalog-group" data-group="Automation solutions">
+              <h2 class="catalog-heading">Automation solutions</h2>
+              <div class="catalog-list">
+                <button class="example-option" data-type="invoice-automation" data-single data-description="Dispatcher, queue, performer, approval, and posting." data-prompt="Draw the executive architecture of an invoice automation where invoices arrive by email, a dispatcher queues them, a performer validates them, finance approves exceptions, and approved invoices are posted to SAP."><span class="option-name">Invoice automation</span><span class="option-meta">Executive overview</span></button>
+                <button class="example-option" data-type="rpa-blueprint" data-single data-description="A phased, end-to-end RPA solution blueprint." data-prompt="Create an RPA solution blueprint with named processes, phase bands, decision exits, human validation, queue handoffs, and exception terminals."><span class="option-name">RPA solution blueprint</span><span class="option-meta">End-to-end solution</span></button>
+                <button class="example-option" data-type="process-detail" data-single data-description="One numbered process at PDD depth." data-prompt="Draw process 1.2 in PDD detail: email arrives, identify the sender, an agent drafts a reply, send it above 80 percent confidence, otherwise escalate to review, and log the result."><span class="option-name">Process detail</span><span class="option-meta">PDD-depth page</span></button>
+                <button class="example-option" data-type="detail-set-overview" data-single data-description="Overview page for a linked process detail set." data-prompt="Create the overview page for a numbered automation detail set, showing the major processes, their dependencies, and links to each process page."><span class="option-name">Detail set overview</span><span class="option-meta">Linked solution set</span></button>
+                <button class="example-option" data-type="detail-set-p2-catch-webhook" data-single data-description="One process page in a numbered detail set." data-prompt="Create the process 2.0 detail page for catching and validating a webhook, preserving the numbering and links back to the solution overview."><span class="option-name">Detail page · process 2.0</span><span class="option-meta">Numbered process page</span></button>
+                <button class="example-option" data-type="detail-set-p2.2.1-excel-readsheet" data-single data-description="A numbered sub-routine within a detail set." data-prompt="Create the process 2.2.1 sub-routine page for reading an Excel worksheet, including inputs, validation, outputs, exceptions, and links to its parent process."><span class="option-name">Detail page · sub-routine 2.2.1</span><span class="option-meta">Numbered sub-routine</span></button>
+              </div>
+            </section>
 
-    <main>
-      <iframe
-        id="preview"
-        src="example-architecture.html"
-        title="Preview"
-      ></iframe>
-    </main>
+            <section class="catalog-group" data-group="Agents and applications">
+              <h2 class="catalog-heading">Agents and applications</h2>
+              <div class="catalog-list">
+                <button class="example-option" data-type="agent-card" data-single data-description="Autonomous agent charter, grounding, tools, and escalation." data-prompt="Create an autonomous agent card showing its charter, trigger, input and output, reasoning model, grounding sources, permitted tools, confidence gate, and human escalation."><span class="option-name">Agent card · autonomous</span><span class="option-meta">Agent architecture</span></button>
+                <button class="example-option" data-type="agent-card-conversational" data-single data-description="Conversational agent with sourced answers and takeover." data-prompt="Create a conversational agent card showing user query and sourced answer, grounding, permitted tools, session context, and human takeover."><span class="option-name">Agent card · conversational</span><span class="option-meta">Conversational architecture</span></button>
+                <button class="example-option" data-type="app-card" data-single data-description="Users, data, identity, and triggered automations." data-prompt="Create an application card showing user roles, the identity gate, the system of record, major screens, and the commands or automations the app triggers."><span class="option-name">Application card</span><span class="option-meta">Functional view</span></button>
+                <button class="example-option" data-type="screen-states" data-single data-description="Screens as states and user events as transitions." data-prompt="Create a screen-state diagram for an application, including navigation events, role guards, transient dialogs, asynchronous acknowledgements, and failure behavior."><span class="option-name">Screen states</span><span class="option-meta">Navigation model</span></button>
+                <button class="example-option" data-type="screen-contract" data-single data-description="Operations, responses, authorization, and async boundaries." data-prompt="Create a screen contract for an approval screen, showing its logical operations, responses, authorization gate, queued command, and acknowledgement path."><span class="option-name">Screen contract</span><span class="option-meta">Integration contract</span></button>
+                <button class="example-option" data-type="runtime-topology" data-single data-description="Deployment layers, ownership, environments, and scale." data-prompt="Create a runtime deployment topology showing edge, application, and data layers, with environments, ownership, region, high availability, and replica counts."><span class="option-name">Runtime topology</span><span class="option-meta">Deployment view</span></button>
+              </div>
+            </section>
+
+            <section class="catalog-group" data-group="Technical and presentation">
+              <h2 class="catalog-heading">Technical and presentation</h2>
+              <div class="catalog-list">
+                <button class="example-option" data-type="sequence-oauth" data-description="A security-sensitive OAuth sequence." data-prompt="Create an OAuth sequence diagram showing authorization, token exchange, validation, refresh, error responses, and the trust boundaries involved."><span class="option-name">Sequence · OAuth</span><span class="option-meta">Security sequence</span></button>
+                <button class="example-option" data-type="import-drawio" data-single data-description="A draw.io source redrawn in the design system." data-prompt="Redraw my draw.io architecture in the Automation Design system at balanced detail for a mixed audience, and include a fidelity ledger."><span class="option-name">Import · draw.io</span><span class="option-meta">Editorial redraw</span></button>
+                <button class="example-option" data-type="import-mermaid" data-single data-description="A Mermaid source redrawn in the design system." data-prompt="Redraw my Mermaid diagram in the Automation Design system at balanced detail for a mixed audience, and include a fidelity ledger."><span class="option-name">Import · Mermaid</span><span class="option-meta">Editorial redraw</span></button>
+                <button class="example-option" data-type="loop-terminal" data-single data-description="A terminal-native presentation variant." data-prompt="Create a terminal-style loop diagram for a technical audience, keeping the automation cycle and accumulated state readable in a static frame."><span class="option-name">Loop · terminal</span><span class="option-meta">Technical presentation</span></button>
+                <button class="example-option" data-type="policy-trace-animated" data-single data-description="Animated comparison of two policy traces." data-prompt="Create an accessible step animation comparing two ordered policy-evaluation traces and highlighting their first divergence, with a complete static fallback."><span class="option-name">Policy trace · animated</span><span class="option-meta">Step explanation</span></button>
+                <button class="example-option" data-type="queue-animated" data-single data-description="Animated fan-in queue and bottleneck." data-prompt="Create an accessible animation of several producers feeding a finite-capacity queue and a slower consumer, with a complete static fallback."><span class="option-name">Fan-in queue · animated</span><span class="option-meta">Capacity and bottleneck</span></button>
+                <button class="example-option" data-type="paved-road-animated" data-single data-description="Animated approved and forbidden deployment paths." data-prompt="Create an accessible animation showing the approved paved-road deployment path, its enforcement gates, and a visibly forbidden bypass, with a complete static fallback."><span class="option-name">Secure paved road · animated</span><span class="option-meta">Trust and enforcement</span></button>
+              </div>
+            </section>
+          </nav>
+          <p class="empty-results" id="empty-results">No examples match this search.</p>
+        </aside>
+
+        <main class="content">
+          <div class="toolbar">
+            <div class="selection-copy"><p class="selection-title" id="selection-title">Architecture</p><p class="selection-description" id="selection-description">Components and connections in a system.</p></div>
+            <label class="status" for="mobile-picker">Choose an example</label>
+            <select class="mobile-picker" id="mobile-picker" aria-label="Choose an example"></select>
+            <div class="variant-tabs" id="variant-tabs" role="radiogroup" aria-label="Visual variant">
+              <button class="variant-tab" data-variant="" role="radio">Light</button>
+              <button class="variant-tab" data-variant="-dark" role="radio">Dark</button>
+              <button class="variant-tab" data-variant="-full" role="radio">Editorial</button>
+            </div>
+            <div class="toolbar-actions">
+              <button class="toolbar-action" id="copy-prompt" type="button" aria-label="Copy example prompt"><span class="toolbar-action-label">Copy prompt</span><span aria-hidden="true">⌘</span></button>
+              <a class="toolbar-action" id="open-raw" href="example-architecture.html" target="_blank" rel="noopener" aria-label="Open selected example in a new tab"><span class="toolbar-action-label-secondary">Open example</span><span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="preview-shell"><iframe class="preview" id="preview" src="example-architecture.html" title="Architecture example preview"></iframe></div>
+        </main>
+      </div>
+    </div>
+    <p class="status" id="copy-status" role="status" aria-live="polite"></p>
 
     <script>
-      const state = { type: "architecture", variant: "" };
+      const options = [...document.querySelectorAll(".example-option")];
+      const groups = [...document.querySelectorAll(".catalog-group")];
+      const variants = [...document.querySelectorAll(".variant-tab")];
+      const search = document.getElementById("example-search");
+      const mobilePicker = document.getElementById("mobile-picker");
       const iframe = document.getElementById("preview");
       const openRaw = document.getElementById("open-raw");
+      const copyPrompt = document.getElementById("copy-prompt");
+      const copyStatus = document.getElementById("copy-status");
+      const selectionTitle = document.getElementById("selection-title");
+      const selectionDescription = document.getElementById("selection-description");
+      const emptyResults = document.getElementById("empty-results");
+      const state = {
+        type: options.some((option) => option.dataset.type === location.hash.slice(1)) ? location.hash.slice(1) : "architecture",
+        variant: "",
+      };
 
-      function update() {
-        const activeType = [...document.querySelectorAll("#type-tabs .tab")].find(
-          (tab) => tab.dataset.type === state.type,
-        );
-        const single = activeType && activeType.hasAttribute("data-single");
-        const variantTabs = document.querySelectorAll("#variant-tabs .tab");
-        if (single) state.variant = "";
-        variantTabs.forEach((tab) => {
-          tab.disabled = single && tab.dataset.variant !== "";
-        });
-        for (const [containerId, key] of [
-          ["type-tabs", "type"],
-          ["variant-tabs", "variant"],
-        ]) {
-          document.querySelectorAll(`#${containerId} .tab`).forEach((tab) => {
-            const active = tab.dataset[key] === state[key];
-            tab.classList.toggle("active", active);
-            tab.setAttribute("aria-checked", String(active));
-            tab.tabIndex = active ? 0 : -1;
+      function optionName(option) { return option.querySelector(".option-name").textContent.trim(); }
+      function activeOption() { return options.find((option) => option.dataset.type === state.type); }
+      function buildMobilePicker() {
+        groups.forEach((group) => {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = group.dataset.group;
+          group.querySelectorAll(".example-option").forEach((option) => {
+            const item = document.createElement("option");
+            item.value = option.dataset.type; item.textContent = optionName(option); optgroup.append(item);
           });
-        }
-        const src = `example-${state.type}${state.variant}.html`;
-        iframe.src = src;
-        openRaw.href = src;
-        const selectedTabs = document.querySelectorAll('[role="radio"][aria-checked="true"]');
-        iframe.setAttribute(
-          "aria-labelledby",
-          [...selectedTabs].map((tab) => tab.id).join(" "),
-        );
-      }
-
-      function bindTabs(containerId, key) {
-        const container = document.getElementById(containerId);
-        const tabs = [...container.querySelectorAll(".tab")];
-        tabs.forEach((tab, index) => {
-          tab.id = `${containerId}-${index}`;
-          tab.setAttribute("role", "radio");
-          tab.setAttribute("aria-controls", "preview");
-        });
-
-        function activate(tab, focus = false) {
-          state[key] = tab.dataset[key];
-          update();
-          if (focus) tab.focus();
-        }
-
-        container.addEventListener("click", (e) => {
-          const btn = e.target.closest(".tab");
-          if (!btn) return;
-          activate(btn);
-        });
-        container.addEventListener("keydown", (e) => {
-          const current = e.target.closest('[role="radio"]');
-          if (!current || !container.contains(current)) return;
-          const enabledTabs = tabs.filter((tab) => !tab.disabled);
-          const index = enabledTabs.indexOf(current);
-          let next;
-          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-            next = enabledTabs[(index + 1) % enabledTabs.length];
-          }
-          if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-            next = enabledTabs[(index - 1 + enabledTabs.length) % enabledTabs.length];
-          }
-          if (e.key === "Home") next = enabledTabs[0];
-          if (e.key === "End") next = enabledTabs.at(-1);
-          if (!next) return;
-          e.preventDefault();
-          activate(next, true);
+          mobilePicker.append(optgroup);
         });
       }
+      function syncSelection() {
+        const selected = activeOption();
+        if (!selected) return;
+        const single = selected.hasAttribute("data-single");
+        if (single) state.variant = "";
+        options.forEach((option) => {
+          const active = option === selected;
+          option.setAttribute("aria-checked", String(active)); option.tabIndex = active ? 0 : -1;
+        });
+        variants.forEach((variant) => {
+          variant.disabled = single && variant.dataset.variant !== "";
+          variant.setAttribute("aria-checked", String(variant.dataset.variant === state.variant));
+          variant.tabIndex = variant.dataset.variant === state.variant ? 0 : -1;
+        });
+        const name = optionName(selected);
+        const source = `example-${state.type}${state.variant}.html`;
+        selectionTitle.textContent = name; selectionDescription.textContent = selected.dataset.description;
+        mobilePicker.value = state.type; iframe.src = source; iframe.title = `${name} example preview`; openRaw.href = source;
+        history.replaceState(null, "", `#${state.type}`);
+      }
+      function selectOption(option, focus = false) { state.type = option.dataset.type; syncSelection(); if (focus) option.focus(); }
+      function visibleOptions() { return options.filter((option) => !option.hidden); }
+      function moveSelection(direction) {
+        const visible = visibleOptions(); const currentIndex = visible.indexOf(activeOption());
+        const nextIndex = (currentIndex + direction + visible.length) % visible.length;
+        if (visible[nextIndex]) selectOption(visible[nextIndex], true);
+      }
+      async function writeClipboard(value) {
+        if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(value); return; }
+        const textarea = document.createElement("textarea"); textarea.value = value; textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed"; textarea.style.opacity = "0"; document.body.append(textarea); textarea.select();
+        const copied = document.execCommand("copy"); textarea.remove(); if (!copied) throw new Error("Copy command was rejected");
+      }
 
-      bindTabs("type-tabs", "type");
-      bindTabs("variant-tabs", "variant");
-      update();
+      options.forEach((option, index) => {
+        option.id = `example-option-${index}`; option.setAttribute("role", "radio");
+        option.addEventListener("click", () => selectOption(option));
+      });
+      document.getElementById("example-catalog").addEventListener("keydown", (event) => {
+        if (!event.target.closest(".example-option")) return;
+        if (event.key === "ArrowDown" || event.key === "ArrowRight") { event.preventDefault(); moveSelection(1); }
+        if (event.key === "ArrowUp" || event.key === "ArrowLeft") { event.preventDefault(); moveSelection(-1); }
+        if (event.key === "Home" || event.key === "End") {
+          event.preventDefault(); const visible = visibleOptions(); selectOption(event.key === "Home" ? visible[0] : visible.at(-1), true);
+        }
+      });
+      variants.forEach((variant) => variant.addEventListener("click", () => { state.variant = variant.dataset.variant; syncSelection(); }));
+      document.getElementById("variant-tabs").addEventListener("keydown", (event) => {
+        if (!event.target.closest(".variant-tab")) return;
+        const enabled = variants.filter((variant) => !variant.disabled); const current = enabled.indexOf(event.target); let next = null;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") next = enabled[(current + 1) % enabled.length];
+        if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = enabled[(current - 1 + enabled.length) % enabled.length];
+        if (!next) return; event.preventDefault(); state.variant = next.dataset.variant; syncSelection(); next.focus();
+      });
+      search.addEventListener("input", () => {
+        const query = search.value.trim().toLocaleLowerCase(); let matches = 0;
+        options.forEach((option) => {
+          const group = option.closest(".catalog-group").dataset.group;
+          const haystack = `${option.textContent} ${option.dataset.description} ${group}`.toLocaleLowerCase();
+          option.hidden = query !== "" && !haystack.includes(query); if (!option.hidden) matches += 1;
+        });
+        groups.forEach((group) => { group.hidden = !group.querySelector(".example-option:not([hidden])"); });
+        emptyResults.classList.toggle("visible", matches === 0);
+      });
+      mobilePicker.addEventListener("change", () => {
+        const option = options.find((item) => item.dataset.type === mobilePicker.value); if (option) selectOption(option);
+      });
+      copyPrompt.addEventListener("click", async () => {
+        const selected = activeOption();
+        try {
+          await writeClipboard(selected.dataset.prompt); copyPrompt.dataset.state = "copied";
+          copyStatus.textContent = `${optionName(selected)} prompt copied.`;
+          window.setTimeout(() => { delete copyPrompt.dataset.state; }, 1800);
+        } catch { copyStatus.textContent = "The prompt could not be copied. Open the example and copy it manually."; }
+      });
+      buildMobilePicker(); syncSelection();
     </script>
   </body>
 </html>

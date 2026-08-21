@@ -4,6 +4,10 @@
 
 Takes about 60 seconds.
 
+## Activation policy
+
+An ordinary first diagram is allowed to use the shipped default skin. Deliver that useful first draft, identify the skin as `default`, and then offer this onboarding flow. Pause before drawing only when the user explicitly requests a brand match, supplies a brand source, or the project already selects a saved profile. This keeps brand fidelity strict without turning customization into a prerequisite for seeing the product work.
+
 Three source methods are supported. Jump to the relevant section:
 
 - [§ URL](#url) — fetch a live website

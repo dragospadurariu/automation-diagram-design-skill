@@ -14,6 +14,18 @@ Forked from [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diag
 
 ---
 
+## Start with an outcome
+
+Already installed? Open the [`example gallery`](skills/automation-design/assets/index.html), choose the outcome closest to your task, and use **Copy prompt**. The gallery groups visual types, complete automation solutions, agent/application views, and technical presentation examples so you do not need to know the diagram taxonomy first.
+
+For a complete design set rather than one page, start with:
+
+> Read this PDD or SDD and create the complete automation design set: executive overview, solution blueprint, numbered process-detail pages, one card per named agent, and the application/runtime views the document materially requires.
+
+The first draft uses the shipped skin unless you request a brand match or the project selects a saved profile. After the first result, the skill offers brand onboarding without interrupting the initial path to value.
+
+---
+
 ## What makes it different
 
 Most diagram generators arrange boxes. This skill understands the domain first:
@@ -177,7 +189,7 @@ Agent:   → fetches the homepage
 You:     "yes, apply it"
 ```
 
-Brand matching emits a fidelity receipt: sampled URLs, exact color roles, font families and weights, font source URLs, and any fallback. Contrast is verified (WCAG AA on `ink` over `paper`) before tokens are written. On first use in a new project the skill pauses and asks before shipping default-skinned output. See [`skills/automation-design/references/onboarding.md`](skills/automation-design/references/onboarding.md) for the full spec.
+Brand matching emits a fidelity receipt: sampled URLs, exact color roles, font families and weights, font source URLs, and any fallback. Contrast is verified (WCAG AA on `ink` over `paper`) before tokens are written. A direct brand-match request pauses for confirmation before tokens are written; an ordinary first run produces the initial draft with the shipped skin, then offers onboarding. See [`skills/automation-design/references/onboarding.md`](skills/automation-design/references/onboarding.md) for the full spec.
 
 ### Working with multiple clients
 
@@ -212,7 +224,7 @@ cp skills/automation-design/assets/template-motion.html my-diagram.html # option
 
 ### Semantic patterns and optional motion
 
-When behavior matters, the skill chooses a semantic pattern first and a visual type second. Eighteen routed patterns: seven general (fan-in queues, stage slots, unstructured-input transformation, paired policy traces, secure paved roads, governance catalogs, compensating security layers) and eleven automation-specific (listed above). Each defines its triggers, primitives, budget, anti-patterns, static fallback, and nearest visual type in [`semantic-patterns.md`](skills/automation-design/references/semantic-patterns.md).
+When behavior matters, the skill chooses a semantic pattern first and a visual type second. 20 routed patterns: seven general (fan-in queues, stage slots, unstructured-input transformation, paired policy traces, secure paved roads, governance catalogs, compensating security layers) and thirteen automation-specific (listed above). Each defines its triggers, primitives, budget, anti-patterns, static fallback, and nearest visual type in [`semantic-patterns.md`](skills/automation-design/references/semantic-patterns.md).
 
 Motion is optional and does not create another visual type. [`animation.md`](skills/automation-design/references/animation.md) defines `none`, `reveal`, `step`, and `loop` modes with a complete static first frame, deterministic timing, and controls when interaction is available. Reduced-motion output shows the complete static frame and hides/disables playback controls. The default is `none`: ordinary output remains static and script-free. [`example-policy-trace-animated.html`](skills/automation-design/assets/example-policy-trace-animated.html) is the self-contained interactive example.
 
@@ -380,4 +392,4 @@ Contributions are welcome — new automation patterns, vendor packs, import gram
 
 ## Credits & license
 
-MIT. Forked from [diagram-design](https://github.com/cathrynlavery/diagram-design) by [Cathryn Lavery](https://github.com/cathrynlavery) — the editorial design system, style-guide/profile machinery, import/export pipeline, icon set, and verification tooling originate there. Automation vocabulary, semantic patterns 8–18, and the automation scope by Dragos Padurariu. Icons: [Tabler Icons](https://tabler.io/icons) (MIT), [Simple Icons](https://simpleicons.org) (CC0) — see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+MIT. Forked from [diagram-design](https://github.com/cathrynlavery/diagram-design) by [Cathryn Lavery](https://github.com/cathrynlavery) — the editorial design system, style-guide/profile machinery, import/export pipeline, icon set, and verification tooling originate there. Automation vocabulary, semantic patterns 8–20, and the automation scope by Dragos Padurariu. Icons: [Tabler Icons](https://tabler.io/icons) (MIT), [Simple Icons](https://simpleicons.org) (CC0) — see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
