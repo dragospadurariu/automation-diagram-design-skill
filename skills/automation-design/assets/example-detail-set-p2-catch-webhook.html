@@ -8,9 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
-      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
-      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8; --danger: #a63d40;
+      --paper: #f6f6f6; --paper-2: #e9ecef; --ink: #1e1e1e; --muted: #4a5464;
+      --soft: #7b8797; --rule: rgba(30,30,30,0.12); --accent: #087a5b;
+      --accent-tint: rgba(8,122,91,0.08); --link: #0078a8; --danger: #b23a38;
       --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
       --mono: 'Geist Mono', ui-monospace, monospace;
     }
@@ -47,126 +47,126 @@
       <title id="detail-set-p2-catch-webhook-title">Catch webhook data — numbered process page</title>
       <desc id="detail-set-p2-catch-webhook-desc">A webhook payload is parsed and validated, employee and project sheets are read through a shared Excel sub-routine with a batching loop, and the bundle is inserted; an empty payload raises a business exception and a failed insert raises a system exception.</desc>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
-        <marker id="arr-accent" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#eb6c36"/></marker>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a5464"/></marker>
+        <marker id="arr-accent" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#087a5b"/></marker>
       </defs>
-      <rect width="1200" height="440" fill="#f5f5f5"/>
+      <rect width="1200" height="440" fill="#f6f6f6"/>
 
       <!-- Page-context panel — reserved top band inside the viewBox -->
-      <rect x="40" y="16" width="496" height="56" rx="6" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+      <rect x="40" y="16" width="496" height="56" rx="6" fill="#e9ecef" stroke="rgba(30,30,30,0.12)"/>
       <text x="52" y="36" class="panel-eyebrow">TRIGGER MECHANISM</text>
       <text x="52" y="48" class="panel-line">webhook · orchestrator trigger event</text>
       <text x="52" y="60" class="panel-line">INPUTS · raw JSON payload</text>
 
       <!-- Connectors first (z-order) -->
-      <path d="M96 200 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M224 200 H248" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M284 228 V288" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M320 200 H344" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M448 200 H472" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M96 200 H120" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M224 200 H248" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M284 228 V288" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M320 200 H344" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M448 200 H472" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
       <!-- Loop-back: More batches? YES re-enters 2.2 from above (focal) -->
-      <path d="M508 172 V148 Q508 140 500 140 H404 Q396 140 396 148 V176" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arr-accent)"/>
-      <path d="M544 200 H568" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M672 200 H696" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M800 200 H824" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M860 228 V288" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M896 200 H920" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M508 172 V148 Q508 140 500 140 H404 Q396 140 396 148 V176" fill="none" stroke="#087a5b" stroke-width="1.2" marker-end="url(#arr-accent)"/>
+      <path d="M544 200 H568" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M672 200 H696" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M800 200 H824" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M860 228 V288" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M896 200 H920" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
 
       <!-- Arrow labels (masked, 6-10px off the stroke) -->
-      <rect x="316" y="180" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="316" y="180" width="24" height="12" rx="2" fill="#f6f6f6"/>
       <text x="328" y="189" class="arrow-label">YES</text>
-      <rect x="292" y="244" width="20" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="292" y="244" width="20" height="12" rx="2" fill="#f6f6f6"/>
       <text x="302" y="253" class="arrow-label">NO</text>
-      <rect x="416" y="120" width="72" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="416" y="120" width="72" height="12" rx="2" fill="#f6f6f6"/>
       <text x="452" y="129" class="arrow-label focal-text">YES · +BATCH</text>
-      <rect x="548" y="180" width="20" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="548" y="180" width="20" height="12" rx="2" fill="#f6f6f6"/>
       <text x="558" y="189" class="arrow-label">NO</text>
-      <rect x="868" y="244" width="20" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="868" y="244" width="20" height="12" rx="2" fill="#f6f6f6"/>
       <text x="878" y="253" class="arrow-label">NO</text>
-      <rect x="892" y="180" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="892" y="180" width="24" height="12" rx="2" fill="#f6f6f6"/>
       <text x="904" y="189" class="arrow-label">YES</text>
 
       <!-- Start -->
-      <rect x="40" y="184" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="40" y="184" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="68" y="204" class="terminal-text">Start</text>
 
       <!-- 2.1 Parse payload -->
-      <rect x="120" y="176" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="120" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="124" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="138" y="187" class="id-text">2.1</text>
-      <rect x="192" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="206" y="187" class="tag-text">RPA</text>
+      <rect x="120" y="176" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="120" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="124" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="138" y="187" class="id-text">2.1</text>
+      <rect x="192" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="206" y="187" class="tag-text">RPA</text>
       <text x="172" y="202" class="node-title">Parse payload</text>
       <text x="172" y="214" class="node-sub">raw JSON → fields</text>
 
       <!-- Decision: payload OK? -->
-      <polygon points="284,172 320,200 284,228 248,200" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="284,172 320,200 284,228 248,200" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="284" y="198" class="decision-text">Payload</text>
       <text x="284" y="208" class="decision-text">OK?</text>
 
       <!-- BE001 exception terminal (business · solid ink stroke) -->
-      <rect x="232" y="288" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="232" y="288" width="104" height="48" rx="6" fill="rgba(166,61,64,0.06)" stroke="#a63d40"/>
+      <rect x="232" y="288" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="232" y="288" width="104" height="48" rx="6" fill="rgba(178,58,56,0.06)" stroke="#b23a38"/>
       <text x="284" y="308" class="exception-code">BE001</text>
       <text x="284" y="322" class="node-sub">empty webhook payload</text>
 
       <!-- 2.2 Read employee sheet — links to the shared sub-routine (call site 1) -->
       <a href="example-detail-set-p2.2.1-excel-readsheet.html">
-        <rect x="344" y="176" width="104" height="48" rx="6" fill="#f5f5f5"/>
-        <rect x="344" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-        <rect x="348" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="362" y="187" class="id-text">2.2</text>
-        <rect x="416" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="430" y="187" class="tag-text">APP</text>
+        <rect x="344" y="176" width="104" height="48" rx="6" fill="#f6f6f6"/>
+        <rect x="344" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+        <rect x="348" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="362" y="187" class="id-text">2.2</text>
+        <rect x="416" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="430" y="187" class="tag-text">APP</text>
         <text x="396" y="202" class="node-title">Read employee sheet</text>
         <text x="396" y="214" class="node-sub">via 2.2.1 · batched</text>
       </a>
       <text x="396" y="240" class="annotation">Skip += BatchSize</text>
 
       <!-- Decision: more batches? -->
-      <polygon points="508,172 544,200 508,228 472,200" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="508,172 544,200 508,228 472,200" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="508" y="198" class="decision-text">More</text>
       <text x="508" y="208" class="decision-text">batches?</text>
 
       <!-- 2.3 Read project sheet — same sub-routine (call site 2) -->
       <a href="example-detail-set-p2.2.1-excel-readsheet.html">
-        <rect x="568" y="176" width="104" height="48" rx="6" fill="#f5f5f5"/>
-        <rect x="568" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-        <rect x="572" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="586" y="187" class="id-text">2.3</text>
-        <rect x="640" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="654" y="187" class="tag-text">APP</text>
+        <rect x="568" y="176" width="104" height="48" rx="6" fill="#f6f6f6"/>
+        <rect x="568" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+        <rect x="572" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="586" y="187" class="id-text">2.3</text>
+        <rect x="640" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="654" y="187" class="tag-text">APP</text>
         <text x="620" y="202" class="node-title">Read project sheet</text>
         <text x="620" y="214" class="node-sub">via 2.2.1 · reused</text>
       </a>
 
       <!-- 2.4 Insert bundle -->
-      <rect x="696" y="176" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="696" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="700" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="714" y="187" class="id-text">2.4</text>
-      <rect x="768" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="782" y="187" class="tag-text">API</text>
+      <rect x="696" y="176" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="696" y="176" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="700" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="714" y="187" class="id-text">2.4</text>
+      <rect x="768" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="782" y="187" class="tag-text">API</text>
       <text x="748" y="202" class="node-title">Insert bundle</text>
       <text x="748" y="214" class="node-sub">bundle record</text>
 
       <!-- Decision: insert OK? -->
-      <polygon points="860,172 896,200 860,228 824,200" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="860,172 896,200 860,228 824,200" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="860" y="198" class="decision-text">Insert</text>
       <text x="860" y="208" class="decision-text">OK?</text>
 
       <!-- SE001 exception terminal (system · dashed ink stroke) -->
-      <rect x="808" y="288" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="808" y="288" width="104" height="48" rx="6" fill="rgba(166,61,64,0.06)" stroke="#a63d40" stroke-dasharray="4,3"/>
+      <rect x="808" y="288" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="808" y="288" width="104" height="48" rx="6" fill="rgba(178,58,56,0.06)" stroke="#b23a38" stroke-dasharray="4,3"/>
       <text x="860" y="308" class="exception-code">SE001</text>
       <text x="860" y="322" class="node-sub">data service call failed</text>
 
       <!-- End -->
-      <rect x="920" y="184" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="920" y="184" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="948" y="204" class="terminal-text">End</text>
 
       <!-- Legend -->
-      <line x1="40" y1="376" x2="1160" y2="376" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <line x1="40" y1="376" x2="1160" y2="376" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
       <text x="40" y="396" class="legend-label">LEGEND</text>
-      <rect x="120" y="384" width="32" height="14" rx="7" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="394" class="legend-text">Start / End</text>
-      <rect x="236" y="382" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="272" y="394" class="legend-text">Step · linked step opens its page</text>
-      <path d="M424 382 L436 390 L424 398 L412 390 Z" fill="#f5f5f5" stroke="#4f5d75"/><text x="444" y="394" class="legend-text">Decision</text>
-      <rect x="504" y="382" width="28" height="16" rx="3" fill="rgba(166,61,64,0.06)" stroke="#a63d40"/><text x="540" y="394" class="legend-text">BE terminal (business)</text>
-      <rect x="656" y="382" width="28" height="16" rx="3" fill="rgba(166,61,64,0.06)" stroke="#a63d40" stroke-dasharray="4,3"/><text x="692" y="394" class="legend-text">SE terminal (system)</text>
-      <path d="M816 396 V390 Q816 386 820 386 H836 Q840 386 840 390 V396" fill="none" stroke="#eb6c36" stroke-width="1.2"/><text x="848" y="394" class="legend-text">Loop-back (focal)</text>
+      <rect x="120" y="384" width="32" height="14" rx="7" fill="#f6f6f6" stroke="#1e1e1e"/><text x="160" y="394" class="legend-text">Start / End</text>
+      <rect x="236" y="382" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/><text x="272" y="394" class="legend-text">Step · linked step opens its page</text>
+      <path d="M424 382 L436 390 L424 398 L412 390 Z" fill="#f6f6f6" stroke="#4a5464"/><text x="444" y="394" class="legend-text">Decision</text>
+      <rect x="504" y="382" width="28" height="16" rx="3" fill="rgba(178,58,56,0.06)" stroke="#b23a38"/><text x="540" y="394" class="legend-text">BE terminal (business)</text>
+      <rect x="656" y="382" width="28" height="16" rx="3" fill="rgba(178,58,56,0.06)" stroke="#b23a38" stroke-dasharray="4,3"/><text x="692" y="394" class="legend-text">SE terminal (system)</text>
+      <path d="M816 396 V390 Q816 386 820 386 H836 Q840 386 840 390 V396" fill="none" stroke="#087a5b" stroke-width="1.2"/><text x="848" y="394" class="legend-text">Loop-back (focal)</text>
     </svg>
 
     <p class="colophon">part 2 of 3 · timesheet-receiver · <a href="example-detail-set-overview.html">↑ overview</a></p>

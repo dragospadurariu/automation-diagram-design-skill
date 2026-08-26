@@ -234,7 +234,7 @@ Map variable names to semantic roles using name-heuristics:
 
 **From JSON tokens:** follow the same heuristics on key names. If the JSON follows Style Dictionary format (`{ "color": { "brand": { "value": "#…" } } }`), flatten the path and apply heuristics to the leaf key.
 
-**From Markdown tables:** look for rows with hex values (`#rrggbb`) adjacent to role-like words. A row like `| accent | #eb6c36 |` maps directly.
+**From Markdown tables:** look for rows with hex values (`#rrggbb`) adjacent to role-like words. A row like `| accent | #087a5b |` maps directly.
 
 **Fonts:** look for `font-family` rules, `@import` or `@font-face` declarations, and Markdown mentions of font names alongside size/weight.
 
@@ -288,7 +288,7 @@ Read every discovered file. Apply the same extraction logic as the Skill method 
 **Figma token JSON** (Figma Tokens Plugin format):
 
 ```json
-{ "colors": { "brand": { "primary": { "value": "#eb6c36", "type": "color" } } } }
+{ "colors": { "brand": { "primary": { "value": "#087a5b", "type": "color" } } } }
 ```
 
 Walk the tree; the leaf `value` fields are the colors, the path segments supply the role heuristic.

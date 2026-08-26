@@ -8,9 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
-      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
-      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8; --danger: #a63d40;
+      --paper: #f6f6f6; --paper-2: #e9ecef; --ink: #1e1e1e; --muted: #4a5464;
+      --soft: #7b8797; --rule: rgba(30,30,30,0.12); --accent: #087a5b;
+      --accent-tint: rgba(8,122,91,0.08); --link: #0078a8; --danger: #b23a38;
       --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
       --mono: 'Geist Mono', ui-monospace, monospace;
     }
@@ -43,74 +43,74 @@
       <title id="detail-set-p2.2.1-excel-readsheet-title">Excel read sheet — reusable sub-routine</title>
       <desc id="detail-set-p2.2.1-excel-readsheet-desc">A shared sub-routine that validates its arguments, reads a workbook range into a DataTable, and validates the output; a missing workbook raises a system exception. Called from steps 2.2 and 2.3 of the webhook capture process.</desc>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a5464"/></marker>
       </defs>
-      <rect width="960" height="376" fill="#f5f5f5"/>
+      <rect width="960" height="376" fill="#f6f6f6"/>
 
       <!-- Connectors first (z-order) -->
-      <path d="M96 160 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M224 160 H248" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M284 188 V248" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M320 160 H344" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M448 160 H472" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M576 160 H600" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M96 160 H120" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M224 160 H248" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M284 188 V248" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M320 160 H344" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M448 160 H472" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M576 160 H600" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
 
       <!-- Arrow labels (masked, 6-10px off the stroke) -->
-      <rect x="316" y="140" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="316" y="140" width="24" height="12" rx="2" fill="#f6f6f6"/>
       <text x="328" y="149" class="arrow-label">YES</text>
-      <rect x="292" y="204" width="20" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="292" y="204" width="20" height="12" rx="2" fill="#f6f6f6"/>
       <text x="302" y="213" class="arrow-label">NO</text>
 
       <!-- Start -->
-      <rect x="40" y="144" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="40" y="144" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="68" y="164" class="terminal-text">Start</text>
 
       <!-- 2.2.1.1 Validate arguments -->
-      <rect x="120" y="136" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="120" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="124" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="142" y="147" class="id-text">2.2.1.1</text>
-      <rect x="184" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="202" y="147" class="tag-text">RPA</text>
+      <rect x="120" y="136" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="120" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="124" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="142" y="147" class="id-text">2.2.1.1</text>
+      <rect x="184" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="202" y="147" class="tag-text">RPA</text>
       <text x="172" y="162" class="node-title">Validate arguments</text>
       <text x="172" y="174" class="node-sub">path · sheet name</text>
 
       <!-- Decision: workbook exists? -->
-      <polygon points="284,132 320,160 284,188 248,160" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="284,132 320,160 284,188 248,160" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="284" y="156" class="decision-text">Workbook</text>
       <text x="284" y="166" class="decision-text">exists?</text>
 
       <!-- SE002 exception terminal (system · dashed ink stroke) -->
-      <rect x="232" y="248" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="232" y="248" width="104" height="48" rx="6" fill="rgba(166,61,64,0.06)" stroke="#a63d40" stroke-dasharray="4,3"/>
+      <rect x="232" y="248" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="232" y="248" width="104" height="48" rx="6" fill="rgba(178,58,56,0.06)" stroke="#b23a38" stroke-dasharray="4,3"/>
       <text x="284" y="268" class="exception-code">SE002</text>
       <text x="284" y="282" class="node-sub">workbook not found</text>
 
       <!-- 2.2.1.2 Read range -->
-      <rect x="344" y="136" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="344" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="348" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="366" y="147" class="id-text">2.2.1.2</text>
-      <rect x="408" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="426" y="147" class="tag-text">APP</text>
+      <rect x="344" y="136" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="344" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="348" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="366" y="147" class="id-text">2.2.1.2</text>
+      <rect x="408" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="426" y="147" class="tag-text">APP</text>
       <text x="396" y="162" class="node-title">Read range</text>
       <text x="396" y="174" class="node-sub">sheet → DataTable</text>
 
       <!-- 2.2.1.3 Validate output -->
-      <rect x="472" y="136" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="472" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="476" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="494" y="147" class="id-text">2.2.1.3</text>
-      <rect x="536" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="554" y="147" class="tag-text">RPA</text>
+      <rect x="472" y="136" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="472" y="136" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="476" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="494" y="147" class="id-text">2.2.1.3</text>
+      <rect x="536" y="140" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="554" y="147" class="tag-text">RPA</text>
       <text x="524" y="162" class="node-title">Validate output</text>
       <text x="524" y="174" class="node-sub">rows &gt; 0</text>
 
       <!-- End (plain — sub-routine return lives in the colophon, never on the oval) -->
-      <rect x="600" y="144" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="600" y="144" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="628" y="164" class="terminal-text">End</text>
 
       <!-- Legend -->
-      <line x1="40" y1="312" x2="920" y2="312" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <line x1="40" y1="312" x2="920" y2="312" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
       <text x="40" y="332" class="legend-label">LEGEND</text>
-      <rect x="120" y="320" width="32" height="14" rx="7" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="330" class="legend-text">Start / End</text>
-      <rect x="240" y="318" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="276" y="330" class="legend-text">Step · id chip left, tag right</text>
-      <path d="M428 318 L440 326 L428 334 L416 326 Z" fill="#f5f5f5" stroke="#4f5d75"/><text x="448" y="330" class="legend-text">Decision</text>
-      <rect x="512" y="318" width="28" height="16" rx="3" fill="rgba(166,61,64,0.06)" stroke="#a63d40" stroke-dasharray="4,3"/><text x="548" y="330" class="legend-text">SE terminal (system)</text>
+      <rect x="120" y="320" width="32" height="14" rx="7" fill="#f6f6f6" stroke="#1e1e1e"/><text x="160" y="330" class="legend-text">Start / End</text>
+      <rect x="240" y="318" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/><text x="276" y="330" class="legend-text">Step · id chip left, tag right</text>
+      <path d="M428 318 L440 326 L428 334 L416 326 Z" fill="#f6f6f6" stroke="#4a5464"/><text x="448" y="330" class="legend-text">Decision</text>
+      <rect x="512" y="318" width="28" height="16" rx="3" fill="rgba(178,58,56,0.06)" stroke="#b23a38" stroke-dasharray="4,3"/><text x="548" y="330" class="legend-text">SE terminal (system)</text>
     </svg>
 
     <p class="colophon">part 3 of 3 · timesheet-receiver · <a href="example-detail-set-p2-catch-webhook.html">↑ 2.0 · catch webhook data</a> · CALLED FROM · <a href="example-detail-set-p2-catch-webhook.html">2.2</a> · <a href="example-detail-set-p2-catch-webhook.html">2.3</a></p>

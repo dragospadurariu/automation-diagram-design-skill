@@ -2,7 +2,7 @@
 
 **The single source of truth for colors, typography, and tokens.** Every diagram draws from this — not from hex values inlined in other reference files. If you want to change the visual skin of Automation Design, change this file.
 
-Default skin is a cool editorial palette — white-smoke paper, jet-black ink, atomic-tangerine accent, blue-slate muted. It's designed to look good out of the box; swap these values (or run [`onboarding.md`](onboarding.md)) and every new diagram inherits the new skin without touching any type-specific logic.
+Default skin is **Graphite + Mint** — a restrained automation palette built around TQA's mint and graphite colors, with darker functional variants for accessible lines and labels. It is designed to make the automated path immediately visible without turning every node into an accent. Swap these values (or run [`onboarding.md`](onboarding.md)) and every new diagram inherits the new skin without touching any type-specific logic.
 
 To generate your own from a website URL, see [`onboarding.md`](onboarding.md).
 
@@ -16,26 +16,26 @@ Every token is referred to by **semantic role**, not by its hex value. Type refe
 
 | Role | Purpose | Default (light) | Default (dark) |
 |---|---|---|---|
-| `paper` | Page background, default node fill | `#f5f5f5` (white-smoke) | `#2d3142` (jet-black) |
-| `paper-2` | Diagram container bg, secondary fill | `#ececec` | `#393e53` |
-| `ink` | Primary text, primary stroke | `#2d3142` (jet-black) | `#f5f5f5` (white-smoke) |
-| `muted` | Secondary text, default arrow stroke | `#4f5d75` (blue-slate) | `#bfc0c0` (silver) |
-| `soft` | Sublabels, boundary labels | `#7a8399` | `#8e98ac` |
-| `rule` | Hairline borders | `rgba(45,49,66,0.12)` | `rgba(245,245,245,0.12)` |
-| `rule-solid` | Stronger borders, baselines | `#bfc0c0` (silver) | `rgba(191,192,192,0.25)` |
-| `accent` | Focal / 1–2 max per diagram | `#eb6c36` (atomic-tangerine) | `#f08a59` |
-| `accent-tint` | Fill for accent-bordered boxes | `rgba(235,108,54,0.08)` | `rgba(240,138,89,0.10)` |
-| `link` | HTTP/API calls, external arrows | `#2e5aa8` | `#6a95d8` |
-| `danger` | Exception terminals (BE/SE) and failure marking only | `#a63d40` (brick) | `#c96b6d` |
-| `danger-tint` | Fill for danger-bordered boxes | `rgba(166,61,64,0.06)` | `rgba(201,107,109,0.10)` |
+| `paper` | Page background, default node fill | `#f6f6f6` (mist) | `#1e1e1e` (graphite) |
+| `paper-2` | Diagram container bg, secondary fill | `#e9ecef` | `#272727` |
+| `ink` | Primary text, primary stroke | `#1e1e1e` (graphite) | `#f6f6f6` (mist) |
+| `muted` | Secondary text, default arrow stroke | `#4a5464` (steel) | `#c1c8d1` (silver) |
+| `soft` | Sublabels, boundary labels | `#7b8797` | `#9aa4b1` |
+| `rule` | Hairline borders | `rgba(30,30,30,0.12)` | `rgba(246,246,246,0.12)` |
+| `rule-solid` | Stronger borders, baselines | `#c1c8d1` (silver) | `rgba(193,200,209,0.25)` |
+| `accent` | Automated path / focal, 1–2 max per diagram | `#087a5b` (deep mint) | `#82ffcf` (mint) |
+| `accent-tint` | Fill for accent-bordered boxes | `rgba(8,122,91,0.08)` | `rgba(130,255,207,0.10)` |
+| `link` | HTTP/API calls, external arrows | `#0078a8` | `#5bc9ff` |
+| `danger` | Exception terminals (BE/SE) and failure marking only | `#b23a38` (brick) | `#ff7f7a` |
+| `danger-tint` | Fill for danger-bordered boxes | `rgba(178,58,56,0.06)` | `rgba(255,127,122,0.10)` |
 
-> **Brand palette source:** this skin maps to a five-color brand palette — `jet-black #2d3142`, `silver #bfc0c0`, `white-smoke #f5f5f5`, `atomic-tangerine #eb6c36`, `blue-slate #4f5d75`. The `soft`, `rule`, and `link` tokens are derived (lighter slate, ink-at-opacity, and a saturated variant in the blue-slate hue family) to cover roles the brand palette doesn't name directly.
+> **Palette source:** the identity seed is TQA's `mint #82ffcf`, `graphite #1e1e1e`, `mist #f6f6f6`, and `silver #c1c8d1`. Light-mode accent `#087a5b`, link colors, rules, and state colors are functional derivatives chosen for WCAG AA contrast and diagram legibility rather than copied brand swatches.
 
 > **Note:** The pre-baked example HTML files in `assets/` use these shipped defaults. The gallery shell reads the same semantic palette so browsing examples does not introduce a second visual skin.
 
 ### Inversion rule (light → dark)
 
-Any `rgba(28,25,23, X)` in light becomes `rgba(250,247,242, X)` in dark. Same opacities, RGB flipped. The accent gets a slight hue-shift brighter to read on dark paper.
+Any `rgba(30,30,30, X)` in light becomes `rgba(246,246,246, X)` in dark. Same opacities, RGB flipped. Deep mint becomes the brighter brand mint on dark paper.
 
 ### Series palette (multi-series chart types only)
 
@@ -61,11 +61,11 @@ A self-contained palette for the terminal-window primitive (see [primitive-termi
 | `terminal-paper` | `#141414` | Window body, node fill |
 | `terminal-bar` | `#1b1b1b` | Titlebar strip |
 | `terminal-border` | `#2b2b2b` | Window border, hairlines |
-| `terminal-ink` | `#f5f5f5` | Primary text, primary stroke (same white-smoke as default `ink`) |
+| `terminal-ink` | `#f6f6f6` | Primary text, primary stroke (same mist as default `ink`) |
 | `terminal-muted` | `#9a9a9a` | Secondary text, sublabels, ring stroke |
 | `terminal-soft` | `#5c5c5c` | Tertiary — inactive dots, spokes |
-| `terminal-accent` | `#ff5a36` | The one accent — focal station, prompt sign, active dot |
-| `terminal-accent-tint` | `rgba(255,90,54,0.12)` | Fill for accent-bordered boxes |
+| `terminal-accent` | `#82ffcf` | The one accent — focal station, prompt sign, active dot |
+| `terminal-accent-tint` | `rgba(130,255,207,0.12)` | Fill for accent-bordered boxes |
 
 **1-accent rule still holds.** Everything that isn't `terminal-ink` or `terminal-muted`/`terminal-soft` should be `terminal-accent` — never introduce a second hue.
 

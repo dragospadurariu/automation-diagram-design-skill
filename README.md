@@ -4,7 +4,7 @@
 
 A visual language for enterprise automation: robots, agents, humans, queues, orchestrators, business systems, and the boundaries between them — drawn as editorial, self-contained HTML/SVG diagrams that match your brand.
 
-![Process detail — numbered steps, technical annotations, an agent step with a confidence gate falling back to human review](docs/screenshots/process-detail.png)
+![Process detail — numbered steps, technical annotations, an agent step with a confidence gate falling back to human review](readme-assets/process-detail.png)
 
 *One numbered process at the depth a PDD is written: step IDs that match the document's sections, technical facts annotated under each box, and the agent step with its confidence gate as the focal decision. Source: [`example-process-detail.html`](skills/automation-design/assets/example-process-detail.html).*
 
@@ -50,11 +50,11 @@ A solution-design document needs the same automation drawn at more than one dept
 | **Solution blueprint** | How do the processes fit together end to end? | RPA solution blueprint → **Flowchart**, phased |
 | **Process detail** | What exactly does step 1.2.4 do, and against which endpoint? | RPA solution blueprint → **Flowchart**, process-detail |
 
-![RPA solution blueprint — three named processes with decisions, human validation, and a queue handoff](docs/screenshots/rpa-blueprint.png)
+![RPA solution blueprint — three named processes with decisions, human validation, and a queue handoff](readme-assets/rpa-blueprint.png)
 
 *Solution-blueprint altitude: the whole automation on one canvas, phase by phase — activities tagged by executing system, every decision exit labeled, the human-validation branch focal, and the queue as the visible decoupling point. Source: [`example-rpa-blueprint.html`](skills/automation-design/assets/example-rpa-blueprint.html).*
 
-![Invoice automation — dispatcher, queue, performer, human approval, SAP](docs/screenshots/invoice-automation.png)
+![Invoice automation — dispatcher, queue, performer, human approval, SAP](readme-assets/invoice-automation.png)
 
 *Executive-overview altitude: the same class of automation by role lane rather than by workflow logic — useful when the audience cares who owns each stage, not which endpoint is called. Source: [`example-invoice-automation.html`](skills/automation-design/assets/example-invoice-automation.html).*
 
@@ -64,11 +64,11 @@ All three are vendor-neutral: they work for UiPath, Power Automate, Automation A
 
 An agent built in UiPath, Copilot Studio, LangGraph, or plain code gets the same one-page architecture artifact: a fixed spatial grammar where the I/O spine runs horizontally, knowledge sits lower-left (grounding container, dashed `RETRIEVE` edges), actions sit lower-right (tool-permission boundary, `TOOL CALL` edges), reasoning on top, and the human at the bottom. Operating-mode chips (`AUTO` autonomous / `CONV` conversational / `STEP` invoked) say how the agent is engaged; guardrail gates sit on the exact edge each control governs.
 
-![Agent card — autonomous invoice agent with grounding, tool boundary, approval gate, and escalation](docs/screenshots/agent-card.png)
+![Agent card — autonomous invoice agent with grounding, tool boundary, approval gate, and escalation](readme-assets/agent-card.png)
 
 *An autonomous agent's card: charter, mode, and I/O contract in the panel; grounding sources feed the agent, permitted tools act for it, and low confidence escalates to a named human. Source: [`example-agent-card.html`](skills/automation-design/assets/example-agent-card.html).*
 
-![Conversational agent card — user query in, sourced answer out, human takes over the session](docs/screenshots/agent-card-conversational.png)
+![Conversational agent card — user query in, sourced answer out, human takes over the session](readme-assets/agent-card-conversational.png)
 
 *The conversational variant is the same card, not a different diagram: `CONV` chip, user query → answer, and escalation means a human takes over the session. Source: [`example-agent-card-conversational.html`](skills/automation-design/assets/example-agent-card-conversational.html).*
 
@@ -83,19 +83,19 @@ Applications (UiPath Apps, Power Apps, Next.js, anything) get a family of pages 
 | **Screen contract** | One screen's operations, responses, authorization | the screen is architecturally significant |
 | **Runtime deployment topology** | What it runs on, who operates it | deployment/ownership materially matters |
 
-![App card — users through an SSO gate, data container, automations boundary, decision event out](docs/screenshots/app-card.png)
+![App card — users through an SSO gate, data container, automations boundary, decision event out](readme-assets/app-card.png)
 
 *The functional view: users enter through an identity gate, the app reads and writes its system of record, and approval emits a queued command — one implementation profile is named in the panel, the card itself stays platform-neutral. Source: [`example-app-card.html`](skills/automation-design/assets/example-app-card.html).*
 
-![Screen states — screens as states, clicks as events, roles as guards, async ack as its own transition](docs/screenshots/screen-states.png)
+![Screen states — screens as states, clicks as events, roles as guards, async ack as its own transition](readme-assets/screen-states.png)
 
 *Navigation as a state machine: `event [guard]` transitions, transient modals, and the async acknowledgement (`ACK QUEUED`) drawn as its own transition — failure stays in place. Source: [`example-screen-states.html`](skills/automation-design/assets/example-screen-states.html).*
 
-![Screen contract — logical operations, auth gate on the governed edge, async command with ack back to the screen](docs/screenshots/screen-contract.png)
+![Screen contract — logical operations, auth gate on the governed edge, async command with ack back to the screen](readme-assets/screen-contract.png)
 
 *One architecturally significant screen's integration contract: logical operations (`GetInvoice`, `ApproveInvoice`) that the implementation profile maps to flows, processes, or routes; the role+amount gate on the edge it governs; and the queue as the visible sync–async boundary. Source: [`example-screen-contract.html`](skills/automation-design/assets/example-screen-contract.html).*
 
-![Runtime deployment topology — three layer zones, external browser, deployment facts panel](docs/screenshots/runtime-topology.png)
+![Runtime deployment topology — three layer zones, external browser, deployment facts panel](readme-assets/runtime-topology.png)
 
 *The conditional technical annex: edge, application, and data layers with the browser as an external node, and a deployment panel that makes `×2` auditable (model, ownership, environments, region/HA). Source: [`example-runtime-topology.html`](skills/automation-design/assets/example-runtime-topology.html).*
 
@@ -103,27 +103,33 @@ Applications (UiPath Apps, Power Apps, Next.js, anything) get a family of pages 
 
 ## What it makes
 
-All 11 visual types ship in three static variants: minimal light, minimal dark, and full-editorial. Open any of them directly in a browser. There is no build step, JavaScript, or external image dependency.
+First and foremost, it makes **automation design deliverables**, not generic box diagrams:
+
+- **RPA solution sets** — executive overview, phased solution blueprint, numbered PDD-level process pages, queue handoffs, retries, exceptions, and human validation.
+- **Agentic automation packs** — one card per agent with grounding, tools, permissions, operating mode, confidence gates, escalation, memory, and evaluation loops.
+- **Automation application annexes** — app cards, screen states, screen contracts, and runtime topology tied back to the automations they trigger.
+
+Those deliverables use 11 underlying visual types. Each ships in minimal light, minimal dark, and full-editorial variants; every example opens directly in a browser with no build step or external image dependency.
 
 <table>
 <tr>
-  <td align="center" width="33%"><img src="docs/screenshots/architecture.png" alt="Architecture"><br><b>Architecture</b><br><sub>Agents, tools, robots, systems</sub></td>
-  <td align="center" width="33%"><img src="docs/screenshots/flowchart.png" alt="Flowchart"><br><b>Flowchart</b><br><sub>Decision logic</sub></td>
-  <td align="center" width="33%"><img src="docs/screenshots/sequence.png" alt="Sequence"><br><b>Sequence</b><br><sub>Agent/robot/human interplay</sub></td>
+  <td align="center" width="33%"><img src="readme-assets/architecture.png" alt="Automation architecture"><br><b>Automation architecture</b><br><sub>Agents, tools, robots, queues, systems</sub></td>
+  <td align="center" width="33%"><img src="readme-assets/flowchart.png" alt="RPA solution blueprint"><br><b>RPA solution blueprint</b><br><sub>Processes, decisions, validation</sub></td>
+  <td align="center" width="33%"><img src="readme-assets/sequence.png" alt="Automation sequence"><br><b>Automation sequence</b><br><sub>Agent → robot → human handoffs</sub></td>
 </tr>
 <tr>
-  <td align="center"><img src="docs/screenshots/state.png" alt="State machine"><br><b>State machine</b><br><sub>Transaction lifecycles</sub></td>
-  <td align="center"><img src="docs/screenshots/swimlane.png" alt="Swimlane"><br><b>Swimlane</b><br><sub>Human/robot handoffs</sub></td>
-  <td align="center"><img src="docs/screenshots/org-chart.png" alt="Org chart"><br><b>Org chart</b><br><sub>Supervisor + worker agents</sub></td>
+  <td align="center"><img src="readme-assets/state.png" alt="Transaction lifecycle"><br><b>Transaction lifecycle</b><br><sub>Retries, business and system exceptions</sub></td>
+  <td align="center"><img src="readme-assets/swimlane.png" alt="Attended automation"><br><b>Attended automation</b><br><sub>Human and robot on one workstation</sub></td>
+  <td align="center"><img src="readme-assets/org-chart.png" alt="Multi-agent supervision"><br><b>Multi-agent supervision</b><br><sub>Supervisor, workers, escalation</sub></td>
 </tr>
 <tr>
-  <td align="center"><img src="docs/screenshots/layers.png" alt="Layers"><br><b>Layer stack</b><br><sub>Guardrails + governance</sub></td>
-  <td align="center"><img src="docs/screenshots/loop.png" alt="Loop"><br><b>Loop</b><br><sub>Agent memory flywheel</sub></td>
-  <td align="center"><img src="docs/screenshots/it-state.png" alt="IT current-state"><br><b>IT current-state</b><br><sub>The landscape before automation</sub></td>
+  <td align="center"><img src="readme-assets/layers.png" alt="Automation guardrails"><br><b>Automation guardrails</b><br><sub>Permissions, controls, governance</sub></td>
+  <td align="center"><img src="readme-assets/loop.png" alt="Agent learning loop"><br><b>Agent learning loop</b><br><sub>Act, observe, evaluate, remember</sub></td>
+  <td align="center"><img src="readme-assets/it-state.png" alt="IT current-state"><br><b>IT current-state</b><br><sub>The landscape before automation</sub></td>
 </tr>
 <tr>
-  <td align="center"><img src="docs/screenshots/process.png" alt="Process"><br><b>Process</b><br><sub>Multi-actor sequential workflow</sub></td>
-  <td align="center"><img src="docs/screenshots/data-flow.png" alt="Data flow"><br><b>Data flow</b><br><sub>Dispatcher → queue → performer</sub></td>
+  <td align="center"><img src="readme-assets/process.png" alt="Automation process"><br><b>Automation process</b><br><sub>System-tagged steps and handoffs</sub></td>
+  <td align="center"><img src="readme-assets/data-flow.png" alt="Queue-based automation"><br><b>Queue-based automation</b><br><sub>Dispatcher → queue → performer</sub></td>
   <td></td>
 </tr>
 </table>
@@ -176,7 +182,7 @@ The shared skill lives at `skills/automation-design/`. Pi discovers it through t
 
 ## Onboarding — make it look like *your* brand
 
-Out of the box, diagrams render in a clean **jet-black + atomic-tangerine** palette. Good enough to screenshot straight away. But 60 seconds of onboarding is better — the skill pulls your brand from your website and applies it across every diagram.
+Out of the box, diagrams render in the restrained **Graphite + Mint** palette: graphite structure, deep-mint automated paths, bright mint on dark surfaces, and cyan reserved for external/API links. It is ready to screenshot immediately. For client work, the skill can still pull a different brand from a website and apply it across every diagram.
 
 ```
 You:     "onboard automation-design to https://yoursite.com"
@@ -234,7 +240,7 @@ Motion is optional and does not create another visual type. [`animation.md`](ski
 
 Already have automation diagrams in draw.io / diagrams.net or Mermaid? Point the skill at the source and it **redraws** them — same content, this design system, at whatever the destination needs.
 
-![Redrawn from a .drawio file](docs/screenshots/import-drawio.png)
+![Redrawn from a .drawio file](readme-assets/import-drawio.png)
 
 ```
 /automation-design:import-drawio platform.drawio
@@ -340,8 +346,7 @@ automation-design/
 │       ├── sample-flowchart.mmd
 │       ├── sample-readme-with-mermaid.md
 │       └── sample-adversarial.mmd
-├── docs/adr/                        — short records of settled design decisions
-└── docs/screenshots/                — images used in this README
+└── readme-assets/                  — rendered examples used in this README
 ```
 
 This keeps the agent's working context tight: routine diagrams load one type reference; behavior-rich diagrams add the routed semantic reference plus the automation vocabulary; animation adds its contract only when selected.
@@ -353,7 +358,7 @@ The repository-wide check `python3 scripts/lint-skin.py --all --baseline` covers
 Semantic routing must pass `python3 scripts/verify-semantic-motion.py --markdown-only`; the animated example has a separate `--example-only` gate. Every shipped motion template/example must also pass `python3 scripts/verify-motion.py --shipped`.
 If you touch the draw.io import path, `python3 scripts/verify-drawio-import.py` must also pass; the Mermaid path is gated by `python3 scripts/verify-mermaid-import.py`.
 Label placement is gated geometrically: `python3 scripts/verify-geometry.py --all` fails CI when a label mask overlaps a node declared later in the document. `python3 scripts/test-verify-geometry.py` keeps that checker honest in both directions.
-Docs and routing surfaces are themselves gated: `python3 scripts/verify-docs-sync.py` fails CI if the SKILL.md description loses a type's lexical hook, the gallery can't reach a shipped example, the README tree names a file that doesn't exist, a relative `references/*.md` link in SKILL.md is broken, a reference file links to a sibling that doesn't exist, or the Claude/Pi profile surfaces drift from `profiles.md`. `python3 scripts/test-verify-docs-sync.py` exercises those checks adversarially. The skill also ships `skills/automation-design/scripts/self_check.py` — a distilled output checker installed agents can run on their own generated diagrams; `python3 scripts/test-self-check.py` keeps it honest. Settled design decisions live as short ADRs in `docs/adr/` — read them before relitigating one, add one when you settle a new policy.
+Routing and public documentation surfaces are gated: `python3 scripts/verify-docs-sync.py` fails CI if the SKILL.md description loses a type's lexical hook, the gallery cannot reach a shipped example, the README tree names a file that does not exist, a relative `references/*.md` link is broken, or the Claude/Pi profile surfaces drift from `profiles.md`. `python3 scripts/test-verify-docs-sync.py` exercises those checks adversarially. The skill also ships `skills/automation-design/scripts/self_check.py` — a distilled output checker installed agents can run on their own generated diagrams; `python3 scripts/test-self-check.py` keeps it honest.
 
 All pull requests and pushes are automatically validated across Linux, Windows, and macOS runners via GitHub Actions CI (`.github/workflows/ci.yml`).
 

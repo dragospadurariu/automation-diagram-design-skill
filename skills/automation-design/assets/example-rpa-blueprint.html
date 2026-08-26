@@ -8,9 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
-      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
-      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8;
+      --paper: #f6f6f6; --paper-2: #e9ecef; --ink: #1e1e1e; --muted: #4a5464;
+      --soft: #7b8797; --rule: rgba(30,30,30,0.12); --accent: #087a5b;
+      --accent-tint: rgba(8,122,91,0.08); --link: #0078a8;
       --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
       --mono: 'Geist Mono', ui-monospace, monospace;
     }
@@ -41,112 +41,112 @@
       <title id="rpa-blueprint-title">Document intake automation solution blueprint</title>
       <desc id="rpa-blueprint-desc">Three named processes: a mail-intake robot fetches emails and saves attachments; document understanding digitizes, classifies, and extracts fields with a human validation branch; accepted results wait in a queue until a performer posts them into the target application.</desc>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
-        <marker id="arr-accent" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#eb6c36"/></marker>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a5464"/></marker>
+        <marker id="arr-accent" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#087a5b"/></marker>
       </defs>
-      <rect width="1200" height="348" fill="#f5f5f5"/>
+      <rect width="1200" height="348" fill="#f6f6f6"/>
 
       <!-- Phase labels + dashed dividers -->
       <text x="40" y="56" class="phase-label">PROCESS 1 · MAIL INTAKE</text>
       <text x="392" y="56" class="phase-label">PROCESS 2 · DOCUMENT UNDERSTANDING</text>
       <text x="992" y="56" class="phase-label">PROCESS 3 · DATA INPUT</text>
-      <line x1="372" y1="64" x2="372" y2="280" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,4"/>
-      <line x1="976" y1="64" x2="976" y2="280" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,4"/>
+      <line x1="372" y1="64" x2="372" y2="280" stroke="rgba(30,30,30,0.20)" stroke-width="1" stroke-dasharray="4,4"/>
+      <line x1="976" y1="64" x2="976" y2="280" stroke="rgba(30,30,30,0.20)" stroke-width="1" stroke-dasharray="4,4"/>
 
       <!-- Connectors first (z-order), then labels, then nodes -->
-      <path d="M96 120 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M224 120 H248" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M352 120 H392" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M496 120 H516" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M580 120 H616" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M548 148 V200" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arr-accent)"/>
-      <path d="M600 224 H660 Q668 224 668 216 V144" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M720 120 H740" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M804 120 H856" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M772 148 V200" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M960 120 H992" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M1096 120 H1120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M96 120 H120" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M224 120 H248" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M352 120 H392" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M496 120 H516" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M580 120 H616" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M548 148 V200" fill="none" stroke="#087a5b" stroke-width="1.2" marker-end="url(#arr-accent)"/>
+      <path d="M600 224 H660 Q668 224 668 216 V144" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M720 120 H740" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M804 120 H856" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M772 148 V200" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M960 120 H992" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M1096 120 H1120" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
 
       <!-- Branch labels (masked, 6-10px off the stroke) -->
-      <rect x="586" y="100" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="586" y="100" width="24" height="12" rx="2" fill="#f6f6f6"/>
       <text x="598" y="109" class="arrow-label">YES</text>
-      <rect x="556" y="164" width="24" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="556" y="164" width="24" height="12" rx="2" fill="#f6f6f6"/>
       <text x="568" y="173" class="arrow-label focal-text">NO</text>
-      <rect x="810" y="100" width="40" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="810" y="100" width="40" height="12" rx="2" fill="#f6f6f6"/>
       <text x="830" y="109" class="arrow-label">ACCEPT</text>
-      <rect x="780" y="164" width="40" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="780" y="164" width="40" height="12" rx="2" fill="#f6f6f6"/>
       <text x="800" y="173" class="arrow-label">REJECT</text>
 
       <!-- Process 1: Start, fetch, save -->
-      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="68" y="124" class="terminal-text">Start</text>
 
-      <rect x="120" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="120" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="138" y="107" class="tag-text">MAIL</text>
+      <rect x="120" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="120" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="138" y="107" class="tag-text">MAIL</text>
       <text x="172" y="122" class="node-title">Fetch new emails</text>
       <text x="172" y="134" class="node-sub">shared mailbox</text>
 
-      <rect x="248" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="248" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="252" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="266" y="107" class="tag-text">MAIL</text>
+      <rect x="248" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="248" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="252" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="266" y="107" class="tag-text">MAIL</text>
       <text x="300" y="122" class="node-title">Save attachments</text>
       <text x="300" y="134" class="node-sub">pdf → work folder</text>
 
       <!-- Process 2: classify, confidence gate, human validation, extract, accept gate -->
-      <rect x="392" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="392" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="396" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="410" y="107" class="tag-text">DOC AI</text>
+      <rect x="392" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="392" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="396" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="410" y="107" class="tag-text">DOC AI</text>
       <text x="444" y="122" class="node-title">Digitize &amp; classify</text>
       <text x="444" y="134" class="node-sub">document model</text>
 
-      <polygon points="548,92 580,120 548,148 516,120" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="548,92 580,120 548,148 516,120" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="548" y="115" class="decision-text">Conf.</text>
       <text x="548" y="127" class="decision-text">≥ 85%?</text>
 
-      <rect x="496" y="200" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="496" y="200" width="104" height="48" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
-      <rect x="500" y="204" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="514" y="211" class="tag-text focal-text">HUMAN</text>
+      <rect x="496" y="200" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="496" y="200" width="104" height="48" rx="6" fill="rgba(8,122,91,0.07)" stroke="#087a5b" stroke-width="1.2"/>
+      <rect x="500" y="204" width="28" height="10" rx="3" fill="rgba(8,122,91,0.20)"/><text x="514" y="211" class="tag-text focal-text">HUMAN</text>
       <text x="548" y="226" class="node-title">Human validation</text>
       <text x="548" y="238" class="node-sub">task inbox · review</text>
 
-      <rect x="616" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="616" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="620" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="634" y="107" class="tag-text">DOC AI</text>
+      <rect x="616" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="616" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="620" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="634" y="107" class="tag-text">DOC AI</text>
       <text x="668" y="122" class="node-title">Extract fields</text>
       <text x="668" y="134" class="node-sub">fields · confidence</text>
 
-      <polygon points="772,92 804,120 772,148 740,120" fill="#f5f5f5" stroke="#4f5d75"/>
+      <polygon points="772,92 804,120 772,148 740,120" fill="#f6f6f6" stroke="#4a5464"/>
       <text x="772" y="123" class="decision-text">Accept?</text>
 
-      <rect x="744" y="200" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="744" y="200" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="772" y="220" class="terminal-text">End</text>
 
       <!-- Queue bridge at the producing edge of Process 2 -->
-      <rect x="856" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="856" y="96" width="104" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
-      <rect x="860" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="874" y="107" class="tag-text">QUEUE</text>
+      <rect x="856" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="856" y="96" width="104" height="48" rx="6" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/>
+      <rect x="860" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="874" y="107" class="tag-text">QUEUE</text>
       <text x="908" y="122" class="node-title">Extracted data</text>
       <text x="908" y="134" class="node-sub">queue · 84 items</text>
 
       <!-- Process 3: post + end -->
-      <rect x="992" y="96" width="104" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="992" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="996" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="1010" y="107" class="tag-text">APP</text>
+      <rect x="992" y="96" width="104" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="992" y="96" width="104" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="996" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="1010" y="107" class="tag-text">APP</text>
       <text x="1044" y="122" class="node-title">Post form data</text>
       <text x="1044" y="134" class="node-sub">submission form</text>
 
-      <rect x="1120" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="1120" y="104" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="1148" y="124" class="terminal-text">End</text>
 
       <!-- Legend -->
-      <line x1="40" y1="300" x2="1160" y2="300" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <line x1="40" y1="300" x2="1160" y2="300" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
       <text x="40" y="320" class="legend-label">LEGEND</text>
-      <rect x="120" y="308" width="32" height="14" rx="7" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="318" class="legend-text">Start / End</text>
-      <rect x="240" y="306" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="276" y="318" class="legend-text">Activity · tag names the executing system</text>
-      <path d="M480 306 L492 314 L480 322 L468 314 Z" fill="#f5f5f5" stroke="#4f5d75"/><text x="500" y="318" class="legend-text">Decision · every exit labeled</text>
-      <rect x="644" y="306" width="28" height="16" rx="3" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/><text x="680" y="318" class="legend-text">Queue · decoupling point</text>
-      <rect x="808" y="306" width="28" height="16" rx="3" fill="rgba(235,108,54,0.07)" stroke="#eb6c36"/><text x="844" y="318" class="legend-text">Human validation (focal)</text>
+      <rect x="120" y="308" width="32" height="14" rx="7" fill="#f6f6f6" stroke="#1e1e1e"/><text x="160" y="318" class="legend-text">Start / End</text>
+      <rect x="240" y="306" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/><text x="276" y="318" class="legend-text">Activity · tag names the executing system</text>
+      <path d="M480 306 L492 314 L480 322 L468 314 Z" fill="#f6f6f6" stroke="#4a5464"/><text x="500" y="318" class="legend-text">Decision · every exit labeled</text>
+      <rect x="644" y="306" width="28" height="16" rx="3" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/><text x="680" y="318" class="legend-text">Queue · decoupling point</text>
+      <rect x="808" y="306" width="28" height="16" rx="3" fill="rgba(8,122,91,0.07)" stroke="#087a5b"/><text x="844" y="318" class="legend-text">Human validation (focal)</text>
     </svg>
   </main>
 </body>

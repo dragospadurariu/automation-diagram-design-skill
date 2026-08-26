@@ -8,9 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
-      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36;
-      --accent-tint: rgba(235,108,54,0.08); --link: #2e5aa8;
+      --paper: #f6f6f6; --paper-2: #e9ecef; --ink: #1e1e1e; --muted: #4a5464;
+      --soft: #7b8797; --rule: rgba(30,30,30,0.12); --accent: #087a5b;
+      --accent-tint: rgba(8,122,91,0.08); --link: #0078a8;
       --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
       --mono: 'Geist Mono', ui-monospace, monospace;
     }
@@ -41,47 +41,47 @@
       <title id="detail-set-overview-title">Timesheet receiver — detail set overview</title>
       <desc id="detail-set-overview-desc">Two numbered processes drawn as nodes: environment initialization, then webhook data capture; the capture node links to its own numbered detail page.</desc>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a5464"/></marker>
       </defs>
-      <rect width="720" height="280" fill="#f5f5f5"/>
+      <rect width="720" height="280" fill="#f6f6f6"/>
 
       <!-- Connectors first (z-order) -->
-      <path d="M96 120 H120" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M264 120 H288" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
-      <path d="M432 120 H456" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M96 120 H120" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M264 120 H288" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
+      <path d="M432 120 H456" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
 
       <!-- Start -->
-      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="40" y="104" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="68" y="124" class="terminal-text">Start</text>
 
       <!-- 1.0 Init environment (no detail page in this mini-set, so no link) -->
-      <rect x="120" y="96" width="144" height="48" rx="6" fill="#f5f5f5"/>
-      <rect x="120" y="96" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="138" y="107" class="id-text">1.0</text>
-      <rect x="232" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="246" y="107" class="tag-text">RPA</text>
+      <rect x="120" y="96" width="144" height="48" rx="6" fill="#f6f6f6"/>
+      <rect x="120" y="96" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="124" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="138" y="107" class="id-text">1.0</text>
+      <rect x="232" y="100" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="246" y="107" class="tag-text">RPA</text>
       <text x="192" y="122" class="node-title">Init environment</text>
       <text x="192" y="134" class="node-sub">temp folder · templates</text>
 
       <!-- 2.0 Catch webhook data (focal, links to its numbered page) -->
       <a href="example-detail-set-p2-catch-webhook.html">
-        <rect x="288" y="96" width="144" height="48" rx="6" fill="#f5f5f5"/>
-        <rect x="288" y="96" width="144" height="48" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
-        <rect x="292" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="306" y="107" class="id-text focal-text">2.0</text>
-        <rect x="400" y="100" width="28" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="414" y="107" class="tag-text focal-text">API</text>
+        <rect x="288" y="96" width="144" height="48" rx="6" fill="#f6f6f6"/>
+        <rect x="288" y="96" width="144" height="48" rx="6" fill="rgba(8,122,91,0.07)" stroke="#087a5b" stroke-width="1.2"/>
+        <rect x="292" y="100" width="28" height="10" rx="3" fill="rgba(8,122,91,0.20)"/><text x="306" y="107" class="id-text focal-text">2.0</text>
+        <rect x="400" y="100" width="28" height="10" rx="3" fill="rgba(8,122,91,0.20)"/><text x="414" y="107" class="tag-text focal-text">API</text>
         <text x="360" y="122" class="node-title">Catch webhook data</text>
         <text x="360" y="134" class="node-sub">parse · insert bundle</text>
       </a>
 
       <!-- End -->
-      <rect x="456" y="104" width="56" height="32" rx="16" fill="#f5f5f5" stroke="#2d3142"/>
+      <rect x="456" y="104" width="56" height="32" rx="16" fill="#f6f6f6" stroke="#1e1e1e"/>
       <text x="484" y="124" class="terminal-text">End</text>
 
       <!-- Legend -->
-      <line x1="40" y1="216" x2="680" y2="216" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <line x1="40" y1="216" x2="680" y2="216" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
       <text x="40" y="236" class="legend-label">LEGEND</text>
-      <rect x="120" y="224" width="32" height="14" rx="7" fill="#f5f5f5" stroke="#2d3142"/><text x="160" y="234" class="legend-text">Start / End</text>
-      <rect x="240" y="222" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/><text x="276" y="234" class="legend-text">Process · id chip left, tag right</text>
-      <rect x="424" y="222" width="28" height="16" rx="3" fill="rgba(235,108,54,0.07)" stroke="#eb6c36"/><text x="460" y="234" class="legend-text">Linked process · opens its numbered page</text>
+      <rect x="120" y="224" width="32" height="14" rx="7" fill="#f6f6f6" stroke="#1e1e1e"/><text x="160" y="234" class="legend-text">Start / End</text>
+      <rect x="240" y="222" width="28" height="16" rx="3" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/><text x="276" y="234" class="legend-text">Process · id chip left, tag right</text>
+      <rect x="424" y="222" width="28" height="16" rx="3" fill="rgba(8,122,91,0.07)" stroke="#087a5b"/><text x="460" y="234" class="legend-text">Linked process · opens its numbered page</text>
     </svg>
 
     <p class="colophon">part 1 of 3 · timesheet-receiver</p>
