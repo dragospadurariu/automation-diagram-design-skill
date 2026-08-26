@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High-level architecture · End-to-end stack</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f6f6f6; --color-paper-2:#e9ecef; --color-ink:#1e1e1e; --color-muted:#4a5464; --color-soft:#7b8797; --color-rule:rgba(30,30,30,0.12); --color-accent:#087a5b; --font-sans:'Geist',system-ui,sans-serif; --font-serif:'Instrument Serif',serif; --font-mono:'Geist Mono',ui-monospace,monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); min-height: 100vh; padding: 3rem 2rem; color: var(--color-ink); }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2.5rem; }
+    .header-eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.75rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.75rem, 3vw + 1rem, 2.5rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 1rem; line-height: 1.55; color: var(--color-muted); max-width: 72ch; }
+    .diagram-container { background: var(--color-paper-2); border-radius: 8px; border: 1px solid var(--color-rule); padding: 1.5rem; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+    .card { background: #fff; border-radius: 6px; border: 1px solid var(--color-rule); padding: 1.25rem; }
+    .card .eyebrow { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    .card-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.875rem; padding-bottom: 0.875rem; border-bottom: 1px solid rgba(30,30,30,0.08); }
+    .card-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .card-dot.accent { background: var(--color-accent); }
+    .card-dot.ink   { background: var(--color-ink); }
+    .card-dot.muted { background: var(--color-muted); }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { color: var(--color-muted); font-size: 0.8125rem; line-height: 1.55; list-style: none; }
+    .card li { margin-bottom: 0.3rem; padding-left: 0.875rem; position: relative; }
+    .card li::before { content: '—'; position: absolute; left: 0; color: rgba(30,30,30,0.25); font-size: 0.75rem; }
+    .footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(30,30,30,0.10); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--color-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <p class="header-eyebrow">Architecture · Automation Design</p>
+      <h1>High-level architecture · End-to-end stack</h1>
+      <p class="subtitle">Five functional phases from raw source ingestion to business visualization. Apache NiFi collects, MinIO stores, Trino virtualizes, notebooks model — all orchestrated by Airflow and secured by Active Directory, running on Kubernetes.</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="high-level-full-title high-level-full-desc">
+        <title id="high-level-full-title">High-level architecture · End-to-end stack</title>
+        <desc id="high-level-full-desc">Architecture diagram showing data sources moving through Apache NiFi and MinIO into Trino, data modeling, and Superset dashboards, with Airflow orchestration.</desc>
+        <defs>
+          <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.9" fill="rgba(30,30,30,0.10)"/>
+          </pattern>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4a5464"/>
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#087a5b"/>
+          </marker>
+          <marker id="arrow-sm" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+            <polygon points="0 0, 6 2.5, 0 5" fill="#4a5464"/>
+          </marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f6f6f6"/>
+        <rect width="100%" height="100%" fill="url(#dots)" opacity="0.55"/>
+
+        <!-- Phase chevrons -->
+        <polygon points="0,4 188,4 200,18 188,32 0,32" fill="#1e1e1e"/>
+        <polygon points="200,4 388,4 400,18 388,32 200,32 212,18" fill="#4a5464"/>
+        <polygon points="400,4 588,4 600,18 588,32 400,32 412,18" fill="#1e1e1e"/>
+        <polygon points="600,4 788,4 800,18 788,32 600,32 612,18" fill="#4a5464"/>
+        <polygon points="800,4 1000,4 1000,32 800,32 812,18" fill="#1e1e1e"/>
+        <text x="100" y="21" fill="#f6f6f6" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">DATA SOURCES</text>
+        <text x="300" y="21" fill="#f6f6f6" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">INGESTION</text>
+        <text x="500" y="21" fill="#f6f6f6" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">STORAGE</text>
+        <text x="700" y="21" fill="#f6f6f6" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.13em" text-anchor="middle">TRANSFORMATION &amp; ANALYSIS</text>
+        <text x="900" y="21" fill="#f6f6f6" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">VISUALIZATION</text>
+
+        <!-- Zones -->
+        <rect x="4" y="40" width="152" height="336" rx="6" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.20)" stroke-width="0.8" stroke-dasharray="6,3"/>
+        <text x="80" y="52" fill="#4a5464" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">SOURCES</text>
+        <rect x="164" y="40" width="832" height="336" rx="8" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.18)" stroke-width="1.2"/>
+        <rect x="4" y="388" width="992" height="40" rx="6" fill="rgba(30,30,30,0.05)" stroke="rgba(30,30,30,0.20)" stroke-width="0.8"/>
+
+        <!-- Data sources → shared ingestion bus → NiFi -->
+        <line x1="160" y1="92" x2="160" y2="336" stroke="#4a5464" stroke-width="1"/>
+        <line x1="144" y1="92" x2="160" y2="92" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="144" y1="172" x2="160" y2="172" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="144" y1="252" x2="160" y2="252" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="144" y1="336" x2="160" y2="336" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="160" y1="152" x2="176" y2="152" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="452" y1="96" x2="452" y2="104" stroke="#4a5464" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-sm)"/>
+        <line x1="682" y1="96" x2="682" y2="144" stroke="#4a5464" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-sm)"/>
+        <line x1="896" y1="96" x2="896" y2="144" stroke="#4a5464" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-sm)"/>
+        <path d="M 328,152 H 344 Q 348,152 348,148 V 144 Q 348,140 352,140 H 372" fill="none" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 328,168 H 344 Q 352,168 352,176 V 240 Q 352,248 372,248" fill="none" stroke="#087a5b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <line x1="444" y1="176" x2="444" y2="208" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="460" y1="208" x2="460" y2="176" stroke="rgba(30,30,30,0.30)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <path d="M 532,140 H 556 Q 564,140 564,148 V 176 Q 564,184 600,184" fill="none" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 532,248 H 556 Q 564,248 564,240 V 192 Q 564,184 600,184" fill="none" stroke="#087a5b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <line x1="764" y1="184" x2="820" y2="184" stroke="#4a5464" stroke-width="1" marker-end="url(#arrow)"/>
+
+        <!-- Source nodes -->
+        <rect x="12" y="60" width="132" height="64" rx="6" fill="#f6f6f6"/><rect x="12" y="60" width="132" height="64" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.22)" stroke-width="1"/>
+        <rect x="20" y="66" width="22" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="31" y="75" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">EXT</text>
+        <text x="78" y="102" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">WEB</text>
+        <text x="78" y="114" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Census · Survey · Admin</text>
+
+        <rect x="12" y="140" width="132" height="64" rx="6" fill="#f6f6f6"/><rect x="12" y="140" width="132" height="64" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.22)" stroke-width="1"/>
+        <rect x="20" y="146" width="22" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="31" y="155" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">EXT</text>
+        <text x="78" y="182" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">FTP</text>
+        <text x="78" y="194" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Census · Business</text>
+
+        <rect x="12" y="220" width="132" height="64" rx="6" fill="#f6f6f6"/><rect x="12" y="220" width="132" height="64" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.22)" stroke-width="1"/>
+        <rect x="20" y="226" width="22" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="31" y="235" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">EXT</text>
+        <text x="78" y="262" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">DB Connection</text>
+        <text x="78" y="274" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">CDC · SQL · API</text>
+
+        <rect x="12" y="304" width="132" height="64" rx="6" fill="#f6f6f6"/><rect x="12" y="304" width="132" height="64" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.22)" stroke-width="1"/>
+        <rect x="20" y="310" width="22" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="31" y="319" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">EXT</text>
+        <text x="78" y="346" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Legacy System</text>
+        <text x="78" y="358" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Trade data</text>
+
+        <!-- Airflow bar -->
+        <rect x="176" y="52" width="808" height="44" rx="4" fill="rgba(30,30,30,0.05)" stroke="rgba(30,30,30,0.18)" stroke-width="0.8"/>
+        <text x="564" y="71" fill="#1e1e1e" font-size="10" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Orchestration / Workflow Automation</text>
+        <text x="564" y="84" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">(Apache Airflow)</text>
+
+        <!-- NiFi -->
+        <rect x="176" y="112" width="152" height="80" rx="6" fill="#f6f6f6"/><rect x="176" y="112" width="152" height="80" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)" stroke-width="1"/>
+        <rect x="184" y="118" width="30" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="199" y="127" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">COLL</text>
+        <text x="252" y="154" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Apache NiFi</text>
+        <text x="252" y="166" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Collect · route · transform</text>
+
+        <!-- Trino -->
+        <rect x="372" y="104" width="160" height="72" rx="6" fill="#f6f6f6"/><rect x="372" y="104" width="160" height="72" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)" stroke-width="1"/>
+        <rect x="380" y="110" width="28" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="394" y="119" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">VIRT</text>
+        <text x="452" y="146" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Trino</text>
+        <text x="452" y="158" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">SQL · data virtualization</text>
+
+        <!-- MinIO FOCAL -->
+        <rect x="372" y="208" width="160" height="80" rx="8" fill="#f6f6f6"/><rect x="372" y="208" width="160" height="80" rx="8" fill="rgba(8,122,91,0.08)" stroke="#087a5b" stroke-width="1.2"/>
+        <rect x="380" y="214" width="36" height="12" rx="2" fill="transparent" stroke="rgba(8,122,91,0.50)" stroke-width="0.8"/>
+        <text x="398" y="223" fill="rgba(8,122,91,0.80)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STORE</text>
+        <text x="452" y="252" fill="#087a5b" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">MinIO / S3</text>
+        <text x="452" y="268" fill="#087a5b" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" opacity="0.75">Object store · S3-API</text>
+
+        <!-- Data Modeling -->
+        <rect x="600" y="144" width="164" height="80" rx="6" fill="#f6f6f6"/><rect x="600" y="144" width="164" height="80" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)" stroke-width="1"/>
+        <rect x="608" y="150" width="32" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="624" y="159" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ANLZ</text>
+        <text x="682" y="186" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Data Modeling</text>
+        <text x="682" y="198" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Notebook · Python · R</text>
+
+        <!-- Dashboards -->
+        <rect x="820" y="144" width="152" height="80" rx="6" fill="#f6f6f6"/><rect x="820" y="144" width="152" height="80" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)" stroke-width="1"/>
+        <rect x="828" y="150" width="28" height="12" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="842" y="159" fill="rgba(30,30,30,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DASH</text>
+        <text x="896" y="186" fill="#1e1e1e" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dashboards</text>
+        <text x="896" y="198" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Superset · reports</text>
+
+        <!-- Kubernetes label -->
+        <text x="204" y="362" fill="#4a5464" font-size="8" font-weight="500" font-family="'Geist', sans-serif">Kubernetes</text>
+
+        <!-- Identity Manager -->
+        <text x="500" y="410" fill="#1e1e1e" font-size="10" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Identity Manager</text>
+        <text x="500" y="422" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">(Active Directory)</text>
+
+        <!-- Legend -->
+        <line x1="40" y1="440" x2="960" y2="440" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
+        <text x="40" y="456" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+        <rect x="40"  y="464" width="20" height="12" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="68"  y="474" fill="#4a5464" font-size="8.5" font-family="'Geist', sans-serif">External source · outside cluster</text>
+        <rect x="252" y="464" width="20" height="12" rx="3" fill="rgba(30,30,30,0.04)" stroke="rgba(30,30,30,0.25)" stroke-width="1"/>
+        <text x="280" y="474" fill="#4a5464" font-size="8.5" font-family="'Geist', sans-serif">Kubernetes boundary</text>
+        <rect x="436" y="464" width="20" height="12" rx="3" fill="rgba(8,122,91,0.10)" stroke="#087a5b" stroke-width="1.2"/>
+        <text x="464" y="474" fill="#4a5464" font-size="8.5" font-family="'Geist', sans-serif">Focal component (MinIO)</text>
+        <line x1="648" y1="466" x2="668" y2="466" stroke="#087a5b" stroke-width="1.2"/>
+        <text x="676" y="471" fill="#4a5464" font-size="8.5" font-family="'Geist', sans-serif">Primary data path</text>
+        <line x1="808" y1="466" x2="828" y2="466" stroke="rgba(30,30,30,0.35)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="836" y="471" fill="#4a5464" font-size="8.5" font-family="'Geist', sans-serif">Orchestration trigger</text>
+      </svg>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <p class="eyebrow">Ingestion · Apache NiFi</p>
+        <div class="card-header">
+          <div class="card-dot ink"></div>
+          <h3>Data collection</h3>
+        </div>
+        <ul>
+          <li>Collects from WEB (HTTP/REST), FTP, database CDC, and legacy file exports</li>
+          <li>No-code dataflow routing with back-pressure and guaranteed delivery</li>
+          <li>Lands raw data into MinIO and exposes it to Trino simultaneously</li>
+          <li>Orchestrated by Airflow DAGs for scheduled batch and event-driven runs</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Storage · MinIO / S3</p>
+        <div class="card-header">
+          <div class="card-dot mint"></div>
+          <h3>Object store (focal)</h3>
+        </div>
+        <ul>
+          <li>S3-compatible API — single storage surface for all tools in the stack</li>
+          <li>Holds raw, cleansed, and curated layers (bronze / silver / gold paths)</li>
+          <li>Trino virtualizes directly over MinIO buckets — no ETL copy step needed</li>
+          <li>Python notebooks write model outputs back as Parquet for further querying</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Query &amp; Serve · Trino + Superset</p>
+        <div class="card-header">
+          <div class="card-dot muted"></div>
+          <h3>Analysis &amp; visualization</h3>
+        </div>
+        <ul>
+          <li>Trino federates SQL queries across MinIO, databases, and APIs in one query</li>
+          <li>JupyterLab notebooks run Python and R for statistical modeling and ML</li>
+          <li>Superset dashboards connect to Trino for live, governed report delivery</li>
+          <li>Active Directory enforces row- and column-level access across all surfaces</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>High-level architecture · Kubernetes-deployed open-source stack</span>
+      <span>Sources → NiFi → MinIO → Trino → Notebooks → Superset</span>
+    </div>
+  </div>
+</body>
+</html>

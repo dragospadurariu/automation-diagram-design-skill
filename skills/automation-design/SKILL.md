@@ -1,16 +1,16 @@
 ---
 name: automation-design
-description: Design branded architecture, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
+description: Design branded architecture, high-level architecture, database schema, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
 license: MIT
 metadata:
-  version: "0.4.4"
+  version: "0.5.0"
 ---
 
 # Automation Design
 
 Create architecture diagrams for RPA, AI agents, and hybrid automation systems as self-contained HTML files with inline SVG and CSS, following an opinionated editorial design system.
 
-Eleven visual types. Semantic patterns describe behavior independently; type references describe layout. A vendor-neutral automation vocabulary ([`references/automation-primitives.md`](references/automation-primitives.md)) names the actors — robot, agent, human, queue, orchestrator, boundary. Details load from `references/` only when selected.
+Thirteen visual types. Semantic patterns describe behavior; type references describe layout. [`references/automation-primitives.md`](references/automation-primitives.md) defines the vendor-neutral actors. Details load only when selected.
 
 ---
 
@@ -29,7 +29,7 @@ Open [`references/style-guide.md`](references/style-guide.md) and check the defa
 
 If the user chooses a saved profile, follow [`references/profiles.md`](references/profiles.md). If they explicitly choose to persist the shipped skin for the project, offer a `.automation-design` marker containing `profile: default`; write it only with consent.
 
-**Once the style guide has been customized** (or a marker selects the default), skip the offer on subsequent runs. A leading profile header names the copied-in active profile. Without a header, any semantic-role value or typography family differing from shipped defaults means **custom-unsaved**: use it and offer to save it as a profile. All-default tokens with no marker/header remain eligible for the post-delivery onboarding offer. At the end of every onboarding method, offer to save the result as a named client profile per `references/profiles.md`.
+Customized tokens or a valid marker skip future onboarding offers. A profile header names the active profile; otherwise any changed role or font means **custom-unsaved**: use it and offer to save it. All-default tokens without a marker remain eligible. After onboarding, offer a named profile per `references/profiles.md`.
 
 ---
 
@@ -50,7 +50,7 @@ Applied to schematics:
 
 ## 2. When to Use
 
-Use for any of the 11 visual types (§3) when a reader will learn more from a visual than from prose, a table, or a bulleted list.
+Use for any of the 13 visual types (§3) when a visual teaches more than prose, a table, or bullets.
 
 **Don't use for:**
 
@@ -94,11 +94,12 @@ Whenever an automation pattern routes (rows 8–20), also load [`references/auto
 
 The pattern owns semantic primitives and its tighter budget; the type owns layout grammar. Use [`references/animation.md`](references/animation.md) only when motion is requested or materially clarifies ordered change; static remains the default.
 
-### Visual-type guide (11)
+### Visual-type guide (13)
 
 | If you're showing… | Use | Reference |
 |---|---|---|
 | Components + connections in a system — agents, tools, robots, business apps | **Architecture** | [type-architecture.md](references/type-architecture.md) |
+| End-to-end platform organized by phases, runtime boundary, and cross-cutting controls | **High-level architecture** | [type-high-level.md](references/type-high-level.md) |
 | Legacy IT landscape grouped by phase/department; documents the *before* state in automation proposals | **IT current-state** | [type-it-state.md](references/type-it-state.md) |
 | Decision logic with branches — workflow logic, routing rules | **Flowchart** | [type-flowchart.md](references/type-flowchart.md) |
 | Time-ordered messages between actors — agent/robot/human/system interplay | **Sequence** | [type-sequence.md](references/type-sequence.md) |
@@ -109,6 +110,7 @@ The pattern owns semantic primitives and its tighter budget; the type owns layou
 | Stacked abstraction levels — guardrails, control planes, governance | **Layer stack** | [type-layers.md](references/type-layers.md) |
 | Multi-actor sequential process with data handoffs | **Process** | [type-process.md](references/type-process.md) |
 | Role-scoped data flow: who does what at each pipeline step | **Data flow** | [type-data-flow.md](references/type-data-flow.md) |
+| Physical tables with SQL types, constraints, indexes, and column-level foreign keys | **Database schema** | [type-db-schema.md](references/type-db-schema.md) |
 
 Rules of thumb:
 
