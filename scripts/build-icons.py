@@ -482,13 +482,13 @@ GALLERY_TEMPLATE = """<!DOCTYPE html>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --color-paper:   #f5f5f5;
-      --color-paper-2: #ececec;
-      --color-ink:     #2d3142;
-      --color-muted:   #4f5d75;
-      --color-soft:    #7a8399;
-      --color-rule:    rgba(45,49,66,0.12);
-      --color-accent:  #eb6c36;
+      --color-paper:   #f6f6f6;
+      --color-paper-2: #e9ecef;
+      --color-ink:     #1e1e1e;
+      --color-muted:   #4a5464;
+      --color-soft:    #7b8797;
+      --color-rule:    rgba(30,30,30,0.12);
+      --color-accent:  #087a5b;
       --font-sans:     'Geist', system-ui, sans-serif;
       --font-serif:    'Instrument Serif', serif;
       --font-mono:     'Geist Mono', ui-monospace, monospace;

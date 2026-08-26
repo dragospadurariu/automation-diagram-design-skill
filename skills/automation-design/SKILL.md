@@ -22,7 +22,7 @@ Don't claim a brand match when the shipped skin is active, and don't block an or
 
 First check the project root for a `.automation-design` marker and resolve it per [`references/profiles.md`](references/profiles.md). A valid marker whose profile exists selects that file directly and skips this gate; `profile: default` also skips it. A malformed or missing-profile marker follows the visible failure handling in that reference. Never copy a marker-selected profile over the installed working copy.
 
-Open [`references/style-guide.md`](references/style-guide.md) and check the default tokens. If they are still the shipped defaults (paper `#f5f5f5`, ink `#2d3142`, accent `#eb6c36` atomic-tangerine), branch by intent:
+Open [`references/style-guide.md`](references/style-guide.md) and check the default tokens. If they are still the shipped defaults (paper `#f6f6f6`, ink `#1e1e1e`, accent `#087a5b` deep mint), branch by intent:
 
 - **Explicit brand intent** — the user asks to match a brand, supplies a website/design system, or says the output is for a named client. Pause before drawing and ask for the source if it is missing. Then branch through [`references/onboarding.md`](references/onboarding.md).
 - **Ordinary first draft** — proceed with the shipped skin. When delivering the result, label the skin `default` and offer brand onboarding as the next step. Do not force a configuration choice before the user sees the first useful diagram.
@@ -41,7 +41,7 @@ Applied to schematics:
 
 - Every node represents a distinct idea. Two nodes that always travel together are one node.
 - Every connection carries information. If the relationship is obvious from layout, remove the line.
-- Coral is **editorial, not a flag.** 1–2 focal nodes per diagram. Using it on 5 nodes erases the signal.
+- Mint marks the **automated or focal path, not general importance.** Keep it to 1–2 focal nodes per diagram. Using it on 5 nodes erases the signal.
 - The schematic isn't done when everything is added. It's done when nothing can be removed.
 
 **Target density: 4/10.** Enough to be technically complete. Not so dense it needs a guide. Above 9 nodes, it's probably two diagrams.
@@ -141,7 +141,7 @@ These mark "AI slop" schematics of any type:
 | 3 equal-width summary cards as default | Generic grid — vary widths |
 | Shadow on any element | Shadows are out. Borders are in. |
 | `rounded-2xl` on boxes | Max radius 6–10px or none |
-| Coral on every "important" node | Coral is 1–2 editorial accents, not a signaling system |
+| Mint on every "important" node | Mint identifies the automated/focal path; it is not a generic signaling system |
 | Reproducing Mermaid's renderer layout | Imports automatic spacing and routing instead of making an editorial layout |
 | Diagonal / slanted connectors between off-axis nodes | Rounded right-angle (orthogonal) elbows are mandatory — see §6 Mandatory connector rules |
 | Arrow label sitting on or touching its connector | Label must have a 6–10px gap above the line so the connector stays visible |
@@ -156,7 +156,7 @@ Type-specific anti-patterns live in each `references/type-*.md`.
 
 ## 5. Design System
 
-**The design system is skinnable.** All colors, typography, and tokens live in a single source of truth — [`references/style-guide.md`](references/style-guide.md). This file describes semantic roles (`paper`, `ink`, `muted`, `accent`, `link`, …). The default skin is a cool editorial palette (white-smoke paper, jet-black ink, atomic-tangerine accent, blue-slate muted, silver hairlines); to apply your own brand, either edit `style-guide.md` directly or run the URL-based flow described in [`references/onboarding.md`](references/onboarding.md).
+**The design system is skinnable.** All colors, typography, and tokens live in a single source of truth — [`references/style-guide.md`](references/style-guide.md). This file describes semantic roles (`paper`, `ink`, `muted`, `accent`, `link`, …). The default skin is Graphite + Mint: mist paper, graphite ink, deep-mint light accent, bright-mint dark accent, steel secondary text, and silver hairlines. To apply another brand, either edit `style-guide.md` directly or run the URL-based flow described in [`references/onboarding.md`](references/onboarding.md).
 
 > When specs below or in type references mention "ink", "accent", "muted", etc., look up the current hex value in `style-guide.md`.
 
@@ -219,7 +219,7 @@ Universal building blocks. Type-specialized primitives (lifeline, activation bar
 **Default: clean paper, no dot pattern.** Single `<rect>` filled with `paper`. Don't wrap the diagram in a secondary container background — the diagram sits directly on the page.
 
 ```svg
-<rect width="100%" height="100%" fill="#f5f5f5"/>
+<rect width="100%" height="100%" fill="#f6f6f6"/>
 ```
 
 **Optional: dotted paper variant.** When a long-form editorial diagram benefits from textured ground (essays, hero diagrams on a dedicated page), opt in by adding the `dots` pattern and a second rect:
@@ -227,10 +227,10 @@ Universal building blocks. Type-specialized primitives (lifeline, activation bar
 ```svg
 <defs>
   <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
-    <circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/>
+    <circle cx="1" cy="1" r="0.9" fill="rgba(30,30,30,0.10)"/>
   </pattern>
 </defs>
-<rect width="100%" height="100%" fill="#f5f5f5"/>
+<rect width="100%" height="100%" fill="#f6f6f6"/>
 <rect width="100%" height="100%" fill="url(#dots)" opacity="0.6"/>
 ```
 
@@ -240,21 +240,21 @@ Don't use the dot pattern when the diagram sits inside a product page, slide, or
 
 ```svg
 <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-  <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+  <polygon points="0 0, 8 3, 0 6" fill="#4a5464"/>
 </marker>
 <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-  <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+  <polygon points="0 0, 8 3, 0 6" fill="#087a5b"/>
 </marker>
 <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-  <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+  <polygon points="0 0, 8 3, 0 6" fill="#0078a8"/>
 </marker>
 ```
 
 | Arrow | Stroke | When |
 |---|---|---|
-| Default | muted `#4f5d75` | Internal, generic |
-| Accent | coral `#eb6c36` | Primary / highlighted / headline |
-| Link-blue | `#2e5aa8` | HTTP/API calls, external systems |
+| Default | muted `#4a5464` | Internal, generic |
+| Accent | deep mint `#087a5b` | Automated / primary / highlighted path |
+| Link-cyan | `#0078a8` | HTTP/API calls, external systems |
 | Dashed | `stroke-dasharray="5,4"` + any color | Optional, passive, return, async |
 
 **Draw arrows before boxes** so z-order puts lines behind nodes.
@@ -291,7 +291,7 @@ These six rules are **non-negotiable**. Run the pre-output checklist (§9) to ve
 
 ```svg
 <!-- 1. Opaque paper mask — prevents arrows bleeding through transparent fills -->
-<rect x="X" y="Y" width="W" height="H" rx="6" fill="#f5f5f5"/>
+<rect x="X" y="Y" width="W" height="H" rx="6" fill="#f6f6f6"/>
 <!-- 2. Styled box -->
 <rect x="X" y="Y" width="W" height="H" rx="6" fill="FILL" stroke="STROKE" stroke-width="1"/>
 <!-- 3. Rectangular type tag (rx=2, NOT a pill) -->
@@ -299,10 +299,10 @@ These six rules are **non-negotiable**. Run the pre-output checklist (§9) to ve
 <text x="X+22" y="Y+15" fill="STROKE@0.8" font-size="7" font-family="'Geist Mono', monospace"
       text-anchor="middle" letter-spacing="0.08em">API</text>
 <!-- 4. Node name (Geist sans — human-readable) -->
-<text x="CX" y="CY+2" fill="#2d3142" font-size="12" font-weight="600"
+<text x="CX" y="CY+2" fill="#1e1e1e" font-size="12" font-weight="600"
       font-family="'Geist', sans-serif" text-anchor="middle">Node Name</text>
 <!-- 5. Technical sublabel (Geist Mono) -->
-<text x="CX" y="CY+18" fill="#4f5d75" font-size="9"
+<text x="CX" y="CY+18" fill="#4a5464" font-size="9"
       font-family="'Geist Mono', monospace" text-anchor="middle">tech:port</text>
 ```
 
@@ -312,8 +312,8 @@ Every arrow label needs an opaque rect behind it. Without one it bleeds through 
 
 ```svg
 <!-- Mask sits 14px above the arrow (8px text height + 6px gap). Stroke is at ARROW_Y. -->
-<rect x="MID_X-18" y="ARROW_Y-20" width="36" height="12" rx="2" fill="#f5f5f5"/>
-<text x="MID_X" y="ARROW_Y-11" fill="#7a8399" font-size="8"
+<rect x="MID_X-18" y="ARROW_Y-20" width="36" height="12" rx="2" fill="#f6f6f6"/>
+<text x="MID_X" y="ARROW_Y-11" fill="#7b8797" font-size="8"
       font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">WRITE</text>
 ```
 
@@ -330,8 +330,8 @@ Rules:
 
 ```svg
 <line x1="30" y1="LEGEND_Y-8" x2="VIEWBOX_W-30" y2="LEGEND_Y-8"
-      stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
-<text x="30" y="LEGEND_Y+8" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace"
+      stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
+<text x="30" y="LEGEND_Y+8" fill="#4a5464" font-size="8" font-family="'Geist Mono', monospace"
       letter-spacing="0.14em">LEGEND</text>
 <!-- Items — horizontal row, ~160px apart -->
 ```
@@ -365,7 +365,7 @@ Quick check: if a coordinate ends in 1, 2, 3, 5, 6, 7, 9 — fix it.
 |---|---|
 | Max nodes | 9 |
 | Max arrows / transitions | 12 |
-| Max coral elements | 2 |
+| Max mint elements | 2 |
 | Max lifelines (sequence) | 5 |
 | Max combined fragments (sequence) | 1 (default); 2 only if each is single-region `opt`/`loop` |
 | Max `alt` regions (sequence) | 2 |
@@ -396,7 +396,7 @@ Don't use 3 identical generic cards. Vary the treatment:
 <div class="card">
   <p class="eyebrow">SECTION LABEL</p>
   <div class="card-header">
-    <span class="card-dot coral"></span>
+    <span class="card-dot accent"></span>
     <h3>Card Title</h3>
   </div>
   <ul><li>Item</li></ul>
@@ -406,10 +406,10 @@ Don't use 3 identical generic cards. Vary the treatment:
 Rules:
 
 - `background: #ffffff` (not paper — slight lift without shadow)
-- `border: 1px solid rgba(45,49,66,0.12)`
+- `border: 1px solid rgba(30,30,30,0.12)`
 - `border-radius: 6px`, `padding: 1.25rem`
 - **No `box-shadow`**
-- Card dots: 7px, `border-radius: 50%` — ink / muted / coral / link / soft variants
+- Card dots: 7px, `border-radius: 50%` — ink / muted / mint / link / soft variants
 
 ---
 
@@ -436,7 +436,7 @@ Run before producing any diagram.
 
 **Signal:**
 
-- [ ] Coral used on ≤2 elements? If more, which actually deserve focal status?
+- [ ] Mint used on ≤2 elements? If more, which actually deserve focal status?
 - [ ] Legend covers every type used — and nothing extra?
 - [ ] Within the type's complexity budget (§7)?
 
@@ -452,7 +452,7 @@ Run before producing any diagram.
 - [ ] **When several connectors enter or exit the same edge of a box, each has its own attach point (≥12px apart)? No connector hides another?**
 - [ ] **No connector passes behind a non-endpoint box, except the unavoidable-intervening-box case (§6 rule 5) — and in that case, the stroke is dashed and the label sits at the visible end?**
 - [ ] **No label mask overlaps a node drawn after it (§6 rule 6)? Every arrowhead lands on a shape border or lifeline (§6 rule 7)?**
-- [ ] Every arrow label has an opaque `fill="#f5f5f5"` rect behind it?
+- [ ] Every arrow label has an opaque `fill="#f6f6f6"` rect behind it?
 - [ ] Legend is a horizontal bottom strip, not floating?
 - [ ] No vertical `writing-mode` text?
 - [ ] `viewBox` expanded for the legend strip (~60px)?

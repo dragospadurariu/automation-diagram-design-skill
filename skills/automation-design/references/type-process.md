@@ -104,10 +104,10 @@ legend_row_y     = [legend_y_top + 16, legend_y_top + 37,
 ### 2.1 Background structure
 
 - Paper fill across full viewBox.
-- Dot pattern: 22×22 grid, `circle r=0.8`, `fill rgba(45,49,66,0.10)`. Opacity 0.55.
-- Alternating lane tints: odd-indexed lanes (0, 2, …) receive `rgba(45,49,66,0.018)` fill from `x=140` to `viewBox_w`.
-- Lane dividers: horizontal hairlines at every `lane_y_top(k)` and at `legend_y_top`; stroke `rgba(45,49,66,0.12)` width 0.8.
-- Label column right border: vertical hairline at `x = label_col_w`, stroke `rgba(45,49,66,0.20)` width 1, from `y = header_h` to `y = legend_y_top`.
+- Dot pattern: 22×22 grid, `circle r=0.8`, `fill rgba(30,30,30,0.10)`. Opacity 0.55.
+- Alternating lane tints: odd-indexed lanes (0, 2, …) receive `rgba(30,30,30,0.018)` fill from `x=140` to `viewBox_w`.
+- Lane dividers: horizontal hairlines at every `lane_y_top(k)` and at `legend_y_top`; stroke `rgba(30,30,30,0.12)` width 0.8.
+- Label column right border: vertical hairline at `x = label_col_w`, stroke `rgba(30,30,30,0.20)` width 1, from `y = header_h` to `y = legend_y_top`.
 
 ### 2.2 Step header chip + label
 
@@ -121,15 +121,15 @@ label_anchor     = (step_cx(j), 32)              # 8-px gap below chip
 ```
 
 **Chip** (the numbered pill at the top of each column):
-- Default fill: `rgba(45,49,66,0.12)`, number text ink.
-- Focal fill: `rgba(235,108,54,0.20)`, number text accent (§5).
+- Default fill: `rgba(30,30,30,0.12)`, number text ink.
+- Focal fill: `rgba(8,122,91,0.20)`, number text accent (§5).
 - Per-step `color` override (§4): replaces the fill with `rgba(C, 0.20)` and the number fill with `C`.
 
 **Label** (the uppercase mono text below the chip):
 - Renders `steps[j].label` (uppercased), anchored at `label_anchor`.
 - Font: Geist Mono 6 px, weight 500, `letter-spacing="0.12em"`, `text-anchor="middle"`.
-- Default fill: muted (`#4f5d75` light / `#bfc0c0` dark).
-- Focal fill: accent (`#eb6c36` light / `#f08a59` dark).
+- Default fill: muted (`#4a5464` light / `#c1c8d1` dark).
+- Focal fill: accent (`#087a5b` light / `#82ffcf` dark).
 - Per-step `color` override: fill = `C` (matches the chip number color).
 - Keep labels short (≤ 9 chars). Long labels truncate; if you need more, abbreviate.
 
@@ -168,20 +168,20 @@ Three styles, bound to topology. Connectors drawn **before** all node rects (z-o
 
 | `style` | Stroke | Width | Dash | Marker | When required |
 |---|---|---|---|---|---|
-| `normal` | `#4f5d75` (muted) | 1.0 | — | `arrow` | Standard data hand-off between steps or actors. Unlabelled. |
-| `focal-in` / `focal-out` | `#eb6c36` (accent) | 1.2 | — | `arrow-accent` | Every edge whose endpoint is the focal node (`focal-in`) or origin is the focal node (`focal-out`). |
-| `trigger` | `#4f5d75` (muted) | 1.0 | `4,3` | `arrow-sm` | Orchestration trigger (scheduler → tool, manual override → upstream step). Unlabelled. |
+| `normal` | `#4a5464` (muted) | 1.0 | — | `arrow` | Standard data hand-off between steps or actors. Unlabelled. |
+| `focal-in` / `focal-out` | `#087a5b` (accent) | 1.2 | — | `arrow-accent` | Every edge whose endpoint is the focal node (`focal-in`) or origin is the focal node (`focal-out`). |
+| `trigger` | `#4a5464` (muted) | 1.0 | `4,3` | `arrow-sm` | Orchestration trigger (scheduler → tool, manual override → upstream step). Unlabelled. |
 
 **Defs block** (required, three markers):
 
 ```svg
 <defs>
   <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
-    <circle cx="11" cy="11" r="0.8" fill="rgba(45,49,66,0.10)"/>
+    <circle cx="11" cy="11" r="0.8" fill="rgba(30,30,30,0.10)"/>
   </pattern>
-  <marker id="arrow"        markerWidth="8" markerHeight="6" refX="7" refY="3"   orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
-  <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3"   orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
-  <marker id="arrow-sm"     markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0 0, 6 2.5, 0 5" fill="#4f5d75"/></marker>
+  <marker id="arrow"        markerWidth="8" markerHeight="6" refX="7" refY="3"   orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4a5464"/></marker>
+  <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3"   orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#087a5b"/></marker>
+  <marker id="arrow-sm"     markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><polygon points="0 0, 6 2.5, 0 5" fill="#4a5464"/></marker>
 </defs>
 ```
 
@@ -283,21 +283,21 @@ If zero or >1 of any focal slot are declared, halt and ask the user.
 
 | Token | Light | Dark |
 |---|---|---|
-| Paper | `#f5f5f5` | `#2d3142` |
-| Ink | `#2d3142` | `#f5f5f5` |
-| Muted | `#4f5d75` | `#bfc0c0` |
-| Soft | `#7a8399` | `#8e98ac` |
-| Accent | `#eb6c36` | `#f08a59` |
-| Dot pattern | `rgba(45,49,66,0.10)` | `rgba(245,245,245,0.10)` |
-| Lane tint | `rgba(45,49,66,0.018)` | `rgba(245,245,245,0.025)` |
-| Dividers | `rgba(45,49,66,0.12)` | `rgba(245,245,245,0.12)` |
-| Label col divider | `rgba(45,49,66,0.20)` | `rgba(245,245,245,0.22)` |
-| Default chip fill | `rgba(45,49,66,0.12)` | `rgba(245,245,245,0.12)` |
-| Focal chip fill | `rgba(235,108,54,0.20)` | `rgba(240,138,89,0.22)` |
-| Default node fill | white | `rgba(245,245,245,0.04)` |
-| Default node stroke | `rgba(45,49,66,0.25)` | `rgba(245,245,245,0.20)` |
-| Focal node fill | `rgba(235,108,54,0.08)` | `rgba(240,138,89,0.12)` |
-| Focal node stroke | `#eb6c36` | `#f08a59` |
+| Paper | `#f6f6f6` | `#1e1e1e` |
+| Ink | `#1e1e1e` | `#f6f6f6` |
+| Muted | `#4a5464` | `#c1c8d1` |
+| Soft | `#7b8797` | `#9aa4b1` |
+| Accent | `#087a5b` | `#82ffcf` |
+| Dot pattern | `rgba(30,30,30,0.10)` | `rgba(246,246,246,0.10)` |
+| Lane tint | `rgba(30,30,30,0.018)` | `rgba(246,246,246,0.025)` |
+| Dividers | `rgba(30,30,30,0.12)` | `rgba(246,246,246,0.12)` |
+| Label col divider | `rgba(30,30,30,0.20)` | `rgba(246,246,246,0.22)` |
+| Default chip fill | `rgba(30,30,30,0.12)` | `rgba(246,246,246,0.12)` |
+| Focal chip fill | `rgba(8,122,91,0.20)` | `rgba(130,255,207,0.22)` |
+| Default node fill | white | `rgba(246,246,246,0.04)` |
+| Default node stroke | `rgba(30,30,30,0.25)` | `rgba(246,246,246,0.20)` |
+| Focal node fill | `rgba(8,122,91,0.08)` | `rgba(130,255,207,0.12)` |
+| Focal node stroke | `#087a5b` | `#82ffcf` |
 | Custom component colors | `C` | `C_light` (lighten ~15%) |
 
 ---

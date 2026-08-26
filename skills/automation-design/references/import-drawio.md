@@ -89,7 +89,7 @@ Fresh layout on the 4px grid, per the type reference and SKILL.md §6–§7. Exp
 | `#ffe6cc` / `#d79b00` (orange) | attention / queue | `ink` treatment; accent only if focal |
 | `#f8cecc` / `#b85450` (red) | failure / risk / legacy | Optional/Async — dashed `ink @ 0.20` |
 | `#e1d5e7` / `#9673a6` (purple) | external / third-party | External/Cloud — `ink @ 0.03` fill |
-| `#f5f5f5` / grey | infrastructure / background | Store/State, or a zone container |
+| `#f6f6f6` / grey | infrastructure / background | Store/State, or a zone container |
 | no fill | unstyled | Backend/API |
 
   Source color is a *signal about role*, not a color to keep. Six fill colors in the source do not become six fills in the output — the palette is one accent plus the ink ramp (SKILL.md §5).

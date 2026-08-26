@@ -5,7 +5,7 @@
 The nodes must be people, agents, teams, roles, or accountable owners: an org chart shows responsibility, invocation paths, and coverage gaps. A hierarchy of *things* — module decomposition, a taxonomy, a folder layout — is not an org chart and this skill ships no type for it; route it per the out-of-scope rule in [import-drawio.md](import-drawio.md) or redraw the part that carries meaning as **Architecture** with grouped zones.
 
 ## Layout conventions
-- Root owner or front door at top center. Use one coral focal node for the person/team/agent that receives ambiguous work.
+- Root owner or front door at top center. Use one mint focal node for the person/team/agent that receives ambiguous work.
 - Tier 1 nodes are departments, pods, queues, or primary routing buckets. Keep them horizontally aligned.
 - Tier 2 nodes are responsible owners or specialists. If there are more than 8 specialists, group them under pod nodes instead of making one giant row.
 - Use orthogonal connectors: vertical drop from parent → horizontal bus → vertical drops to children. No diagonal lines.
@@ -27,7 +27,7 @@ The nodes must be people, agents, teams, roles, or accountable owners: an org ch
 - Max visible org nodes: 12. If more, create an overview org chart plus separate detail charts per pod.
 - Max depth: 4 tiers.
 - Max direct reports under one parent: 5. If there are more, introduce grouping nodes.
-- Max coral nodes: 1. The org chart's job is clarity, not highlighting everything.
+- Max mint nodes: 1. The org chart's job is clarity, not highlighting everything.
 - Max side callouts: 2.
 
 ## Anti-patterns

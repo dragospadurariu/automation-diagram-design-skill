@@ -6,7 +6,7 @@
 - Group components by tier or trust boundary (frontend → backend → data; public → private).
 - Primary flow runs left→right or top→down. Pick one and hold it.
 - Draw arrows before boxes so z-order puts connections behind components.
-- 1–2 coral focal nodes: the primary integration point, the primary data store, or the key decision node.
+- 1–2 mint focal nodes: the primary integration point, the primary data store, or the key decision node.
 - Dashed boundary rectangles mark regions (VPC, security group, trust zone); labels sit on a paper-colored mask over the boundary line.
 
 ## Connector style
@@ -55,20 +55,20 @@ Group 2+ nodes that serve the same tier or trust boundary with a zone rect — d
 
 ```svg
 <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8"
-      fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
 <rect x="{label_x}" y="{y+4}" width="{label_w}" height="12" rx="2" fill="{paper}"/>
-<text x="{label_cx}" y="{y+13}" fill="rgba(45,49,66,0.40)" font-size="7"
+<text x="{label_cx}" y="{y+13}" fill="rgba(30,30,30,0.40)" font-size="7"
       font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">LAYER</text>
 ```
 
 Rules:
 - Leave 12–16px above the first enclosed node — the eyebrow label sits in this margin.
-- Zone fill: `rgba(45,49,66,0.02)` (2% ink wash). Any stronger competes with node fills.
+- Zone fill: `rgba(30,30,30,0.02)` (2% ink wash). Any stronger competes with node fills.
 - Max 3 zones per diagram. More and it reads like a swimlane (use that type instead).
-- Dark mode: swap `rgba(45,49,66,…)` → `rgba(245,245,245,…)` same opacities; label mask fill = `paper` (dark).
+- Dark mode: swap `rgba(30,30,30,…)` → `rgba(246,246,246,…)` same opacities; label mask fill = `paper` (dark).
 
 ## Anti-patterns
-- Every box in coral ("this is important too") — hierarchy collapses.
+- Every box in mint ("this is important too") — hierarchy collapses.
 - Bidirectional arrow when one direction is obvious from context.
 - Legend floating inside the diagram area.
 

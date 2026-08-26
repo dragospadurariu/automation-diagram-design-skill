@@ -355,7 +355,7 @@ def check_docs() -> None:
     example = EXAMPLE.read_text(encoding="utf-8")
     if 'viewBox="0 0 960 600"' not in example:
         fail("worked example does not use the doc-inline viewBox")
-    if example.count("#eb6c36") > 4:
+    if example.count("#087a5b") > 4:
         fail("worked example uses the accent on more than the focal node + legend")
     proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts/lint-skin.py"), str(EXAMPLE)],

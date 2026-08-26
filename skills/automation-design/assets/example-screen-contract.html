@@ -7,8 +7,8 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --paper: #f5f5f5; --paper-2: #ececec; --ink: #2d3142; --muted: #4f5d75;
-      --soft: #7a8399; --rule: rgba(45,49,66,0.12); --accent: #eb6c36; --link: #2e5aa8;
+      --paper: #f6f6f6; --paper-2: #e9ecef; --ink: #1e1e1e; --muted: #4a5464;
+      --soft: #7b8797; --rule: rgba(30,30,30,0.12); --accent: #087a5b; --link: #0078a8;
       --sans: 'Geist', system-ui, sans-serif; --serif: 'Instrument Serif', serif;
       --mono: 'Geist Mono', ui-monospace, monospace;
     }
@@ -42,14 +42,14 @@
       <title id="screen-contract-title">Invoice detail — screen contract</title>
       <desc id="screen-contract-desc">The integration contract of one screen, named as logical operations: GetInvoice loads it, SaveInvoice writes back, RejectInvoice starts a notification flow, and ApproveInvoice — gated by role and amount in the action layer — enqueues a command consumed asynchronously by an RPA process, acknowledging queued back to the screen.</desc>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4f5d75"/></marker>
-        <marker id="arr-ink" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#2d3142"/></marker>
-        <marker id="arr-link" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#2e5aa8"/></marker>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a5464"/></marker>
+        <marker id="arr-ink" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#1e1e1e"/></marker>
+        <marker id="arr-link" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#0078a8"/></marker>
       </defs>
-      <rect width="1040" height="620" fill="#f5f5f5"/>
+      <rect width="1040" height="620" fill="#f6f6f6"/>
 
       <!-- Page-context panel -->
-      <rect x="40" y="16" width="656" height="80" rx="6" fill="#ececec" stroke="rgba(45,49,66,0.12)"/>
+      <rect x="40" y="16" width="656" height="80" rx="6" fill="#e9ecef" stroke="rgba(30,30,30,0.12)"/>
       <text x="52" y="34" class="panel-eyebrow">SCREEN CONTRACT · 2.1</text>
       <text x="52" y="48" class="panel-line">REACHED FROM · 2.0 invoice list [SELECT ROW] · RETURNS · ack queued / cancel / back</text>
       <text x="52" y="60" class="panel-line">OPERATIONS · GetInvoice · SaveInvoice · ApproveInvoice · RejectInvoice</text>
@@ -57,91 +57,91 @@
       <text x="52" y="84" class="panel-line">AUDIT · every operation audited — audit policy → governance page</text>
 
       <!-- Containers first -->
-      <rect x="64" y="176" width="224" height="240" rx="8" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-dasharray="4,4"/>
+      <rect x="64" y="176" width="224" height="240" rx="8" fill="rgba(30,30,30,0.03)" stroke="rgba(30,30,30,0.30)" stroke-dasharray="4,4"/>
       <text x="80" y="196" class="ground-label">DATA · FOR THE SCREEN</text>
-      <rect x="688" y="144" width="288" height="344" rx="8" fill="rgba(235,108,54,0.05)" stroke="rgba(235,108,54,0.50)" stroke-dasharray="4,4"/>
+      <rect x="688" y="144" width="288" height="344" rx="8" fill="rgba(8,122,91,0.05)" stroke="rgba(8,122,91,0.50)" stroke-dasharray="4,4"/>
       <text x="704" y="164" class="boundary-label">TRIGGERED OPERATIONS</text>
 
       <!-- Connectors -->
       <!-- reads into the screen (dashed): GetInvoice -->
-      <path d="M264 232 H424" fill="none" stroke="#4f5d75" stroke-dasharray="5,4" marker-end="url(#arr)"/>
-      <path d="M264 296 H384 Q392 296 392 288 V280 Q392 272 400 272 H424" fill="none" stroke="#4f5d75" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+      <path d="M264 232 H424" fill="none" stroke="#4a5464" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+      <path d="M264 296 H384 Q392 296 392 288 V280 Q392 272 400 272 H424" fill="none" stroke="#4a5464" stroke-dasharray="5,4" marker-end="url(#arr)"/>
       <!-- write back (solid ink): SaveInvoice -->
-      <path d="M424 252 H264" fill="none" stroke="#2d3142" marker-end="url(#arr-ink)"/>
+      <path d="M424 252 H264" fill="none" stroke="#1e1e1e" marker-end="url(#arr-ink)"/>
       <!-- RejectInvoice: screen upper-right -> Notify (top row) -->
-      <path d="M616 232 H656 Q664 232 664 224 V208 Q664 200 672 200 H712" fill="none" stroke="#2e5aa8" marker-end="url(#arr-link)"/>
+      <path d="M616 232 H656 Q664 232 664 224 V208 Q664 200 672 200 H712" fill="none" stroke="#0078a8" marker-end="url(#arr-link)"/>
       <!-- ApproveInvoice: through the auth gate, into the command's top edge -->
-      <path d="M616 256 H800 Q808 256 808 264 V280" fill="none" stroke="#2e5aa8" marker-end="url(#arr-link)"/>
+      <path d="M616 256 H800 Q808 256 808 264 V280" fill="none" stroke="#0078a8" marker-end="url(#arr-link)"/>
       <!-- ACK QUEUED: command back to the screen's bottom edge -->
-      <path d="M712 320 H568 Q560 320 560 312 V288" fill="none" stroke="#2e5aa8" stroke-dasharray="5,4" marker-end="url(#arr-link)"/>
+      <path d="M712 320 H568 Q560 320 560 312 V288" fill="none" stroke="#0078a8" stroke-dasharray="5,4" marker-end="url(#arr-link)"/>
       <!-- async hop inside the boundary: command -> RPA consumer -->
-      <path d="M832 328 V392" fill="none" stroke="#4f5d75" marker-end="url(#arr)"/>
+      <path d="M832 328 V392" fill="none" stroke="#4a5464" marker-end="url(#arr)"/>
 
       <!-- Auth gate on the ApproveInvoice edge (automated · action layer) -->
-      <rect x="700" y="248" width="16" height="16" rx="3" fill="#f5f5f5" stroke="#7a8399"/>
+      <rect x="700" y="248" width="16" height="16" rx="3" fill="#f6f6f6" stroke="#7b8797"/>
       <text x="708" y="260" class="tag-text">⚙</text>
-      <rect x="724" y="236" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="724" y="236" width="104" height="12" rx="2" fill="#f6f6f6"/>
       <text x="776" y="245" class="arrow-label">ROLE + AMOUNT</text>
 
       <!-- Arrow labels -->
-      <rect x="304" y="212" width="60" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="304" y="212" width="60" height="12" rx="2" fill="#f6f6f6"/>
       <text x="334" y="221" class="arrow-label">GET · LOAD</text>
-      <rect x="288" y="276" width="60" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="288" y="276" width="60" height="12" rx="2" fill="#f6f6f6"/>
       <text x="318" y="285" class="arrow-label">GET · LOAD</text>
-      <rect x="300" y="258" width="68" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="300" y="258" width="68" height="12" rx="2" fill="#f6f6f6"/>
       <text x="334" y="267" class="arrow-label">SAVE · SYNC</text>
-      <rect x="608" y="180" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="608" y="180" width="64" height="12" rx="2" fill="#f6f6f6"/>
       <text x="640" y="189" class="arrow-label link-label">REJECT</text>
-      <rect x="624" y="264" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="624" y="264" width="64" height="12" rx="2" fill="#f6f6f6"/>
       <text x="656" y="273" class="arrow-label link-label">APPROVE</text>
-      <rect x="600" y="328" width="80" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="600" y="328" width="80" height="12" rx="2" fill="#f6f6f6"/>
       <text x="640" y="337" class="arrow-label link-label">ACK QUEUED</text>
-      <rect x="844" y="348" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <rect x="844" y="348" width="48" height="12" rx="2" fill="#f6f6f6"/>
       <text x="868" y="357" class="arrow-label">ASYNC</text>
 
       <!-- Data nodes (left) -->
-      <rect x="88" y="208" width="176" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
-      <rect x="92" y="212" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="110" y="219" class="tag-text">ENTITY</text>
+      <rect x="88" y="208" width="176" height="48" rx="6" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/>
+      <rect x="92" y="212" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="110" y="219" class="tag-text">ENTITY</text>
       <text x="176" y="232" class="node-title">Invoice · by id</text>
       <text x="176" y="244" class="node-sub">GetInvoice · SaveInvoice</text>
 
-      <rect x="88" y="280" width="176" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
-      <rect x="92" y="284" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="106" y="291" class="tag-text">DOC</text>
+      <rect x="88" y="280" width="176" height="48" rx="6" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/>
+      <rect x="92" y="284" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="106" y="291" class="tag-text">DOC</text>
       <text x="176" y="304" class="node-title">Attachments</text>
       <text x="176" y="316" class="node-sub">read only · pdf previews</text>
 
       <!-- THE SCREEN (focal) -->
-      <rect x="424" y="216" width="192" height="72" rx="6" fill="rgba(235,108,54,0.07)" stroke="#eb6c36" stroke-width="1.2"/>
-      <rect x="432" y="222" width="44" height="10" rx="3" fill="rgba(235,108,54,0.20)"/><text x="454" y="229" class="screen-chip">SCREEN</text>
-      <rect x="564" y="222" width="44" height="10" rx="3" fill="transparent" stroke="rgba(235,108,54,0.60)" stroke-width="0.8"/><text x="586" y="229" class="screen-chip">2.1</text>
+      <rect x="424" y="216" width="192" height="72" rx="6" fill="rgba(8,122,91,0.07)" stroke="#087a5b" stroke-width="1.2"/>
+      <rect x="432" y="222" width="44" height="10" rx="3" fill="rgba(8,122,91,0.20)"/><text x="454" y="229" class="screen-chip">SCREEN</text>
+      <rect x="564" y="222" width="44" height="10" rx="3" fill="transparent" stroke="rgba(8,122,91,0.60)" stroke-width="0.8"/><text x="586" y="229" class="screen-chip">2.1</text>
       <text x="520" y="252" class="node-title">Invoice detail</text>
       <text x="520" y="266" class="node-sub">approve / reject / edit</text>
       <text x="520" y="278" class="node-sub">ops named · profile decides impl</text>
 
       <!-- Triggered operations (right): Notify top, command middle, RPA bottom -->
-      <rect x="712" y="176" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="716" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="730" y="187" class="tag-text">FLOW</text>
+      <rect x="712" y="176" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="716" y="180" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="730" y="187" class="tag-text">FLOW</text>
       <text x="832" y="200" class="node-title">RejectInvoice</text>
       <text x="832" y="212" class="node-sub">notify AP lead · reject reason</text>
 
-      <rect x="712" y="280" width="240" height="48" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
-      <rect x="716" y="284" width="36" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="734" y="291" class="tag-text">QUEUE</text>
+      <rect x="712" y="280" width="240" height="48" rx="6" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/>
+      <rect x="716" y="284" width="36" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="734" y="291" class="tag-text">QUEUE</text>
       <text x="832" y="304" class="node-title">ApproveInvoice</text>
       <text x="832" y="316" class="node-sub">command · queued · ack to UI</text>
 
-      <rect x="712" y="392" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.25)"/>
-      <rect x="716" y="396" width="28" height="10" rx="3" fill="transparent" stroke="rgba(45,49,66,0.30)" stroke-width="0.8"/><text x="730" y="403" class="tag-text">RPA</text>
+      <rect x="712" y="392" width="240" height="48" rx="6" fill="#ffffff" stroke="rgba(30,30,30,0.25)"/>
+      <rect x="716" y="396" width="28" height="10" rx="3" fill="transparent" stroke="rgba(30,30,30,0.30)" stroke-width="0.8"/><text x="730" y="403" class="tag-text">RPA</text>
       <text x="832" y="416" class="node-title">Post to ERP</text>
       <text x="832" y="428" class="node-sub">unattended · consumes queue</text>
 
       <!-- Legend -->
-      <line x1="40" y1="536" x2="1000" y2="536" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <line x1="40" y1="536" x2="1000" y2="536" stroke="rgba(30,30,30,0.10)" stroke-width="0.8"/>
       <text x="40" y="556" class="legend-label">LEGEND</text>
-      <line x1="120" y1="552" x2="160" y2="552" stroke="#4f5d75" stroke-dasharray="5,4"/><text x="168" y="555" class="legend-text">Data in (GetInvoice)</text>
-      <line x1="296" y1="552" x2="336" y2="552" stroke="#2d3142"/><text x="344" y="555" class="legend-text">Sync write (SaveInvoice)</text>
-      <line x1="480" y1="552" x2="520" y2="552" stroke="#2e5aa8"/><text x="528" y="555" class="legend-text">Operation trigger · dashed = response</text>
-      <rect x="720" y="545" width="16" height="14" rx="3" fill="#f5f5f5" stroke="#7a8399"/><text x="728" y="556" class="tag-text">⚙</text><text x="744" y="555" class="legend-text">Auth gate (action layer)</text>
-      <rect x="888" y="545" width="28" height="14" rx="3" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/><text x="924" y="555" class="legend-text">Queue = async</text>
+      <line x1="120" y1="552" x2="160" y2="552" stroke="#4a5464" stroke-dasharray="5,4"/><text x="168" y="555" class="legend-text">Data in (GetInvoice)</text>
+      <line x1="296" y1="552" x2="336" y2="552" stroke="#1e1e1e"/><text x="344" y="555" class="legend-text">Sync write (SaveInvoice)</text>
+      <line x1="480" y1="552" x2="520" y2="552" stroke="#0078a8"/><text x="528" y="555" class="legend-text">Operation trigger · dashed = response</text>
+      <rect x="720" y="545" width="16" height="14" rx="3" fill="#f6f6f6" stroke="#7b8797"/><text x="728" y="556" class="tag-text">⚙</text><text x="744" y="555" class="legend-text">Auth gate (action layer)</text>
+      <rect x="888" y="545" width="28" height="14" rx="3" fill="rgba(30,30,30,0.05)" stroke="#4a5464"/><text x="924" y="555" class="legend-text">Queue = async</text>
     </svg>
 
     <p class="colophon">screen contract · only for architecturally significant screens — in a detail set: app card → screen states → this page, linked from state 2.1</p>
