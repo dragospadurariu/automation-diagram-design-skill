@@ -76,8 +76,8 @@ def check_description(errors: list[str]) -> None:
         errors.append("SKILL.md frontmatter description is missing")
         return
     types = selection_table_types(markdown)
-    if len(types) != 11:
-        errors.append(f"expected 11 visual types in the selection table; found {len(types)}")
+    if len(types) != 13:
+        errors.append(f"expected 13 visual types in the selection table; found {len(types)}")
     for name in types:
         key = normalized(name)
         if key not in description:

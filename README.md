@@ -8,7 +8,7 @@ A visual language for enterprise automation: robots, agents, humans, queues, orc
 
 *One numbered process at the depth a PDD is written: step IDs that match the document's sections, technical facts annotated under each box, and the agent step with its confidence gate as the focal decision. Source: [`example-process-detail.html`](skills/automation-design/assets/example-process-detail.html).*
 
-11 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
+13 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
 
 Forked from [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design) (MIT) — the editorial design system, verification tooling, and import/export pipeline come from there; the automation vocabulary, patterns, and scope are new.
 
@@ -109,7 +109,7 @@ First and foremost, it makes **automation design deliverables**, not generic box
 - **Agentic automation packs** — one card per agent with grounding, tools, permissions, operating mode, confidence gates, escalation, memory, and evaluation loops.
 - **Automation application annexes** — app cards, screen states, screen contracts, and runtime topology tied back to the automations they trigger.
 
-Those deliverables use 11 underlying visual types. Each ships in minimal light, minimal dark, and full-editorial variants; every example opens directly in a browser with no build step or external image dependency.
+Those deliverables use 13 underlying visual types, including a phase-led high-level architecture and a physical database schema. Each ships in minimal light, minimal dark, and full-editorial variants; every example opens directly in a browser with no build step or external image dependency.
 
 <table>
 <tr>
@@ -130,11 +130,16 @@ Those deliverables use 11 underlying visual types. Each ships in minimal light, 
 <tr>
   <td align="center"><img src="readme-assets/process.png" alt="Automation process"><br><b>Automation process</b><br><sub>System-tagged steps and handoffs</sub></td>
   <td align="center"><img src="readme-assets/data-flow.png" alt="Queue-based automation"><br><b>Queue-based automation</b><br><sub>Dispatcher → queue → performer</sub></td>
+  <td align="center"><img src="readme-assets/high-level.png" alt="High-level architecture"><br><b>High-level architecture</b><br><sub>Phases, boundaries, control planes</sub></td>
+</tr>
+<tr>
+  <td align="center"><img src="readme-assets/db-schema.png" alt="Database schema"><br><b>Database schema</b><br><sub>Physical tables and column-level FKs</sub></td>
+  <td></td>
   <td></td>
 </tr>
 </table>
 
-**Browse the gallery locally:** open [`skills/automation-design/assets/index.html`](skills/automation-design/assets/index.html) to flip through all 11 types with light / dark / full-editorial tabs.
+**Browse the gallery locally:** open [`skills/automation-design/assets/index.html`](skills/automation-design/assets/index.html) to flip through all 13 types with light / dark / full-editorial tabs.
 
 ---
 
