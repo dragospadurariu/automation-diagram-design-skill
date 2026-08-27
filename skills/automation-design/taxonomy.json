@@ -1,5 +1,5 @@
 {
-  "taxonomy_version": "1.0.0",
+  "taxonomy_version": "1.1.0",
   "visual_types": [
     {
       "id": "architecture",
@@ -233,6 +233,23 @@
       "category": "automation",
       "nearest_visual_type": "architecture",
       "aliases": ["app card", "application architecture"]
+    }
+  ],
+  "process_profiles": [
+    {
+      "id": "as-is",
+      "label": "AS-IS",
+      "description": "Observed current execution, including unknowns, manual work, waits, rework, and exceptions without invented improvements."
+    },
+    {
+      "id": "to-be",
+      "label": "TO-BE",
+      "description": "Intended future execution, with proposed behavior and assumptions distinguished from approved requirements."
+    },
+    {
+      "id": "transition",
+      "label": "TRANSITION",
+      "description": "Migration path from current to future execution, with temporary states, cutovers, owners, and retirement points."
     }
   ],
   "node_kinds": [

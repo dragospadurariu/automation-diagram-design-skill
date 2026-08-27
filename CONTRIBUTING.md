@@ -144,6 +144,15 @@ Settled policies live as short records in `docs/adr/` — one pinned motion cont
 5. Amend `docs/adr/0002` in the same PR. Say why the new type is a layout grammar no existing type provides — that is the only accepted reason, and ADR 0007 adds a second bar: it must serve the automation scope.
 6. Run the full gate suite — counts are derived from taxonomy.json, and new examples are linted automatically by `--all`.
 
+## Changing process-state profiles
+
+`AS-IS`, `TO-BE`, and `TRANSITION` are an axis layered onto Process, Swimlane, Flowchart, or Sequence — never add a visual type solely to represent operational state.
+
+1. Update `process_profiles` in `skills/automation-design/taxonomy.json` first.
+2. Keep the stable-profile table in `references/process-profiles.md` exact; `verify-taxonomy.py` rejects drift.
+3. Preserve the canonical AS-IS example's structural contract: profile evidence, performer lane axis, explicit unknown measures, action/decision distinction, manual handoff, and distinct response/escalation outcomes.
+4. Run taxonomy, docs-sync, skin, and geometry gates before opening the PR.
+
 ## Changing the icon set
 
 Icons are generated, never hand-edited:

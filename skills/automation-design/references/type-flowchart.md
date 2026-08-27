@@ -2,6 +2,8 @@
 
 **Best for:** decision logic, algorithms, user-facing branching flows ("Should I…?"), onboarding routing, support-triage trees.
 
+For a current-state, future-state, or migration-state process, also load [`process-profiles.md`](process-profiles.md). The profile adds evidence and state rules; this file continues to own decision shapes and control-flow geometry.
+
 ## Layout conventions
 - Shape carries type, not color:
   - **Oval** (`rx=20`) — start / end

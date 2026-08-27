@@ -1,5 +1,7 @@
 # Sequence
 
+For an explicitly current-state, future-state, or migration-state interaction, also load [`process-profiles.md`](process-profiles.md). Use the profile for evidence and state claims while this file continues to own time ordering and message grammar.
+
 **Best for:** request/response flows, protocol exchanges, multi-actor interactions over time, API call traces, incident reconstructions, auth/token refresh paths with branching.
 
 ## Layout conventions

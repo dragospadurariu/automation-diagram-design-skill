@@ -2,6 +2,8 @@
 
 **Best for:** cross-functional processes, RACI-style flows, vendor handoffs, multi-team shipping workflows.
 
+For a current-state, future-state, or migration-state deliverable, also load [`process-profiles.md`](process-profiles.md). The profile adds evidence and state rules; this file continues to own lanes and handoff layout.
+
 ## Layout conventions
 - Horizontal lanes (or vertical columns) — one per actor/team. Label each lane in the left margin (or top) with a Geist Mono eyebrow.
 - Lane dividers: 1px hairlines.
