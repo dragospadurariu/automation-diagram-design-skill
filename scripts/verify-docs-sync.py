@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify that routing, product metadata, and browsing surfaces stay in sync.
 
-Ten drift classes, each of which has shipped before or is easy to reintroduce:
+Eleven drift classes, each of which has shipped before or is easy to reintroduce:
 
 1. The SKILL.md frontmatter description is the only text an agent sees before
    deciding to load the skill — every visual type in the selection table must
@@ -22,6 +22,8 @@ Ten drift classes, each of which has shipped before or is easy to reintroduce:
 8. README pattern counts must match the numbered semantic-pattern catalog.
 9. SKILL.md metadata version must match both plugin manifests.
 10. The gallery shell must use the shipped semantic palette from style-guide.md.
+11. Counts and visual-type labels must agree with taxonomy.json rather than a
+    second hard-coded catalog.
 """
 
 from __future__ import annotations
@@ -39,6 +41,7 @@ REFERENCE_DIR = ROOT / "skills/automation-design/references"
 SEMANTIC_PATTERNS = REFERENCE_DIR / "semantic-patterns.md"
 STYLE_GUIDE = REFERENCE_DIR / "style-guide.md"
 README = ROOT / "README.md"
+TAXONOMY = ROOT / "skills/automation-design/taxonomy.json"
 VARIANTS = ("", "-dark", "-full")
 PROFILE_SURFACES = (
     Path("commands/profile.md"),
@@ -69,16 +72,40 @@ def selection_table_types(markdown: str) -> list[str]:
     return [name.strip() for name in names]
 
 
-def check_description(errors: list[str]) -> None:
+def taxonomy_projection(errors: list[str]) -> tuple[list[str], int]:
+    try:
+        payload = json.loads(TAXONOMY.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"could not load taxonomy.json: {exc}")
+        return [], 0
+    visuals = payload.get("visual_types")
+    patterns = payload.get("semantic_patterns")
+    if not isinstance(visuals, list) or not isinstance(patterns, list):
+        errors.append("taxonomy.json must contain visual_types and semantic_patterns arrays")
+        return [], 0
+    labels = [
+        entry.get("label")
+        for entry in visuals
+        if isinstance(entry, dict) and isinstance(entry.get("label"), str)
+    ]
+    if len(labels) != len(visuals):
+        errors.append("every taxonomy visual type must have a string label")
+    return labels, len(patterns)
+
+
+def check_description(errors: list[str], expected_types: list[str] | None = None) -> None:
     markdown = SKILL.read_text(encoding="utf-8")
     description = normalized(frontmatter_description(markdown))
     if not description:
         errors.append("SKILL.md frontmatter description is missing")
         return
     types = selection_table_types(markdown)
-    if len(types) != 13:
-        errors.append(f"expected 13 visual types in the selection table; found {len(types)}")
-    for name in types:
+    if expected_types is not None and types != expected_types:
+        errors.append(
+            "SKILL.md visual-type selection table does not match taxonomy.json "
+            f"(expected {len(expected_types)} entries; found {len(types)})"
+        )
+    for name in expected_types if expected_types is not None else types:
         key = normalized(name)
         if key not in description:
             errors.append(
@@ -121,8 +148,18 @@ def semantic_pattern_count(markdown: str) -> int:
     return len(re.findall(r"^##\s+\d+\.\s+", markdown, re.MULTILINE))
 
 
-def check_pattern_counts(errors: list[str], readme: str, patterns: str) -> None:
+def check_pattern_counts(
+    errors: list[str],
+    readme: str,
+    patterns: str,
+    expected_count: int | None = None,
+) -> None:
     actual = semantic_pattern_count(patterns)
+    if expected_count is not None and actual != expected_count:
+        errors.append(
+            f"semantic-patterns.md contains {actual} patterns; "
+            f"taxonomy.json contains {expected_count}"
+        )
     declared = [int(value) for value in re.findall(r"\b(\d+)\s+(?:semantic|routed) patterns\b", readme)]
     if not declared:
         errors.append("README has no numeric semantic-pattern count")
@@ -296,12 +333,14 @@ def find_key(node: object, key: str) -> str | None:
     return None
 
 
-def check_manifest_descriptions(errors: list[str], root: Path) -> None:
+def check_manifest_descriptions(
+    errors: list[str], root: Path, expected_types: list[str] | None = None
+) -> None:
     markdown = SKILL.read_text(encoding="utf-8")
     description = normalized(frontmatter_description(markdown))
     if not description:
         return
-    types = selection_table_types(markdown)
+    types = expected_types if expected_types is not None else selection_table_types(markdown)
     for relative, keys in MANIFEST_DESCRIPTIONS:
         path = root / relative
         if not path.exists():
@@ -326,8 +365,9 @@ def check_manifest_descriptions(errors: list[str], root: Path) -> None:
 
 def main() -> int:
     errors: list[str] = []
-    check_description(errors)
-    check_manifest_descriptions(errors, ROOT)
+    expected_types, expected_pattern_count = taxonomy_projection(errors)
+    check_description(errors, expected_types)
+    check_manifest_descriptions(errors, ROOT, expected_types)
     check_skill_version(errors, ROOT)
     check_gallery(errors)
     check_gallery_palette(errors)
@@ -335,6 +375,7 @@ def main() -> int:
         errors,
         README.read_text(encoding="utf-8"),
         SEMANTIC_PATTERNS.read_text(encoding="utf-8"),
+        expected_pattern_count,
     )
     check_readme_tree(errors)
     check_skill_reference_links(
@@ -350,7 +391,7 @@ def main() -> int:
             print(f"  - {error}")
         return 1
     print(
-        "OK docs sync: description hooks, gallery reachability, README tree, "
+        "OK docs sync: taxonomy projection, description hooks, gallery reachability, README tree, "
         "SKILL.md reference links, references/ cross-links, profile surfaces, "
         "manifest descriptions, versions, semantic counts, gallery metadata and palette"
     )

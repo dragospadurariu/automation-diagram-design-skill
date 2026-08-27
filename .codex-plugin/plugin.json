@@ -1,7 +1,7 @@
 {
   "name": "automation-design",
   "description": "Design branded architecture, high-level architecture, database schema, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": {
     "name": "Dragos Padurariu",
     "url": "https://github.com/dragospadurariu"

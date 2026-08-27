@@ -1,6 +1,6 @@
 # Semantic patterns
 
-Semantic patterns describe **what a system does**; the 13 visual types describe **how information is arranged**. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
+Semantic patterns describe **what a system does**; the 13 visual types describe **how information is arranged**. [`../taxonomy.json`](../taxonomy.json) is the machine-readable source of truth for their stable IDs and default routing; this file owns the human-readable selection rules and drawing contracts. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
 
 Patterns 8–20 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
 

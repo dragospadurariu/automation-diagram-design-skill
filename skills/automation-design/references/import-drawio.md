@@ -47,7 +47,7 @@ The source's shape vocabulary is a hint, not an instruction. draw.io users reach
 | Digest signal | Likely type | Reference |
 |---|---|---|
 | `lifeline` shapes, tall vertical bars | Sequence | [type-sequence.md](type-sequence.md) |
-| `table` / `er` shapes, rows of fields | **Out of scope** — entity-relationship data models are not one of this skill's 11 types | none — see *No surviving target type* below |
+| `table` / `er` shapes, rows of fields | Database schema | [type-db-schema.md](type-db-schema.md) |
 | ≥2 aligned `swimlane` containers (`type candidates: swimlane`) | Swimlane | [type-swimlane.md](type-swimlane.md) |
 | `rhombus` present, single entry point, labeled yes/no edges | Flowchart | [type-flowchart.md](type-flowchart.md) |
 | Mostly `ellipse`, self-loops, `has_cycle: True` | State machine | [type-state.md](type-state.md) |
@@ -59,11 +59,11 @@ The source's shape vocabulary is a hint, not an instruction. draw.io users reach
 | Dated labels on a single axis | Process — the dates become step labels, not an axis | [type-process.md](type-process.md) |
 | Anything else with edges | Architecture | [type-architecture.md](type-architecture.md) |
 
-The digest's `type candidates` field ranks these mechanically. Override it when the content disagrees — a "flowchart" whose diamonds all ask *"which service?"* is an architecture diagram someone drew with the wrong shapes. Tell the user when you override, in one line. The extractor's candidate vocabulary is older than the 11-type taxonomy, so it still emits names like `er`, `nested`, and `tree`: a candidate naming a type this skill doesn't ship is a routing question for the table above and the fallback rule below, never a type to load.
+The digest's `type candidates` field ranks these mechanically. Override it when the content disagrees — a "flowchart" whose diamonds all ask *"which service?"* is an architecture diagram someone drew with the wrong shapes. Tell the user when you override, in one line. The extractor's candidate vocabulary predates [`../taxonomy.json`](../taxonomy.json), so older names are routing hints: `er` maps to **Database schema**, while `nested` and `tree` still require the content test in the table above.
 
 **Load the chosen `type-*.md` before drawing.** Its layout conventions win over anything the source did.
 
-**No surviving target type.** Some sources have no home among the 11 types — entity-relationship data models most clearly, since ADR 0007 dropped ER deliberately. Don't invent a type and don't quietly redraw the source as something adjacent. Tell the user the source is out of scope for this skill, record it in the fidelity ledger ([`output-spec.md` §5](output-spec.md)), and ask what they want instead: a surviving type for a different cut of the same content, or nothing.
+**No surviving target type.** A source can still have no useful home in the taxonomy — for example, an unlabeled shape collection whose meaning is only decorative position. Don't invent a type and don't quietly redraw it as something adjacent. Tell the user the source is out of scope, record it in the fidelity ledger ([`output-spec.md` §5](output-spec.md)), and ask whether they want a different semantic cut or no output.
 
 ## Step 4 — Build the semantic model
 

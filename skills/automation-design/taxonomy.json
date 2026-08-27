@@ -1,0 +1,275 @@
+{
+  "taxonomy_version": "1.0.0",
+  "visual_types": [
+    {
+      "id": "architecture",
+      "label": "Architecture",
+      "reference": "references/type-architecture.md",
+      "gallery_slug": "architecture",
+      "aliases": ["system architecture", "topology"]
+    },
+    {
+      "id": "high-level",
+      "label": "High-level architecture",
+      "reference": "references/type-high-level.md",
+      "gallery_slug": "high-level",
+      "aliases": ["high level architecture", "platform architecture"]
+    },
+    {
+      "id": "it-state",
+      "label": "IT current-state",
+      "reference": "references/type-it-state.md",
+      "gallery_slug": "it-state",
+      "aliases": ["current state", "as-is landscape"]
+    },
+    {
+      "id": "flowchart",
+      "label": "Flowchart",
+      "reference": "references/type-flowchart.md",
+      "gallery_slug": "flowchart",
+      "aliases": ["decision flow", "logic flow"]
+    },
+    {
+      "id": "sequence",
+      "label": "Sequence",
+      "reference": "references/type-sequence.md",
+      "gallery_slug": "sequence",
+      "aliases": ["sequence diagram", "message flow"]
+    },
+    {
+      "id": "state",
+      "label": "State machine",
+      "reference": "references/type-state.md",
+      "gallery_slug": "state",
+      "aliases": ["state diagram", "lifecycle"]
+    },
+    {
+      "id": "swimlane",
+      "label": "Swimlane",
+      "reference": "references/type-swimlane.md",
+      "gallery_slug": "swimlane",
+      "aliases": ["cross-functional flow", "handoff diagram"]
+    },
+    {
+      "id": "loop",
+      "label": "Loop",
+      "reference": "references/type-loop.md",
+      "gallery_slug": "loop",
+      "aliases": ["flywheel", "feedback loop"]
+    },
+    {
+      "id": "org-chart",
+      "label": "Org chart",
+      "reference": "references/type-org-chart.md",
+      "gallery_slug": "org-chart",
+      "aliases": ["hierarchy", "supervision tree"]
+    },
+    {
+      "id": "layers",
+      "label": "Layer stack",
+      "reference": "references/type-layers.md",
+      "gallery_slug": "layers",
+      "aliases": ["layered architecture", "control layers"]
+    },
+    {
+      "id": "process",
+      "label": "Process",
+      "reference": "references/type-process.md",
+      "gallery_slug": "process",
+      "aliases": ["process diagram", "business process"]
+    },
+    {
+      "id": "data-flow",
+      "label": "Data flow",
+      "reference": "references/type-data-flow.md",
+      "gallery_slug": "data-flow",
+      "aliases": ["data-flow diagram", "pipeline"]
+    },
+    {
+      "id": "db-schema",
+      "label": "Database schema",
+      "reference": "references/type-db-schema.md",
+      "gallery_slug": "db-schema",
+      "aliases": ["entity relationship", "er diagram", "physical data model"]
+    }
+  ],
+  "semantic_patterns": [
+    {
+      "id": "fan-in-queue-bottleneck",
+      "label": "Fan-in queue / bottleneck",
+      "category": "general",
+      "nearest_visual_type": "data-flow",
+      "aliases": ["capacity bottleneck", "fan in"]
+    },
+    {
+      "id": "stage-framework-semantic-slots",
+      "label": "Stage framework with semantic slots",
+      "category": "general",
+      "nearest_visual_type": "process",
+      "aliases": ["stage framework", "semantic slots"]
+    },
+    {
+      "id": "unstructured-input-structured-artifact",
+      "label": "Unstructured input → structured artifact",
+      "category": "general",
+      "nearest_visual_type": "data-flow",
+      "aliases": ["structured artifact", "conversation to record"]
+    },
+    {
+      "id": "paired-policy-evaluation-traces",
+      "label": "Paired policy-evaluation traces",
+      "category": "general",
+      "nearest_visual_type": "flowchart",
+      "aliases": ["policy comparison", "first divergence"]
+    },
+    {
+      "id": "secure-paved-road",
+      "label": "Secure paved road",
+      "category": "general",
+      "nearest_visual_type": "architecture",
+      "aliases": ["approved deployment path", "secure route"]
+    },
+    {
+      "id": "governance-control-catalog",
+      "label": "Governance / control catalog",
+      "category": "general",
+      "nearest_visual_type": "layers",
+      "aliases": ["control catalog", "enforcement surfaces"]
+    },
+    {
+      "id": "compensating-security-layers",
+      "label": "Compensating security layers",
+      "category": "general",
+      "nearest_visual_type": "layers",
+      "aliases": ["defense in depth", "residual risk"]
+    },
+    {
+      "id": "dispatcher-queue-performer",
+      "label": "Dispatcher / queue / performer",
+      "category": "automation",
+      "nearest_visual_type": "data-flow",
+      "aliases": ["dispatcher performer", "queue based rpa"]
+    },
+    {
+      "id": "attended-automation-handoff",
+      "label": "Attended automation handoff",
+      "category": "automation",
+      "nearest_visual_type": "swimlane",
+      "aliases": ["human robot handoff", "attended rpa"]
+    },
+    {
+      "id": "transaction-lifecycle-retry-exceptions",
+      "label": "Transaction lifecycle with retry and exceptions",
+      "category": "automation",
+      "nearest_visual_type": "state",
+      "aliases": ["queue item lifecycle", "transaction retry"]
+    },
+    {
+      "id": "human-in-the-loop-approval",
+      "label": "Human-in-the-loop approval",
+      "category": "automation",
+      "nearest_visual_type": "sequence",
+      "aliases": ["hitl", "human approval"]
+    },
+    {
+      "id": "document-processing-pipeline",
+      "label": "Document processing pipeline",
+      "category": "automation",
+      "nearest_visual_type": "data-flow",
+      "aliases": ["document understanding", "intelligent document processing"]
+    },
+    {
+      "id": "agent-with-tools",
+      "label": "Agent with tools",
+      "category": "automation",
+      "nearest_visual_type": "architecture",
+      "aliases": ["tool using agent", "agent architecture"]
+    },
+    {
+      "id": "agent-rpa-handoff",
+      "label": "Agent → RPA handoff",
+      "category": "automation",
+      "nearest_visual_type": "sequence",
+      "aliases": ["agent to robot", "reasoning execution handoff"]
+    },
+    {
+      "id": "supervisor-worker-agents",
+      "label": "Supervisor and worker agents",
+      "category": "automation",
+      "nearest_visual_type": "org-chart",
+      "aliases": ["multi agent supervision", "agent hierarchy"]
+    },
+    {
+      "id": "agent-memory-evaluation-loop",
+      "label": "Agent memory and evaluation loop",
+      "category": "automation",
+      "nearest_visual_type": "loop",
+      "aliases": ["agent learning loop", "evaluation flywheel"]
+    },
+    {
+      "id": "automation-guardrails-boundaries",
+      "label": "Automation guardrails and boundaries",
+      "category": "automation",
+      "nearest_visual_type": "layers",
+      "aliases": ["automation permissions", "agent boundaries"]
+    },
+    {
+      "id": "rpa-solution-blueprint",
+      "label": "RPA solution blueprint",
+      "category": "automation",
+      "nearest_visual_type": "flowchart",
+      "aliases": ["solution blueprint", "pdd overview"]
+    },
+    {
+      "id": "agent-card",
+      "label": "Agent card",
+      "category": "automation",
+      "nearest_visual_type": "architecture",
+      "aliases": ["agent profile", "agent anatomy"]
+    },
+    {
+      "id": "application-card",
+      "label": "Application card",
+      "category": "automation",
+      "nearest_visual_type": "architecture",
+      "aliases": ["app card", "application architecture"]
+    }
+  ],
+  "node_kinds": [
+    {"id": "human", "label": "Human", "description": "A person applying judgment or performing manual work."},
+    {"id": "robot", "label": "Robot", "description": "An attended or unattended UI automation executor."},
+    {"id": "workflow", "label": "Workflow", "description": "A deterministic orchestration or cloud-flow executor."},
+    {"id": "agent", "label": "Agent", "description": "A goal-directed component that selects actions through reasoning."},
+    {"id": "model", "label": "Model", "description": "A probabilistic inference component without independent tool selection."},
+    {"id": "service", "label": "Service", "description": "A programmatic capability or API endpoint."},
+    {"id": "application", "label": "Application", "description": "A business or user-facing software system."},
+    {"id": "orchestrator", "label": "Orchestrator", "description": "A control plane that schedules and assigns execution."},
+    {"id": "queue", "label": "Queue", "description": "A durable ordered collection of work items."},
+    {"id": "trigger", "label": "Trigger", "description": "An event, schedule, or request that starts execution."},
+    {"id": "tool", "label": "Tool", "description": "A bounded capability exposed to an agent or workflow."},
+    {"id": "datastore", "label": "Datastore", "description": "A passive store for state, memory, knowledge, or records."},
+    {"id": "document", "label": "Document", "description": "A payload artifact such as a PDF, email, spreadsheet, or image."},
+    {"id": "vault", "label": "Vault", "description": "A protected store for secrets or credentials."},
+    {"id": "observability", "label": "Observability", "description": "A destination for audit, logs, traces, metrics, or run history."},
+    {"id": "exception", "label": "Exception", "description": "A failure outcome or recovery mechanism."}
+  ],
+  "behavior_classes": [
+    {"id": "human", "label": "Human", "description": "Judgment or manual action performed by a person."},
+    {"id": "deterministic", "label": "Deterministic", "description": "The same rules and inputs select the same prescribed steps."},
+    {"id": "probabilistic", "label": "Probabilistic", "description": "Output depends on statistical inference and may require a quality gate."},
+    {"id": "agentic", "label": "Agentic", "description": "The component reasons over a goal and chooses among permitted actions."},
+    {"id": "passive", "label": "Passive", "description": "The component stores, exposes, or transports information without choosing work."}
+  ],
+  "activity_tags": [
+    {"id": "mail", "tag": "MAIL", "kind": "application", "behavior": "passive", "description": "Mailbox or mail connector activity."},
+    {"id": "document-ai", "tag": "DOC AI", "kind": "model", "behavior": "probabilistic", "description": "Document classification or extraction activity."},
+    {"id": "model", "tag": "MODEL", "kind": "model", "behavior": "probabilistic", "description": "General model inference activity."},
+    {"id": "agent", "tag": "AGENT", "kind": "agent", "behavior": "agentic", "description": "Agent reasoning or action-selection activity."},
+    {"id": "human", "tag": "HUMAN", "kind": "human", "behavior": "human", "description": "Human validation, approval, correction, or exception handling."},
+    {"id": "rpa", "tag": "RPA", "kind": "robot", "behavior": "deterministic", "description": "Scripted UI or API automation activity."},
+    {"id": "flow", "tag": "FLOW", "kind": "workflow", "behavior": "deterministic", "description": "Deterministic workflow or cloud-flow activity."},
+    {"id": "api", "tag": "API", "kind": "service", "behavior": "deterministic", "description": "Direct programmatic call."},
+    {"id": "app", "tag": "APP", "kind": "application", "behavior": "passive", "description": "Business application read or write activity."},
+    {"id": "queue", "tag": "QUEUE", "kind": "queue", "behavior": "passive", "description": "Queue production or consumption activity."}
+  ]
+}

@@ -2,7 +2,42 @@
 
 The shared vocabulary for every automation diagram. Semantic patterns (rows 8–20 of the routing table) cite these primitives by name; this file defines what each one means, how it is drawn, and how edges between them are styled. Load it whenever an automation pattern routes.
 
+[`../taxonomy.json`](../taxonomy.json) is the machine-readable source of truth for stable IDs, activity tags, and their mappings. This reference is the human-readable drawing contract; CI requires both projections to agree.
+
 **Vendor-neutral by design.** The internal concept is `Queue`, never `UiPath Orchestrator Queue`. Platform names (UiPath, Power Automate, Automation Anywhere, LangGraph, …) belong in the technical **sublabel** (Geist Mono), never in the node name or the type tag. This keeps one diagram language across every client stack.
+
+## Semantic axes — what it is vs. how it behaves
+
+Classify every automation component on two independent axes. **Kind** answers what the component is; **behavior** answers how it acts. Display tags remain compact visual labels, not the ontology itself.
+
+| Stable kind ID | Meaning |
+|---|---|
+| `kind.human` | A person applying judgment or performing manual work |
+| `kind.robot` | An attended or unattended UI automation executor |
+| `kind.workflow` | A deterministic orchestration or cloud-flow executor |
+| `kind.agent` | A goal-directed component that selects actions through reasoning |
+| `kind.model` | A probabilistic inference component without independent tool selection |
+| `kind.service` | A programmatic capability or API endpoint |
+| `kind.application` | A business or user-facing software system |
+| `kind.orchestrator` | A control plane that schedules and assigns execution |
+| `kind.queue` | A durable ordered collection of work items |
+| `kind.trigger` | An event, schedule, or request that starts execution |
+| `kind.tool` | A bounded capability exposed to an agent or workflow |
+| `kind.datastore` | A passive store for state, memory, knowledge, or records |
+| `kind.document` | A payload artifact such as a PDF, email, spreadsheet, or image |
+| `kind.vault` | A protected store for secrets or credentials |
+| `kind.observability` | A destination for audit, logs, traces, metrics, or run history |
+| `kind.exception` | A failure outcome or recovery mechanism |
+
+| Stable behavior ID | Meaning |
+|---|---|
+| `behavior.human` | Judgment or manual action performed by a person |
+| `behavior.deterministic` | Rules and inputs select prescribed, repeatable steps |
+| `behavior.probabilistic` | Statistical inference produces an output that may need a quality gate |
+| `behavior.agentic` | The component reasons over a goal and chooses among permitted actions |
+| `behavior.passive` | The component stores, exposes, or transports information without choosing work |
+
+Do not infer kind from the presence of an LLM. A document classifier is `kind.model` + `behavior.probabilistic`; an agent that selects tools is `kind.agent` + `behavior.agentic`. Likewise, a cloud flow is `kind.workflow` + `behavior.deterministic`, while a desktop UI automation is `kind.robot` + `behavior.deterministic`.
 
 ## Node primitives
 
@@ -12,7 +47,9 @@ Each primitive maps to a node treatment from the design system (SKILL.md §5) pl
 |---|---|---|---|
 | **Human** | `HUMAN` | Operator, approver, or business user performing manual steps | Input / User |
 | **RPA Robot** | `RPA` | Deterministic execution — scripted UI or API steps, attended or unattended | Backend / API / Step |
+| **Workflow** | `FLOW` | Deterministic orchestration without desktop UI automation | Backend / API / Step |
 | **Agent** | `AGENT` | LLM-driven component that reasons and decides | Backend / API / Step (focal when the decision is the story) |
+| **Model** | `MODEL` | Probabilistic inference that returns a result but does not select tools independently | External / Cloud |
 | **Orchestrator** | `ORCH` | Scheduler / control plane that assigns work to robots or agents | Backend / API / Step |
 | **Queue** | `QUEUE` | Ordered work items / transactions awaiting a consumer | Store / State |
 | **Trigger** | `TRIG` | What starts the automation — schedule, event, email, webhook, API | Input / User |
@@ -33,33 +70,37 @@ Naming: the node name states the business role (`Invoice Performer`, `Exception 
 
 > **`EXC` vs. BE/SE codes.** `EXC` types an exception as an actor/outcome in topology diagrams (and `SYS EXC` / `ESCALATE` as edge labels). A PDD-style coded branch terminus inside a numbered flowchart page (`BE001`, `SE003`) is a different primitive — the **exception terminal** in [`type-flowchart.md`](type-flowchart.md) — and its codes never appear in an activity-tag chip.
 
-## Activity tags — who executes this step
+## Activity tags — which system class owns this step
 
-The table above types **actors and stores** in a topology diagram, where a node *is* a robot, a queue, an agent. A workflow diagram (flowchart, process, swimlane) is different: every box is a *step*, and the tag answers "which system performs it". That is a closed set, and it maps onto the primitives above:
+The table above types **actors and stores** in a topology diagram, where a node *is* a robot, queue, agent, or other component. A workflow diagram (flowchart, process, swimlane) is different: every box is a *step*, and its compact tag names the system class that executes, hosts, or receives that step. Because tags intentionally compress executors and resources into one visual slot, they never replace the underlying `kind` and `behavior` axes.
 
-| Activity tag | Step is performed by | Maps to primitive |
+| Activity tag | Step meaning | Default kind · behavior of tagged system |
 |---|---|---|
-| `MAIL` | A mailbox or mail connector — read, send, save attachments | Trigger / Business App |
-| `DOC AI` | A document-understanding model — digitize, classify, extract | Business App (model service) |
-| `AGENT` | An LLM agent reasoning over the step | Agent |
-| `HUMAN` | A person — validate, approve, correct, handle an exception | Human / Human Approval |
-| `RPA` | A robot executing scripted UI or API steps | RPA Robot |
-| `API` | A direct programmatic call | API |
-| `APP` | A business application being written to or read from | Business App |
-| `QUEUE` | A queue being produced to or consumed from | Queue |
+| `MAIL` | Read, send, or save attachments through mail | `kind.application` · `behavior.passive` |
+| `DOC AI` | Digitize, classify, or extract a document | `kind.model` · `behavior.probabilistic` |
+| `MODEL` | Infer, score, classify, or generate | `kind.model` · `behavior.probabilistic` |
+| `AGENT` | Reason over a goal and select a permitted action | `kind.agent` · `behavior.agentic` |
+| `HUMAN` | Validate, approve, correct, or handle an exception | `kind.human` · `behavior.human` |
+| `RPA` | Execute scripted UI or API steps | `kind.robot` · `behavior.deterministic` |
+| `FLOW` | Execute a workflow, cloud flow, or orchestration step | `kind.workflow` · `behavior.deterministic` |
+| `API` | Make a direct programmatic call | `kind.service` · `behavior.deterministic` |
+| `APP` | Read from or write to a business application | `kind.application` · `behavior.passive` |
+| `QUEUE` | Produce to or consume from a queue | `kind.queue` · `behavior.passive` |
 
-Same vendor-neutral rule: `DOC AI`, never `Document Understanding`; `HUMAN`, never `Action Center`. The product name goes in the sublabel or the annotation. Do not invent a tag outside this set — pick the closest one and let the sublabel carry the specificity.
+Same vendor-neutral rule: `DOC AI`, never `Document Understanding`; `FLOW`, never `Power Automate`; `HUMAN`, never `Action Center`. The product name goes in the sublabel or the annotation. Do not invent a tag outside this set — pick the closest one and let the sublabel carry the specificity.
 
-## Badge convention — deterministic vs. agentic vs. human
+## Badge convention — kind and behavior at a glance
 
-The reader must tell at a glance whether a box acts by script, by reasoning, or by hand. **In topology diagrams** (architecture, data flow, org chart — where the node is the actor) the tag carries a glyph prefix:
+The reader must tell at a glance whether a box is a scripted robot, deterministic workflow, probabilistic model, agentic actor, human, or passive system. **In topology diagrams** (architecture, data flow, org chart — where the node is the actor) the tag carries a glyph prefix:
 
 | Glyph + tag | Class | Behavior the reader may assume |
 |---|---|---|
-| `⚙ RPA` | Deterministic | Same input, same steps, same output — predictable, auditable |
-| `✦ AGENT` | Agentic | Chooses among actions; output depends on reasoning |
-| `◉ HUMAN` | Human | Judgment, approval, manual work |
-| *(no glyph)* | System | Queues, apps, stores, APIs — passive infrastructure |
+| `⚙ RPA` | Robot | Deterministic scripted UI or API execution |
+| `◆ FLOW` | Workflow | Deterministic orchestration or cloud-flow execution |
+| `◇ MODEL` | Model | Probabilistic inference without independent action selection |
+| `✦ AGENT` | Agent | Agentic reasoning and selection among permitted actions |
+| `◉ HUMAN` | Human | Human judgment, approval, or manual work |
+| *(no glyph)* | Passive system | Queues, apps, stores, and APIs that do not choose work |
 
 ```svg
 <!-- Type tag with glyph — replaces the bare tag chip from SKILL.md §6 -->
@@ -68,7 +109,7 @@ The reader must tell at a glance whether a box acts by script, by reasoning, or 
       text-anchor="middle" letter-spacing="0.08em">⚙ RPA</text>
 ```
 
-The glyph is part of the tag text, not a separate icon. Widen the chip to fit (`40–48px`); everything else in the §6 node pattern is unchanged. One diagram never needs a legend entry per glyph — the legend names the classes once (`⚙ deterministic · ✦ agentic · ◉ human`).
+The glyph is part of the tag text, not a separate icon. Widen the chip to fit (`40–52px`); everything else in the §6 node pattern is unchanged. One diagram never needs a legend entry per glyph — the legend names the classes once (`⚙ robot · ◆ workflow · ◇ model · ✦ agent · ◉ human`).
 
 **Where the glyph is dropped.** Two cases, both deliberate:
 
@@ -161,7 +202,7 @@ Rules:
 | Anti-pattern | Why it fails |
 |---|---|
 | Vendor product names as node names | Locks the diagram to one stack; the business role disappears |
-| Agent and robot drawn identically | Erases the deterministic/agentic distinction the diagram exists to show |
+| Robot/workflow or model/agent drawn as the same class | Erases the kind and behavior distinction the diagram exists to show |
 | Credential vault drawn as a plain database | Hides the security-relevant role; use the Security / Boundary treatment |
 | A queue with no producer or no consumer | A queue is a relationship, not a decoration |
 | Agent connected to every system "for context" | Implies unbounded permissions; draw only permitted tool calls |
