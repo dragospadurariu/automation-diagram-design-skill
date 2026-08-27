@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dispatcher–Performer · Batched execution</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #f6f6f6;
+      --surface: #ffffff;
+      --ink: #1e1e1e;
+      --muted: #4a5464;
+      --soft: #7b8797;
+      --rule: rgba(30,30,30,0.12);
+      --rule-strong: rgba(30,30,30,0.28);
+      --accent: #087a5b;
+      --accent-tint: rgba(8,122,91,0.08);
+      --link: #0078a8;
+      --sans: 'Geist', system-ui, sans-serif;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(24px, 4vw, 48px);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    .frame { width: min(100%, 1320px); }
+    .page-header { margin-bottom: 24px; }
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font: 500 10px/1.4 var(--mono);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin-bottom: 8px;
+      font: 400 clamp(28px, 3vw, 40px)/1.08 var(--serif);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    .subtitle {
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+    .diagram-wrap {
+      overflow-x: auto;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    svg { display: block; width: 100%; min-width: 1120px; }
+    .zone-label { fill: var(--muted); font: 500 8px var(--mono); letter-spacing: 0.14em; }
+    .zone-meta { fill: var(--soft); font: 400 8px var(--mono); letter-spacing: 0.06em; }
+    .node-title { fill: var(--ink); font: 600 16px var(--sans); }
+    .node-title-sm { fill: var(--ink); font: 600 12px var(--sans); }
+    .node-sub { fill: var(--muted); font: 400 8px var(--mono); }
+    .tag { fill: var(--muted); font: 600 8px var(--mono); letter-spacing: 0.06em; text-anchor: middle; }
+    .tag-accent { fill: var(--accent); }
+    .edge-label { fill: var(--muted); font: 500 8px var(--mono); letter-spacing: 0.06em; text-anchor: middle; }
+    .step-index { fill: var(--soft); font: 500 8px var(--mono); text-anchor: middle; }
+    .legend-text { fill: var(--muted); font: 400 8px var(--sans); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; }
+    }
+    @media print {
+      body { padding: 0; }
+      .frame { width: 100%; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <header class="page-header">
+      <p class="eyebrow">RPA architecture · Dispatcher / Queue / Performer</p>
+      <h1>Dispatcher–Performer · batched execution</h1>
+      <p class="subtitle">The dispatcher creates durable transactions. The orchestrator starts available performers from the queue. Each performer writes the final transaction status back to that same queue.</p>
+    </header>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="dispatcher-performer-architecture-title dispatcher-performer-architecture-desc">
+        <title id="dispatcher-performer-architecture-title">Dispatcher–Performer batched execution</title>
+        <desc id="dispatcher-performer-architecture-desc">RPA architecture showing input sources read by a dispatcher robot job, durable batch transactions stored in an orchestrator queue, a queue-based trigger starting five performer jobs, and performer workflow stages updating a business application before writing transaction status back to the queue.</desc>
+        <defs>
+          <marker id="dp-arr-muted" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6 Z" fill="#4a5464"/></marker>
+          <marker id="dp-arr-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6 Z" fill="#087a5b"/></marker>
+          <marker id="dp-arr-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6 Z" fill="#0078a8"/></marker>
+        </defs>
+
+        <rect width="1280" height="720" fill="#f6f6f6"/>
+
+        <!-- Runtime boundaries, inspired by the supplied UiPath references -->
+        <rect x="224" y="96" width="256" height="376" rx="8" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.28)" stroke-width="1" stroke-dasharray="6,4"/>
+        <rect x="512" y="96" width="272" height="424" rx="8" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.28)" stroke-width="1"/>
+        <rect x="816" y="96" width="424" height="424" rx="8" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.28)" stroke-width="1" stroke-dasharray="6,4"/>
+
+        <text x="240" y="120" class="zone-label">ROBOT JOB · DISPATCHER</text>
+        <text x="528" y="120" class="zone-label">ORCHESTRATOR</text>
+        <text x="768" y="120" class="zone-meta" text-anchor="end">QUEUE · TRIGGER · RETRY</text>
+        <text x="832" y="120" class="zone-label">ROBOT JOB · PERFORMER POOL</text>
+        <text x="1224" y="120" class="zone-meta" text-anchor="end">5 UNATTENDED ROBOTS</text>
+
+        <!-- Connectors are drawn before nodes -->
+        <path d="M184 280 H256" fill="none" stroke="#4a5464" stroke-width="1.2" marker-end="url(#dp-arr-muted)"/>
+        <path d="M448 280 H552" fill="none" stroke="#4a5464" stroke-width="1.2" marker-end="url(#dp-arr-muted)"/>
+        <path d="M648 376 V416" fill="none" stroke="#4a5464" stroke-width="1.2" marker-end="url(#dp-arr-muted)"/>
+        <path d="M720 448 H856" fill="none" stroke="#4a5464" stroke-width="1.2" marker-end="url(#dp-arr-muted)"/>
+        <path d="M856 352 H744" fill="none" stroke="#4a5464" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#dp-arr-muted)"/>
+        <path d="M1040 488 V552" fill="none" stroke="#0078a8" stroke-width="1.2" marker-end="url(#dp-arr-link)"/>
+
+        <!-- Connector labels with clear masks -->
+        <rect x="192" y="256" width="56" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="220" y="265" class="edge-label">NEW INPUT</text>
+        <rect x="468" y="256" width="64" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="500" y="265" class="edge-label">ADD ITEMS</text>
+        <rect x="564" y="388" width="72" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="600" y="397" class="edge-label">QUEUE EVENT</text>
+        <rect x="756" y="424" width="64" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="788" y="433" class="edge-label">START JOB</text>
+        <rect x="772" y="328" width="56" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="800" y="337" class="edge-label">SET STATUS</text>
+        <rect x="1052" y="512" width="72" height="12" rx="2" fill="#f6f6f6"/>
+        <text x="1088" y="521" class="edge-label">UI / API CALL</text>
+
+        <!-- Input sources -->
+        <rect x="40" y="224" width="144" height="112" rx="8" fill="rgba(74,84,100,0.08)" stroke="#7b8797" stroke-width="1"/>
+        <rect x="56" y="240" width="40" height="16" rx="2" fill="transparent" stroke="rgba(74,84,100,0.40)" stroke-width="0.8"/>
+        <text x="76" y="251" class="tag">INPUT</text>
+        <text x="56" y="280" class="node-title">Input sources</text>
+        <text x="56" y="304" class="node-sub">folder · rows · API</text>
+        <text x="56" y="320" class="node-sub">one or many files</text>
+
+        <!-- Dispatcher job -->
+        <rect x="256" y="168" width="192" height="216" rx="8" fill="#ffffff" stroke="#1e1e1e" stroke-width="1"/>
+        <rect x="272" y="184" width="48" height="16" rx="2" fill="transparent" stroke="rgba(30,30,30,0.36)" stroke-width="0.8"/>
+        <text x="296" y="195" class="tag">⚙ RPA</text>
+        <text x="272" y="228" class="node-title">Dispatcher</text>
+        <line x1="272" y1="248" x2="432" y2="248" stroke="rgba(30,30,30,0.12)" stroke-width="0.8"/>
+        <circle cx="284" cy="276" r="8" fill="rgba(30,30,30,0.08)"/>
+        <text x="284" y="279" class="step-index">1</text>
+        <text x="304" y="280" class="node-title-sm">Read new input</text>
+        <text x="304" y="296" class="node-sub">validate source · schema</text>
+        <circle cx="284" cy="324" r="8" fill="rgba(30,30,30,0.08)"/>
+        <text x="284" y="327" class="step-index">2</text>
+        <text x="304" y="328" class="node-title-sm">Create Batch ID</text>
+        <text x="304" y="344" class="node-sub">group related transactions</text>
+        <circle cx="284" cy="372" r="8" fill="rgba(30,30,30,0.08)"/>
+        <text x="284" y="375" class="step-index">3</text>
+        <text x="304" y="376" class="node-title-sm">Add queue items</text>
+
+        <!-- Orchestrator queue, the focal durable handoff -->
+        <rect x="552" y="144" width="192" height="232" rx="8" fill="rgba(8,122,91,0.08)" stroke="#087a5b" stroke-width="1.2"/>
+        <rect x="568" y="160" width="48" height="16" rx="2" fill="rgba(8,122,91,0.14)" stroke="rgba(8,122,91,0.52)" stroke-width="0.8"/>
+        <text x="592" y="171" class="tag tag-accent">QUEUE</text>
+        <text x="568" y="204" class="node-title">Work Queue</text>
+        <text x="568" y="224" class="node-sub">Batch B-2408 · 126 pending</text>
+        <rect x="568" y="248" width="160" height="24" rx="4" fill="#ffffff" stroke="rgba(8,122,91,0.32)" stroke-width="0.8"/>
+        <circle cx="584" cy="260" r="4" fill="#087a5b"/>
+        <text x="596" y="263" class="node-sub">WI-001 · NEW</text>
+        <rect x="568" y="280" width="160" height="24" rx="4" fill="#ffffff" stroke="rgba(8,122,91,0.32)" stroke-width="0.8"/>
+        <circle cx="584" cy="292" r="4" fill="#087a5b" opacity="0.80"/>
+        <text x="596" y="295" class="node-sub">WI-002 · NEW</text>
+        <rect x="568" y="312" width="160" height="24" rx="4" fill="#ffffff" stroke="rgba(8,122,91,0.32)" stroke-width="0.8"/>
+        <circle cx="584" cy="324" r="4" fill="#087a5b" opacity="0.60"/>
+        <text x="596" y="327" class="node-sub">WI-003 · RETRY 1/3</text>
+        <text x="648" y="356" class="node-sub" text-anchor="middle">… 123 more items</text>
+
+        <!-- Queue-based trigger -->
+        <rect x="576" y="416" width="144" height="64" rx="8" fill="#ffffff" stroke="#1e1e1e" stroke-width="1"/>
+        <rect x="592" y="432" width="40" height="16" rx="2" fill="transparent" stroke="rgba(30,30,30,0.36)" stroke-width="0.8"/>
+        <text x="612" y="443" class="tag">TRIG</text>
+        <text x="592" y="468" class="node-title-sm">Queue-based trigger</text>
+
+        <!-- Scalable performer stack -->
+        <rect x="888" y="136" width="304" height="336" rx="8" fill="rgba(30,30,30,0.02)" stroke="rgba(30,30,30,0.18)" stroke-width="0.8"/>
+        <rect x="872" y="152" width="304" height="336" rx="8" fill="#f6f6f6" stroke="rgba(30,30,30,0.24)" stroke-width="0.8"/>
+        <rect x="856" y="168" width="304" height="320" rx="8" fill="#ffffff" stroke="#087a5b" stroke-width="1.2"/>
+        <rect x="872" y="184" width="48" height="16" rx="2" fill="rgba(8,122,91,0.10)" stroke="rgba(8,122,91,0.44)" stroke-width="0.8"/>
+        <text x="896" y="195" class="tag tag-accent">⚙ RPA</text>
+        <text x="872" y="220" class="node-title">Performer</text>
+        <rect x="1104" y="184" width="40" height="16" rx="8" fill="rgba(8,122,91,0.12)"/>
+        <text x="1124" y="195" class="tag tag-accent">×5</text>
+        <rect x="880" y="240" width="256" height="48" rx="6" fill="rgba(30,30,30,0.03)" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="896" y="260" class="node-title-sm">Get Queue Item</text>
+        <text x="896" y="276" class="node-sub">one transaction at a time</text>
+        <rect x="880" y="304" width="256" height="48" rx="6" fill="rgba(30,30,30,0.03)" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="896" y="324" class="node-title-sm">Execute Workflow</text>
+        <text x="896" y="340" class="node-sub">RPA · API · optional Agent</text>
+        <rect x="880" y="368" width="256" height="48" rx="6" fill="rgba(30,30,30,0.03)" stroke="rgba(30,30,30,0.28)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <text x="896" y="388" class="node-title-sm">Optional human-in-the-loop</text>
+        <text x="896" y="404" class="node-sub">business rule · low confidence</text>
+        <rect x="880" y="432" width="256" height="40" rx="6" fill="rgba(8,122,91,0.06)" stroke="rgba(8,122,91,0.44)" stroke-width="0.8"/>
+        <text x="896" y="456" class="node-title-sm">Set Transaction Status</text>
+        <text x="1120" y="456" class="node-sub" text-anchor="end">DONE · BE · SE</text>
+
+        <!-- Business application touched by the performer -->
+        <rect x="920" y="552" width="216" height="72" rx="8" fill="rgba(30,30,30,0.03)" stroke="rgba(30,30,30,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="936" y="568" width="40" height="16" rx="2" fill="transparent" stroke="rgba(30,30,30,0.28)" stroke-width="0.8"/>
+        <text x="956" y="579" class="tag">APP</text>
+        <text x="992" y="580" class="node-title-sm">Business application</text>
+        <text x="936" y="608" class="node-sub">ERP · CRM · legacy desktop · SaaS</text>
+
+        <!-- Bottom key -->
+        <line x1="40" y1="664" x2="1240" y2="664" stroke="rgba(30,30,30,0.12)" stroke-width="0.8"/>
+        <text x="40" y="688" class="zone-label legend-label">FLOW KEY</text>
+        <line x1="136" y1="684" x2="168" y2="684" stroke="#4a5464" stroke-width="1.2" marker-end="url(#dp-arr-muted)"/>
+        <text x="180" y="688" class="legend-text">transaction handoff</text>
+        <line x1="312" y1="684" x2="344" y2="684" stroke="#4a5464" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#dp-arr-muted)"/>
+        <text x="356" y="688" class="legend-text">transaction status update</text>
+        <line x1="512" y1="684" x2="544" y2="684" stroke="#0078a8" stroke-width="1.2" marker-end="url(#dp-arr-link)"/>
+        <text x="556" y="688" class="legend-text">business application call</text>
+        <text x="1240" y="688" class="zone-meta" text-anchor="end">DISPATCHER NEVER CALLS A PERFORMER DIRECTLY</text>
+      </svg>
+    </div>
+  </main>
+</body>
+</html>
