@@ -8,7 +8,7 @@ A visual language for enterprise automation: robots, agents, humans, queues, orc
 
 *A production-shaped Dispatcher–Performer architecture: the dispatcher creates durable transactions, the queue decouples and triggers a scalable performer pool, and every performer writes its final status back to the same queue — with no separate reporter process. Source: [`example-dispatcher-performer-architecture.html`](skills/automation-design/assets/example-dispatcher-performer-architecture.html).*
 
-13 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
+13 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. [`taxonomy.json`](skills/automation-design/taxonomy.json) gives every type, pattern, component kind, behavior class, and activity tag a stable machine-readable identity. Semantic patterns still describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
 
 Forked from [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design) (MIT) — the editorial design system, verification tooling, and import/export pipeline come from there; the automation vocabulary, patterns, and scope are new.
 
@@ -34,7 +34,7 @@ Most diagram generators arrange boxes. This skill understands the domain first:
 
 routes to `Dispatcher / queue / performer` + `Human-in-the-loop approval`, loads the vendor-neutral vocabulary, and draws `Outlook → Dispatcher → Queue → Performer → Approval → SAP` with consistent conventions:
 
-- **Class is always visible** — the reader can tell script from reasoning from judgment at a glance. Topology diagrams badge the actor (`⚙ RPA` deterministic, `✦ AGENT` agentic, `◉ HUMAN` judgment, untagged systems); workflow diagrams tag each step with the system that executes it, from one closed set of eight (`MAIL`, `DOC AI`, `AGENT`, `HUMAN`, `RPA`, `API`, `APP`, `QUEUE`).
+- **Kind and behavior are both visible** — the reader can distinguish robot from workflow and model from agent at a glance. Topology diagrams badge the actor (`⚙ RPA`, `◆ FLOW`, `◇ MODEL`, `✦ AGENT`, `◉ HUMAN`, with passive systems untagged); workflow diagrams tag each step with one closed set of ten (`MAIL`, `DOC AI`, `MODEL`, `AGENT`, `HUMAN`, `RPA`, `FLOW`, `API`, `APP`, `QUEUE`).
 - **Vendor-neutral primitives** — the concept is `Queue`, never `UiPath Orchestrator Queue`; platform names live in sublabels, so one visual language covers every client stack.
 - **Automation boundaries** — network, credential, approval, and agent-permission boundaries are drawn explicitly, so a diagram never implies an agent can touch everything.
 
@@ -301,6 +301,7 @@ automation-design/
 ├── skills/
 │   └── automation-design/
 │       ├── SKILL.md                 — philosophy, selection guide, checklist
+│       ├── taxonomy.json            — canonical IDs, routing, kinds, behaviors, tags
 │       ├── references/              — loaded only when a type or primitive is chosen
 │       │   ├── style-guide.md       — single source of truth for colors + fonts
 │       │   ├── automation-primitives.md — vendor-neutral automation vocabulary
@@ -333,7 +334,7 @@ automation-design/
 │       └── assets/
 │           ├── index.html           — live gallery, tabbed
 │           ├── template*.html       — scaffolds for new diagrams
-│           ├── example-<type>.html  — 3 variants × 11 types
+│           ├── example-<type>.html  — base examples for all 13 visual types
 │           ├── example-process-detail.html   — PDD-depth flagship
 │           ├── example-rpa-blueprint.html    — phased-blueprint flagship
 │           ├── example-invoice-automation.html — overview flagship
@@ -346,6 +347,8 @@ automation-design/
 │   ├── bump-plugin-version.py       — synchronized Claude/Codex version bump
 │   ├── verify-plugin-package.py     — version + marketplace package gate
 │   ├── test-plugin-package.py       — adversarial package-gate tests
+│   ├── verify-taxonomy.py           — taxonomy + documentation projection gate
+│   ├── test-verify-taxonomy.py      — adversarial taxonomy-gate tests
 │   ├── test-verify-docs-sync.py     — docs/profile-surface gate tests
 │   └── fixtures/
 │       ├── sample-flowchart.mmd
@@ -363,7 +366,7 @@ The repository-wide check `python3 scripts/lint-skin.py --all --baseline` covers
 Semantic routing must pass `python3 scripts/verify-semantic-motion.py --markdown-only`; the animated example has a separate `--example-only` gate. Every shipped motion template/example must also pass `python3 scripts/verify-motion.py --shipped`.
 If you touch the draw.io import path, `python3 scripts/verify-drawio-import.py` must also pass; the Mermaid path is gated by `python3 scripts/verify-mermaid-import.py`.
 Label placement is gated geometrically: `python3 scripts/verify-geometry.py --all` fails CI when a label mask overlaps a node declared later in the document. `python3 scripts/test-verify-geometry.py` keeps that checker honest in both directions.
-Routing and public documentation surfaces are gated: `python3 scripts/verify-docs-sync.py` fails CI if the SKILL.md description loses a type's lexical hook, the gallery cannot reach a shipped example, the README tree names a file that does not exist, a relative `references/*.md` link is broken, or the Claude/Pi profile surfaces drift from `profiles.md`. `python3 scripts/test-verify-docs-sync.py` exercises those checks adversarially. The skill also ships `skills/automation-design/scripts/self_check.py` — a distilled output checker installed agents can run on their own generated diagrams; `python3 scripts/test-self-check.py` keeps it honest.
+Routing and public documentation surfaces are gated: `python3 scripts/verify-taxonomy.py` checks stable IDs, pattern routing, kind/behavior mappings, activity tags, gallery entries, and documentation projections against `taxonomy.json`; `python3 scripts/verify-docs-sync.py` checks description hooks, gallery reachability, README paths, reference links, and profile surfaces. Their adversarial test scripts keep both gates honest. The skill also ships `skills/automation-design/scripts/self_check.py` — a distilled output checker installed agents can run on their own generated diagrams; `python3 scripts/test-self-check.py` keeps it honest.
 
 All pull requests and pushes are automatically validated across Linux, Windows, and macOS runners via GitHub Actions CI (`.github/workflows/ci.yml`).
 
@@ -385,7 +388,7 @@ No matter how many types exist, the agent only reads the one you need.
 
 ## The design system (in one paragraph)
 
-One accent color, 1–2 focal elements per diagram. Three font families: Instrument Serif (title + italic callouts), Geist sans (node names), Geist Mono (technical sublabels). 1px hairline borders, no shadows, max border-radius 10px. Every coord, width, and gap divisible by 4. Badges (`⚙ RPA` / `✦ AGENT` / `◉ HUMAN`) separate deterministic, agentic, and human actors; automation boundaries make permissions visible. Full spec in [`SKILL.md`](skills/automation-design/SKILL.md#5-design-system) and [`automation-primitives.md`](skills/automation-design/references/automation-primitives.md).
+One accent color, 1–2 focal elements per diagram. Three font families: Instrument Serif (title + italic callouts), Geist sans (node names), Geist Mono (technical sublabels). 1px hairline borders, no shadows, max border-radius 10px. Every coord, width, and gap divisible by 4. Badges (`⚙ RPA` / `◆ FLOW` / `◇ MODEL` / `✦ AGENT` / `◉ HUMAN`) make component kind and behavior legible without conflating deterministic workflows, probabilistic models, agentic actors, and people; automation boundaries make permissions visible. Full spec in [`SKILL.md`](skills/automation-design/SKILL.md#5-design-system) and [`automation-primitives.md`](skills/automation-design/references/automation-primitives.md).
 
 ## When *not* to use this skill
 

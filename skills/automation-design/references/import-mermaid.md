@@ -45,12 +45,12 @@ Grammar is a strong content signal, but not an order to mimic Mermaid's renderer
 | `flowchart` with service/container topology and no decisions | Architecture | [type-architecture.md](type-architecture.md) |
 | `sequenceDiagram` | Sequence | [type-sequence.md](type-sequence.md) |
 | `stateDiagram-v2` | State machine | [type-state.md](type-state.md) |
-| `erDiagram` | **Out of scope** — entity-relationship data models are not one of this skill's 11 types | none — see *No surviving target type* below |
+| `erDiagram` | Database schema | [type-db-schema.md](type-db-schema.md) |
 | Nested subgraphs, depth ≥2, few edges | Architecture, drawn as grouped zones | [type-architecture.md](type-architecture.md) |
 
-Load the selected `type-*.md`. Override the grammar only when the content disagrees, and state the override in one line. The extractor's `type candidates` line predates the 11-type taxonomy and still reports `ER / data model` for `erDiagram`; a candidate naming a type this skill doesn't ship is resolved by the rule below, not followed.
+Load the selected `type-*.md`. Override the grammar only when the content disagrees, and state the override in one line. The extractor's candidate vocabulary predates [`../taxonomy.json`](../taxonomy.json); its `ER / data model` candidate maps to **Database schema**.
 
-**No surviving target type.** When a grammar has no home among the 11 types — `erDiagram` is the clear case, since ADR 0007 dropped ER deliberately — do not invent a type and do not redraw the source as something adjacent. Tell the user the source is out of scope for this skill, record it in the fidelity ledger, and ask what they want instead: a surviving type for a different cut of the same content, or nothing.
+**No surviving target type.** Unsupported Mermaid grammars are rejected by the extractor before routing. If supported syntax still carries no useful diagrammatic meaning, do not invent a target type; report the limitation in the fidelity ledger and ask whether the user wants a different semantic cut.
 
 ## Step 4 — Build the semantic model
 

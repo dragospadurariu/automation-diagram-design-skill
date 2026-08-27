@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import subprocess
 import sys
@@ -413,6 +414,25 @@ def main() -> int:
         if not any("must contain the 13-row visual-type guide" in error for error in markdown_errors):
             raise AssertionError(f"missing visual-guide anchor was accepted: {markdown_errors}")
         print("OK: missing visual-type guide anchor is rejected")
+
+        original_taxonomy = semantic_module.TAXONOMY
+        projected_taxonomy = directory / "taxonomy.json"
+        taxonomy_payload = json.loads(original_taxonomy.read_text(encoding="utf-8"))
+        taxonomy_payload["semantic_patterns"][0]["label"] = "Taxonomy-only pattern"
+        projected_taxonomy.write_text(json.dumps(taxonomy_payload), encoding="utf-8")
+        try:
+            semantic_module.TAXONOMY = projected_taxonomy
+            markdown_errors = semantic_module.verify_markdown()
+        finally:
+            semantic_module.TAXONOMY = original_taxonomy
+        if not any(
+            "SKILL.md does not route semantic pattern: Taxonomy-only pattern" in error
+            for error in markdown_errors
+        ):
+            raise AssertionError(
+                f"semantic verifier ignored taxonomy pattern labels: {markdown_errors}"
+            )
+        print("OK: semantic pattern catalog is projected from taxonomy.json")
 
         cli_result = subprocess.run(
             [sys.executable, str(VERIFIER), str(TEMPLATE)],

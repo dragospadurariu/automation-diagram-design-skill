@@ -8,7 +8,7 @@ Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) first. All contributions ar
 
 ## What this project is
 
-Automation Design is an agent skill (Claude Code, Codex, Pi) that produces editorial-quality diagrams as self-contained HTML files. The repo is documentation-first: `skills/automation-design/SKILL.md` is the index, each of the 11 visual types has its own reference file, and the extractor scripts in `skills/automation-design/scripts/` turn draw.io and Mermaid sources into a structured IR.
+Automation Design is an agent skill (Claude Code, Codex, Pi) that produces editorial-quality diagrams as self-contained HTML files. The repo is documentation-first: `skills/automation-design/SKILL.md` is the index, each of the 13 visual types has its own reference file, and the extractor scripts in `skills/automation-design/scripts/` turn draw.io and Mermaid sources into a structured IR.
 
 See [README.md](README.md) for the full picture, including the design system and the import/export flows.
 
@@ -45,6 +45,7 @@ The helper refuses to run if the Claude and Codex versions already differ. If an
 While the base ref still carries the pre-fork plugin name, the version-increase half of that gate is **waived** — version lineage restarts at a rename, so `2.5.0 → 0.1.0` is legitimate. The waiver prints a `WAIVED …` line rather than passing quietly, and it lapses by itself once the rename has landed on the base branch; the semver and Claude/Codex-match checks apply throughout.
 | Claude marketplace and plugin schema, with warnings treated as errors | `claude plugin validate . --strict` |
 | Accessible SVG contract (unit tests for the a11y linter) | `python3 scripts/test-lint-a11y.py` |
+| Semantic taxonomy schema and exact documentation projections | `python3 scripts/verify-taxonomy.py && python3 scripts/test-verify-taxonomy.py` |
 | Semantic-pattern routing | `python3 scripts/verify-semantic-motion.py --markdown-only` |
 | Animated-example structure and accessibility | `python3 scripts/verify-semantic-motion.py --example-only` |
 | Skin conformance of every example and template (colors, fonts, a11y, assets, scripts) | `python3 scripts/lint-skin.py --all --baseline` |
@@ -69,6 +70,8 @@ python3 scripts/test-plugin-package.py \
   && python3 scripts/verify-plugin-package.py origin/main \
   && claude plugin validate . --strict \
   && python3 scripts/test-lint-a11y.py \
+  && python3 scripts/verify-taxonomy.py \
+  && python3 scripts/test-verify-taxonomy.py \
   && python3 scripts/verify-semantic-motion.py --markdown-only \
   && python3 scripts/verify-semantic-motion.py --example-only \
   && python3 scripts/verify-motion.py --shipped \
@@ -87,6 +90,7 @@ python3 scripts/test-plugin-package.py \
 ### If a gate fails
 
 - **`verify-plugin-package.py`:** run the bump helper if the versions did not increase. If packaging validation fails, keep both marketplaces pointed at the repository root and keep the shared skill at `skills/automation-design/SKILL.md`.
+- **`verify-taxonomy.py`:** update `skills/automation-design/taxonomy.json` first, then make its projections in SKILL.md, semantic-patterns.md, automation-primitives.md, and the gallery agree exactly. The gate compares activity-tag `tag → kind → behavior` mappings and reads stable IDs only from their owning tables; do not satisfy it with stray mentions elsewhere.
 - **`lint-skin.py`:** the failure message names the file, line, and category (`color`, `font-family`, `a11y`, `external-asset`, `pure-black`, `script`). Colors must come from the palette in `skills/automation-design/references/style-guide.md`; fonts from the allowed list; diagrams must satisfy the accessible SVG contract (see below). The linter also requires the SHA-pinned controller from `template-motion.html` verbatim and rejects remote resources, CSS `@import`, non-fragment CSS `url()`, event handlers, `srcdoc`, executable URLs, and extra scripts.
 - **`verify-*.py`:** the extractor's real behavior no longer matches its fixture or the documentation, or the reference/command/prompt wiring drifted. Fix the source of truth — do not widen a test to avoid a failure.
 - **`verify-geometry.py`:** the message names the defect. *Mask clipped by a node*: move the label to a free segment of its connector — do not shrink the mask to sneak under the check. *Mask on / too close to a stroke*: keep a ≥6px gap between the mask rect and every connector (SKILL.md §6 rule 2). *Parallel runs closer than 12px*: re-route one connector or fan the attach points (§6 rules 3–4). *Stroke buried under a node*: route around it through open canvas. *Arrowhead in open canvas*: end the path exactly on the target's border, a lifeline, or an activation bar (§6 rule 7) — decision diamonds must be `<polygon>` (not `<path>`) so the checker can see them as landing surfaces.
@@ -134,11 +138,11 @@ Settled policies live as short records in `docs/adr/` — one pinned motion cont
 ## Adding a new diagram type
 
 1. Write `skills/automation-design/references/type-<name>.md` — layout conventions, anti-patterns, and a worked pattern for that type. Mirror an existing reference's structure.
-2. Add the row to the selection table in `skills/automation-design/SKILL.md` §3 **and** the type's name to the frontmatter `description` — `verify-docs-sync.py` fails if the description loses or lacks a type's lexical hook.
-3. Add the three example variants (see above) and register them in the gallery (`assets/index.html`) — `verify-docs-sync.py` fails on any shipped example the gallery can't reach.
-4. Bump the two type counters together: the row count asserted in `verify-docs-sync.py` and in `verify-semantic-motion.py`, plus the `### Visual-type guide (N)` heading they anchor on. They deliberately hard-assert the current count, so step 2 alone leaves the suite red.
-5. Amend `docs/adr/0002` in the same PR. Those counters are that record's enforcement, so moving them without amending it makes the test the authority instead of the decision. Say why the new type is a layout grammar no existing type provides — that is the only accepted reason, and ADR 0007 adds a second bar: it must serve the automation scope.
-6. Run the full gate suite — new examples are linted automatically by `--all`.
+2. Add the type to `skills/automation-design/taxonomy.json` with its stable ID, reference, gallery slug, and unambiguous aliases. The taxonomy is the source for type order and counts.
+3. Project that entry into the selection table in `skills/automation-design/SKILL.md` §3 and add the type's lexical hook to the frontmatter `description`. Both taxonomy and docs-sync gates reject drift.
+4. Add the three example variants (see above) and register them in the gallery (`assets/index.html`) — the gates reject missing or unreachable examples and taxonomy/gallery mismatches.
+5. Amend `docs/adr/0002` in the same PR. Say why the new type is a layout grammar no existing type provides — that is the only accepted reason, and ADR 0007 adds a second bar: it must serve the automation scope.
+6. Run the full gate suite — counts are derived from taxonomy.json, and new examples are linted automatically by `--all`.
 
 ## Changing the icon set
 

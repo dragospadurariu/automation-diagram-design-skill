@@ -1,8 +1,10 @@
 # Semantic patterns
 
-Semantic patterns describe **what a system does**; the 13 visual types describe **how information is arranged**. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
+Semantic patterns describe **what a system does**; the 13 visual types describe **how information is arranged**. [`../taxonomy.json`](../taxonomy.json) is the machine-readable source of truth for their stable IDs and default routing; this file owns the human-readable selection rules and drawing contracts. Choose a pattern first when behavior, state, enforcement, or risk is load-bearing, then use its nearest visual type as the layout grammar. If no pattern matches, choose a visual type directly.
 
 Patterns 8–20 model automation behavior — RPA, AI agents, and the humans and systems around them. They cite the vendor-neutral vocabulary in [`automation-primitives.md`](automation-primitives.md); load it alongside this file whenever one of them routes.
+
+Topology badges use the complete behavior vocabulary: `⚙ RPA` for scripted robots, `◆ FLOW` for deterministic workflows, `◇ MODEL` for probabilistic inference, `✦ AGENT` for goal-directed reasoning, and `◉ HUMAN` for judgment. APIs, queues, apps, and stores remain unglyphed passive systems.
 
 Use one primary pattern per figure. A second pattern may supply at most one supporting primitive; if both need full treatment, split overview and detail. Labels and outcomes must remain complete in a static frame.
 
@@ -175,7 +177,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** An automation suspends, requests a person's validation or approval, and resumes or aborts on the response. The suspension — who waits, on what, for how long — is the point.
 
-**Required primitives:** Automation actor (⚙ RPA or ✦ AGENT); approval surface (task inbox, form); approver (◉ HUMAN) with their business role; the suspension interval made visible; approve and reject continuations both drawn; timeout/escalation rule if one exists.
+**Required primitives:** Automation actor (⚙ RPA, ◆ FLOW, or ✦ AGENT); approval surface (task inbox, form); approver (◉ HUMAN) with their business role; the suspension interval made visible; approve and reject continuations both drawn; timeout/escalation rule if one exists.
 
 **Complexity budget:** ≤5 lifelines, 1 approval gate (a second gate splits the figure), 2 continuations, ≤1 timeout rule.
 
@@ -189,7 +191,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** Documents arrive, are classified, have fields extracted, pass or fail validation, and post into a business system — with a human correction path for low-confidence results.
 
-**Required primitives:** Document source; classification step; extraction step with named fields; confidence gate with threshold (`< 85% → review`); human validation lane (◉ HUMAN); posting step into the target app; rejected/unprocessable outcome.
+**Required primitives:** Document source; classification and extraction through a probabilistic component (◇ MODEL, or bare `DOC AI` in a workflow); confidence gate with threshold (`< 85% → review`); human validation lane (◉ HUMAN); deterministic posting actor (⚙ RPA or ◆ FLOW) into the target app; rejected/unprocessable outcome.
 
 **Complexity budget:** ≤6 pipeline stages, 1 confidence gate, ≤6 named fields, 2 outcomes. Representative fields, not the full schema.
 
@@ -203,11 +205,11 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** An LLM agent reasons over a goal and acts through a bounded set of tools — functions, MCP servers, APIs, RPA workflows. What the agent can reach, and what it cannot, is the point.
 
-**Required primitives:** Agent (✦ AGENT) with its **operating-mode chip** (`AUTO`/`CONV`/`STEP`) and charter in the sublabel, plus a one-line I/O contract (`in: … → out: …`); LLM; named tools with type tags; the permission boundary around the permitted toolset; data stores the agent reads — drawn as dashed `RETRIEVE` grounding edges, visually distinct from link-blue tool calls, grouped in a grounding container when there are ≥2 sources ([automation-primitives.md § Agent anatomy](automation-primitives.md)); the human or system that receives the result.
+**Required primitives:** Agent (✦ AGENT) with its **operating-mode chip** (`AUTO`/`CONV`/`STEP`) and charter in the sublabel, plus a one-line I/O contract (`in: … → out: …`); reasoning model (◇ MODEL, with the concrete LLM in its sublabel); named tools with type tags; the permission boundary around the permitted toolset; data stores the agent reads — drawn as dashed `RETRIEVE` grounding edges, visually distinct from link-blue tool calls, grouped in a grounding container when there are ≥2 sources ([automation-primitives.md § Agent anatomy](automation-primitives.md)); the human or system that receives the result.
 
 **Complexity budget:** 1 agent, ≤5 tools, ≤2 stores, ≤2 boundaries, ≤9 primary nodes. A second agent re-routes to **Supervisor and worker agents**.
 
-**Anti-patterns:** Agent connected to everything `for context`; tools and knowledge stores styled identically; the LLM omitted so the agent looks self-contained; boundary drawn but with connectors crossing it unlabeled.
+**Anti-patterns:** Agent connected to everything `for context`; tools and knowledge stores styled identically; the ◇ MODEL node omitted so the agent looks self-contained; a separate `LLM` tag that duplicates MODEL; boundary drawn but with connectors crossing it unlabeled.
 
 **Static fallback:** Every permitted tool edge labeled; anything outside the boundary visibly unreachable.
 
@@ -217,7 +219,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** An agent interprets a request, decides which deterministic capability applies, and delegates execution to an RPA workflow, API, or function — then handles the result or failure. Decide vs. execute is the point.
 
-**Required primitives:** Requester; agent (✦ AGENT) with an explicit decision step; the selected deterministic capability (⚙ RPA) with the unselected alternatives implied by a selection label; execution against the business system; result returning to the agent; failure path where the agent analyzes and escalates to a human.
+**Required primitives:** Requester; agent (✦ AGENT) with an explicit decision step; the selected capability — ⚙ RPA for scripted UI automation, ◆ FLOW for deterministic orchestration, or an unglyphed API endpoint — with unselected alternatives implied by a selection label; execution against the business system; result returning to the agent; failure path where the agent analyzes and escalates to a human.
 
 **Complexity budget:** ≤5 lifelines, 1 decision point, 1 executed capability, 1 failure/escalation path.
 
@@ -231,7 +233,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** A supervisor agent decomposes work and routes it to specialist workers (agents, robots, or humans), owns aggregation, and owns escalation. Who is responsible for what, and where failures go, is the point.
 
-**Required primitives:** Supervisor (✦ AGENT) at the root; workers with class badges (✦/⚙/◉); routing criteria on edges; aggregation of results; the escalation edge to a human owner; each worker's specialty in its sublabel.
+**Required primitives:** Supervisor (✦ AGENT) at the root; workers with the appropriate class badges (✦ AGENT, ⚙ RPA, ◆ FLOW, ◇ MODEL, or ◉ HUMAN); routing criteria on edges; aggregation of results; the escalation edge to a human owner; each worker's specialty in its sublabel.
 
 **Complexity budget:** 1 supervisor, ≤5 workers, depth ≤3, 1 escalation owner. Deeper hierarchies split into per-team figures.
 
@@ -287,7 +289,7 @@ Use one primary pattern per figure. A second pattern may supply at most one supp
 
 **Selection triggers:** One agent must be documented as its architecture artifact — charter, operating mode, I/O contract, what it reads, what it may do, and where a human takes over. The client-facing solution annex for an agent built on any platform (UiPath, Copilot Studio, LangGraph, plain code — the vendor lexicon in [automation-primitives.md](automation-primitives.md) maps the terms).
 
-**Required primitives:** Page-context panel (`AGENT CARD` eyebrow; `CHARTER`, `MODE`, `GUARDRAILS` lines); the **I/O spine** — IN node → agent (✦ AGENT + operating-mode chip) → OUT node, ink strokes, payload labels (`EVENT`/`QUERY` → `RESULT`/`ANSWER`); LLM node with a `PROMPT` edge; **grounding container** with ≥1 source and dashed `RETRIEVE` edges in; **tool-permission boundary** with ≥1 tool and link-blue `TOOL CALL` edges out; ≤2 dashed-accent escalation edges to named human roles, each labeled with its condition; on-edge guardrail gates where a control bites. The fixed spatial grammar carries the meaning: *horizontal = data flow; lower-left = knowledge; lower-right = action; top = reasoning; bottom = the human.*
+**Required primitives:** Page-context panel (`AGENT CARD` eyebrow; `CHARTER`, `MODE`, `GUARDRAILS` lines); the **I/O spine** — IN node → agent (✦ AGENT + operating-mode chip) → OUT node, ink strokes, payload labels (`EVENT`/`QUERY` → `RESULT`/`ANSWER`); reasoning-model node (◇ MODEL, concrete LLM in the sublabel) with a `PROMPT` edge; **grounding container** with ≥1 source and dashed `RETRIEVE` edges in; **tool-permission boundary** with ≥1 tool and link-blue `TOOL CALL` edges out; ≤2 dashed-accent escalation edges to named human roles, each labeled with its condition; on-edge guardrail gates where a control bites. The fixed spatial grammar carries the meaning: *horizontal = data flow; lower-left = knowledge; lower-right = action; top = reasoning; bottom = the human.*
 
 **Conversational variant:** `CONV` chip; IN is the user's query (per turn), OUT the answer (+ source); escalation reads "human takes over the session"; the `MODE` panel line says turn-based. When turn timing or session dynamics are the story, draw that figure as a **Sequence directly** — reach for **Human-in-the-loop approval** only when a suspension or handoff is the story. The card stays the static architecture view.
 

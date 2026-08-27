@@ -3,14 +3,14 @@ name: automation-design
 description: Design branded architecture, high-level architecture, database schema, process, data flow, sequence, swimlane, state machine, flowchart, IT current-state, loop/flywheel, org chart, and layer stack diagrams for RPA, AI agents, and hybrid enterprise automation — robots, orchestrators, queues, triggers, dispatcher/performer, human-in-the-loop approval, document processing, agent tools, conversational agents, agent operating modes and autonomy, context grounding, multi-agent supervision, guardrails and automation boundaries, application and screen diagrams (app cards, screen flows and contracts, runtime deployment topology) — as standalone HTML/SVG/PNG. Redraw .drawio/.drawio.png/.drawio.svg or Mermaid .mmd sources at a chosen size/detail; onboard brand tokens from a website; add semantic patterns, callouts, accessible motion, or sketchy/hand-drawn styling.
 license: MIT
 metadata:
-  version: "0.5.1"
+  version: "0.6.0"
 ---
 
 # Automation Design
 
 Create architecture diagrams for RPA, AI agents, and hybrid automation systems as self-contained HTML files with inline SVG and CSS, following an opinionated editorial design system.
 
-Thirteen visual types. Semantic patterns describe behavior; type references describe layout. [`references/automation-primitives.md`](references/automation-primitives.md) defines the vendor-neutral actors. Details load only when selected.
+Thirteen visual types. Semantic patterns describe behavior; type references describe layout. Stable IDs and automation kind/behavior live in [`taxonomy.json`](taxonomy.json); drawing rules live in [`references/automation-primitives.md`](references/automation-primitives.md).
 
 ---
 
@@ -67,7 +67,7 @@ Before drawing, ask: *Would the reader learn more from this than from a well-wri
 
 When behavior, state, enforcement, or risk carries the meaning, first load [`references/semantic-patterns.md`](references/semantic-patterns.md) and choose one primary pattern. Then choose the nearest visual type for layout. If no pattern matches, choose the type directly.
 
-Whenever an automation pattern routes (rows 8–20), also load [`references/automation-primitives.md`](references/automation-primitives.md) — it defines the vendor-neutral vocabulary (robot, agent, human, queue, orchestrator, trigger, boundary), the activity tags, the badge convention that separates deterministic from agentic actors, and the edge kinds.
+Whenever an automation pattern routes (rows 8–20), also load [`references/automation-primitives.md`](references/automation-primitives.md) — it defines the vendor-neutral vocabulary, separates what a component *is* (`kind`) from how it acts (`behavior`), and owns the activity tags, badge convention, and edge kinds.
 
 | Behavioral trigger | Semantic pattern → nearest type |
 |---|---|
@@ -422,6 +422,7 @@ Run before producing any diagram.
 **Type fit:**
 
 - [ ] If behavior matters, did I choose one semantic pattern before the visual type and load `semantic-patterns.md`?
+- [ ] For automation actors, did I classify `kind` independently from `behavior` — especially workflow vs. robot and model vs. agent?
 - [ ] Right visual type for the layout? (§3 visual-type guide)
 - [ ] Stated type, pattern, size preset, and planned cuts before drawing — confirmed, or assumptions noted? (§3)
 - [ ] Would a table / paragraph do the same job? (If yes — don't draw.)
