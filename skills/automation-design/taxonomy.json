@@ -268,7 +268,7 @@
     {"id": "human", "tag": "HUMAN", "kind": "human", "behavior": "human", "description": "Human validation, approval, correction, or exception handling."},
     {"id": "rpa", "tag": "RPA", "kind": "robot", "behavior": "deterministic", "description": "Scripted UI or API automation activity."},
     {"id": "flow", "tag": "FLOW", "kind": "workflow", "behavior": "deterministic", "description": "Deterministic workflow or cloud-flow activity."},
-    {"id": "api", "tag": "API", "kind": "service", "behavior": "deterministic", "description": "Direct programmatic call."},
+    {"id": "api", "tag": "API", "kind": "service", "behavior": "passive", "description": "API endpoint invoked by a deterministic or agentic caller."},
     {"id": "app", "tag": "APP", "kind": "application", "behavior": "passive", "description": "Business application read or write activity."},
     {"id": "queue", "tag": "QUEUE", "kind": "queue", "behavior": "passive", "description": "Queue production or consumption activity."}
   ]

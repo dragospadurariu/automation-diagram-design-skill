@@ -7,6 +7,7 @@ Uses only the Python standard library and never executes example JavaScript.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from collections import Counter
@@ -20,30 +21,9 @@ SKILL = ROOT / "skills/automation-design/SKILL.md"
 PATTERNS = ROOT / "skills/automation-design/references/semantic-patterns.md"
 ANIMATION = ROOT / "skills/automation-design/references/animation.md"
 EXAMPLE = ROOT / "skills/automation-design/assets/example-policy-trace-animated.html"
+TAXONOMY = ROOT / "skills/automation-design/taxonomy.json"
 MAX_SKILL_BYTES = 40_000
 
-PATTERN_NAMES = (
-    "Fan-in queue / bottleneck",
-    "Stage framework with semantic slots",
-    "Unstructured input → structured artifact",
-    "Paired policy-evaluation traces",
-    "Secure paved road",
-    "Governance / control catalog",
-    "Compensating security layers",
-    "Dispatcher / queue / performer",
-    "Attended automation handoff",
-    "Transaction lifecycle with retry and exceptions",
-    "Human-in-the-loop approval",
-    "Document processing pipeline",
-    "Agent with tools",
-    "Agent → RPA handoff",
-    "Supervisor and worker agents",
-    "Agent memory and evaluation loop",
-    "Automation guardrails and boundaries",
-    "RPA solution blueprint",
-    "Agent card",
-    "Application card",
-)
 PATTERN_FIELDS = (
     "Selection triggers:",
     "Required primitives:",
@@ -190,8 +170,30 @@ def section(markdown: str, heading: str, next_heading: str | None) -> str:
     return markdown[start:] if end < 0 else markdown[start:end]
 
 
+def taxonomy_projection(errors: list[str]) -> tuple[list[str], int]:
+    try:
+        payload = json.loads(TAXONOMY.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"could not load taxonomy.json: {exc}")
+        return [], 0
+    patterns = payload.get("semantic_patterns")
+    visuals = payload.get("visual_types")
+    if not isinstance(patterns, list) or not isinstance(visuals, list):
+        errors.append("taxonomy.json must contain semantic_patterns and visual_types arrays")
+        return [], 0
+    names = [
+        entry.get("label")
+        for entry in patterns
+        if isinstance(entry, dict) and isinstance(entry.get("label"), str)
+    ]
+    if len(names) != len(patterns):
+        errors.append("every taxonomy semantic pattern must have a string label")
+    return names, len(visuals)
+
+
 def verify_markdown() -> list[str]:
     errors: list[str] = []
+    pattern_names, visual_count = taxonomy_projection(errors)
     skill_bytes = SKILL.read_bytes()
     skill = skill_bytes.decode("utf-8")
     patterns = PATTERNS.read_text(encoding="utf-8")
@@ -204,23 +206,29 @@ def verify_markdown() -> list[str]:
     if "Selection: semantic pattern, then visual type" not in skill:
         errors.append("SKILL.md must choose semantic pattern before visual type")
     router_position = skill.find("semantic-patterns.md")
-    guide_position = skill.find("### Visual-type guide (13)")
+    guide_heading = f"### Visual-type guide ({visual_count})"
+    guide_position = skill.find(guide_heading)
     if router_position < 0:
         errors.append("SKILL.md must link to semantic-patterns.md")
     if guide_position < 0:
-        errors.append("SKILL.md must contain the 13-row visual-type guide")
+        errors.append(f"SKILL.md must contain the {visual_count}-row visual-type guide")
     if router_position >= 0 and guide_position >= 0 and router_position > guide_position:
         errors.append("semantic-pattern router must precede the visual-type guide")
 
-    visual_guide = section(skill, "### Visual-type guide (13)", "Rules of thumb:")
+    visual_guide = section(skill, guide_heading, "Rules of thumb:")
     visual_rows = re.findall(r"^\|.*\[type-[^)]+\.md\]", visual_guide, re.MULTILINE)
-    if len(visual_rows) != 13:
-        errors.append(f"visual-type guide must preserve 13 rows; found {len(visual_rows)}")
+    if len(visual_rows) != visual_count:
+        errors.append(
+            f"visual-type guide must match taxonomy's {visual_count} rows; "
+            f"found {len(visual_rows)}"
+        )
 
-    for index, name in enumerate(PATTERN_NAMES, 1):
+    for index, name in enumerate(pattern_names, 1):
         if name not in skill:
             errors.append(f"SKILL.md does not route semantic pattern: {name}")
-        next_heading = f"## {index + 1}." if index < len(PATTERN_NAMES) else "## Composition rules"
+        next_heading = (
+            f"## {index + 1}." if index < len(pattern_names) else "## Composition rules"
+        )
         block = section(patterns, f"## {index}. {name}", next_heading)
         if not block:
             errors.append(f"semantic-patterns.md is missing section {index}: {name}")
@@ -432,7 +440,12 @@ def main() -> int:
             print(f"- {error}")
         return 1
     if not args.example_only:
-        print("OK: 20 semantic patterns route independently to the 13 visual types")
+        summary_errors: list[str] = []
+        pattern_names, visual_count = taxonomy_projection(summary_errors)
+        print(
+            f"OK: {len(pattern_names)} semantic patterns route independently to "
+            f"the {visual_count} visual types"
+        )
         print("OK: animation modes, primitives, static fallback, and accessibility contract")
     if not args.markdown_only:
         print("OK: policy-trace example controls, structure, reduced motion, and unique IDs")

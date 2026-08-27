@@ -20,6 +20,7 @@ GALLERY = SKILL_DIR / "assets/index.html"
 README = ROOT / "README.md"
 ID = re.compile(r"^[a-z][a-z0-9-]*$")
 TAG = re.compile(r"^[A-Z][A-Z0-9 ]*$")
+SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 
 
 def _load_json(path: Path, errors: list[str]) -> dict[str, Any] | None:
@@ -154,13 +155,31 @@ def _gallery_visual_types(source: str) -> list[tuple[str, str]]:
     ]
 
 
-def _activity_tags(source: str) -> list[str]:
+def _activity_tag_mappings(source: str) -> list[tuple[str, str, str]]:
     section = _section(source, "## Activity tags", "## Badge convention")
-    return re.findall(r"^\|\s*`([^`]+)`\s*\|", section, re.MULTILINE)
+    return [
+        (tag.strip(), kind.strip(), behavior.strip())
+        for tag, kind, behavior in re.findall(
+            r"^\|\s*`([^`]+)`\s*\|[^|]*\|\s*`kind\.([^`]+)`\s*·\s*"
+            r"`behavior\.([^`]+)`\s*\|$",
+            section,
+            re.MULTILINE,
+        )
+    ]
 
 
-def _stable_ids(source: str, prefix: str) -> set[str]:
-    return set(re.findall(rf"`{re.escape(prefix)}\.([a-z][a-z0-9-]*)`", source))
+def _stable_id_table(
+    source: str,
+    heading: str,
+    next_heading: str,
+    prefix: str,
+) -> list[str]:
+    section = _section(source, heading, next_heading)
+    return re.findall(
+        rf"^\|\s*`{re.escape(prefix)}\.([a-z][a-z0-9-]*)`\s*\|",
+        section,
+        re.MULTILINE,
+    )
 
 
 def _check_declared_counts(
@@ -172,6 +191,7 @@ def _check_declared_counts(
 ) -> None:
     paths = (
         root / "README.md",
+        root / "CONTRIBUTING.md",
         root / "skills/automation-design/SKILL.md",
         root / "skills/automation-design/references/import-drawio.md",
         root / "skills/automation-design/references/import-mermaid.md",
@@ -212,8 +232,9 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
     payload = _load_json(skill_dir / "taxonomy.json", errors)
     if payload is None:
         return errors
-    if not isinstance(payload.get("taxonomy_version"), str):
-        errors.append("taxonomy_version must be a string")
+    taxonomy_version = payload.get("taxonomy_version")
+    if not isinstance(taxonomy_version, str) or SEMVER.fullmatch(taxonomy_version) is None:
+        errors.append("taxonomy_version must be a semantic version (MAJOR.MINOR.PATCH)")
 
     visuals = _catalog(
         payload,
@@ -259,7 +280,7 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
 
     for entry in patterns:
         nearest = entry.get("nearest_visual_type")
-        if nearest not in visual_ids:
+        if isinstance(nearest, str) and nearest not in visual_ids:
             errors.append(
                 f"semantic pattern {entry.get('id')!r} references unknown visual type {nearest!r}"
             )
@@ -281,14 +302,16 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
             errors.append(f"activity_tags has duplicate tag {value!r}")
         else:
             seen_tags.add(value)
-        if entry.get("kind") not in kind_ids:
+        kind = entry.get("kind")
+        if isinstance(kind, str) and kind not in kind_ids:
             errors.append(
-                f"activity tag {entry.get('id')!r} references unknown kind {entry.get('kind')!r}"
+                f"activity tag {entry.get('id')!r} references unknown kind {kind!r}"
             )
-        if entry.get("behavior") not in behavior_ids:
+        behavior = entry.get("behavior")
+        if isinstance(behavior, str) and behavior not in behavior_ids:
             errors.append(
                 f"activity tag {entry.get('id')!r} references unknown behavior "
-                f"{entry.get('behavior')!r}"
+                f"{behavior!r}"
             )
 
     expected_visual_guide = [
@@ -300,7 +323,14 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
         errors.append("SKILL.md visual-type guide does not match taxonomy visual_types")
 
     expected_routing = [
-        (str(entry.get("label")), str(visual_labels.get(entry.get("nearest_visual_type"))))
+        (
+            str(entry.get("label")),
+            str(
+                visual_labels.get(entry.get("nearest_visual_type"))
+                if isinstance(entry.get("nearest_visual_type"), str)
+                else None
+            ),
+        )
         for entry in patterns
     ]
     if _pattern_routing(skill_source, skill=True) != expected_routing:
@@ -325,15 +355,36 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
     primitives_source = (skill_dir / "references/automation-primitives.md").read_text(
         encoding="utf-8"
     )
-    expected_kinds = {str(entry.get("id")) for entry in kinds}
-    expected_behaviors = {str(entry.get("id")) for entry in behaviors}
-    if _stable_ids(primitives_source, "kind") != expected_kinds:
-        errors.append("automation-primitives.md kind.* IDs do not match taxonomy")
-    if _stable_ids(primitives_source, "behavior") != expected_behaviors:
-        errors.append("automation-primitives.md behavior.* IDs do not match taxonomy")
-    expected_tags = [str(entry.get("tag")) for entry in tags]
-    if _activity_tags(primitives_source) != expected_tags:
-        errors.append("automation-primitives.md activity-tag table does not match taxonomy")
+    expected_kinds = [str(entry.get("id")) for entry in kinds]
+    expected_behaviors = [str(entry.get("id")) for entry in behaviors]
+    actual_kinds = _stable_id_table(
+        primitives_source,
+        "| Stable kind ID | Meaning |",
+        "| Stable behavior ID | Meaning |",
+        "kind",
+    )
+    actual_behaviors = _stable_id_table(
+        primitives_source,
+        "| Stable behavior ID | Meaning |",
+        "Do not infer kind",
+        "behavior",
+    )
+    if actual_kinds != expected_kinds:
+        errors.append("automation-primitives.md stable-kind table does not match taxonomy")
+    if actual_behaviors != expected_behaviors:
+        errors.append("automation-primitives.md stable-behavior table does not match taxonomy")
+    expected_tag_mappings = [
+        (
+            str(entry.get("tag")),
+            str(entry.get("kind")),
+            str(entry.get("behavior")),
+        )
+        for entry in tags
+    ]
+    if _activity_tag_mappings(primitives_source) != expected_tag_mappings:
+        errors.append(
+            "automation-primitives.md activity-tag mappings do not match taxonomy"
+        )
 
     automation_pattern_count = sum(
         1 for entry in patterns if entry.get("category") == "automation"

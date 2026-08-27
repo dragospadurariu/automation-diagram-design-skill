@@ -60,14 +60,24 @@ def seed(root: Path) -> dict:
             }
         ],
         "node_kinds": [
-            {"id": "agent", "label": "Agent", "description": "Chooses actions."}
+            {"id": "agent", "label": "Agent", "description": "Chooses actions."},
+            {
+                "id": "workflow",
+                "label": "Workflow",
+                "description": "Runs deterministic steps.",
+            },
         ],
         "behavior_classes": [
             {
                 "id": "agentic",
                 "label": "Agentic",
                 "description": "Reasons over a goal.",
-            }
+            },
+            {
+                "id": "deterministic",
+                "label": "Deterministic",
+                "description": "Runs prescribed steps.",
+            },
         ],
         "activity_tags": [
             {
@@ -119,14 +129,23 @@ Rules of thumb:
     (references / "automation-primitives.md").write_text(
         """# Automation primitives
 
-`kind.agent`
-`behavior.agentic`
+| Stable kind ID | Meaning |
+|---|---|
+| `kind.agent` | Chooses actions |
+| `kind.workflow` | Runs deterministic steps |
+
+| Stable behavior ID | Meaning |
+|---|---|
+| `behavior.agentic` | Reasons over a goal |
+| `behavior.deterministic` | Runs prescribed steps |
+
+Do not infer kind from implementation details.
 
 ## Activity tags
 
-| Activity tag | Meaning |
-|---|---|
-| `AGENT` | Agent reasoning |
+| Activity tag | Meaning | Default kind · behavior |
+|---|---|---|
+| `AGENT` | Agent reasoning | `kind.agent` · `behavior.agentic` |
 
 ## Badge convention
 """,
@@ -217,14 +236,94 @@ def main() -> int:
         primitives = root / "skills/automation-design/references/automation-primitives.md"
         primitives.write_text(
             primitives.read_text(encoding="utf-8").replace(
-                "`kind.agent`", "`kind.workflow`"
+                "| `kind.agent` | Chooses actions |",
+                "| `kind.workflow` | Chooses actions |",
             ),
             encoding="utf-8",
         )
         expect_failure(
             "primitive ID drift",
             VERIFY.verify_taxonomy(root),
-            "kind.* IDs do not match taxonomy",
+            "stable-kind table does not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-kind-row-") as scratch:
+        root = Path(scratch)
+        seed(root)
+        primitives = root / "skills/automation-design/references/automation-primitives.md"
+        primitives.write_text(
+            primitives.read_text(encoding="utf-8").replace(
+                "| `kind.agent` | Chooses actions |\n", ""
+            ),
+            encoding="utf-8",
+        )
+        expect_failure(
+            "missing stable-kind row despite later ID mentions",
+            VERIFY.verify_taxonomy(root),
+            "stable-kind table does not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-tag-doc-map-") as scratch:
+        root = Path(scratch)
+        seed(root)
+        primitives = root / "skills/automation-design/references/automation-primitives.md"
+        primitives.write_text(
+            primitives.read_text(encoding="utf-8").replace(
+                "`kind.agent` · `behavior.agentic`",
+                "`kind.agent` · `behavior.human`",
+            ),
+            encoding="utf-8",
+        )
+        expect_failure(
+            "activity-tag documentation mapping drift",
+            VERIFY.verify_taxonomy(root),
+            "activity-tag mappings do not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-tag-json-map-") as scratch:
+        root = Path(scratch)
+        payload = seed(root)
+        payload["activity_tags"][0]["kind"] = "workflow"
+        payload["activity_tags"][0]["behavior"] = "deterministic"
+        write_json(root / "skills/automation-design/taxonomy.json", payload)
+        expect_failure(
+            "activity-tag taxonomy mapping drift",
+            VERIFY.verify_taxonomy(root),
+            "activity-tag mappings do not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-unhashable-") as scratch:
+        root = Path(scratch)
+        payload = seed(root)
+        payload["semantic_patterns"][0]["nearest_visual_type"] = ["architecture"]
+        write_json(root / "skills/automation-design/taxonomy.json", payload)
+        expect_failure(
+            "non-string visual route",
+            VERIFY.verify_taxonomy(root),
+            "nearest_visual_type must be a non-empty string",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-version-") as scratch:
+        root = Path(scratch)
+        payload = seed(root)
+        payload["taxonomy_version"] = "v1"
+        write_json(root / "skills/automation-design/taxonomy.json", payload)
+        expect_failure(
+            "invalid taxonomy version",
+            VERIFY.verify_taxonomy(root),
+            "taxonomy_version must be a semantic version",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-contributing-count-") as scratch:
+        root = Path(scratch)
+        seed(root)
+        (root / "CONTRIBUTING.md").write_text(
+            "This repository supports 2 visual types.\n", encoding="utf-8"
+        )
+        expect_failure(
+            "stale contributing visual count",
+            VERIFY.verify_taxonomy(root),
+            "CONTRIBUTING.md declares 2 visual types",
         )
 
     print("All taxonomy verification tests passed")

@@ -56,7 +56,6 @@ Each primitive maps to a node treatment from the design system (SKILL.md §5) pl
 | **Business App** | `APP` | Target system — ERP, CRM, browser app, legacy desktop | External / Cloud |
 | **API** | `API` | Programmatic integration point | Backend / API / Step |
 | **Tool** | `TOOL` | Capability exposed to an agent — function, MCP server, RPA workflow | Backend / API / Step |
-| **LLM** | `LLM` | The model an agent calls for reasoning | External / Cloud |
 | **Memory** | `MEM` | Agent short/long-term memory | Store / State |
 | **Knowledge Base** | `KB` | RAG / document store the agent retrieves from | Store / State |
 | **Human Approval** | `APPROVAL` | Suspension point where a person validates, approves, or rejects | Input / User (focal when the gate is the story) |
@@ -67,6 +66,8 @@ Each primitive maps to a node treatment from the design system (SKILL.md §5) pl
 | **Retry / DLQ** | `RETRY` | Recovery mechanism — retry policy, dead-letter queue | Optional / Async (dashed) |
 
 Naming: the node name states the business role (`Invoice Performer`, `Exception Analyst`, `Finance Approver`); the sublabel states the technical detail (`unattended`, `gpt · tool-enabled`, `SAP FI`).
+
+**`MODEL` is the only model-class tag.** Use it for an LLM, classifier, embedding model, or other probabilistic inference component; put the concrete model family or product (`GPT-5`, `Claude`, `invoice classifier`) in the node name or technical sublabel. `LLM` is a model subtype, not a second primitive or tag.
 
 > **`EXC` vs. BE/SE codes.** `EXC` types an exception as an actor/outcome in topology diagrams (and `SYS EXC` / `ESCALATE` as edge labels). A PDD-style coded branch terminus inside a numbered flowchart page (`BE001`, `SE003`) is a different primitive — the **exception terminal** in [`type-flowchart.md`](type-flowchart.md) — and its codes never appear in an activity-tag chip.
 
@@ -83,11 +84,13 @@ The table above types **actors and stores** in a topology diagram, where a node 
 | `HUMAN` | Validate, approve, correct, or handle an exception | `kind.human` · `behavior.human` |
 | `RPA` | Execute scripted UI or API steps | `kind.robot` · `behavior.deterministic` |
 | `FLOW` | Execute a workflow, cloud flow, or orchestration step | `kind.workflow` · `behavior.deterministic` |
-| `API` | Make a direct programmatic call | `kind.service` · `behavior.deterministic` |
+| `API` | Call a programmatic endpoint | `kind.service` · `behavior.passive` |
 | `APP` | Read from or write to a business application | `kind.application` · `behavior.passive` |
 | `QUEUE` | Produce to or consume from a queue | `kind.queue` · `behavior.passive` |
 
 Same vendor-neutral rule: `DOC AI`, never `Document Understanding`; `FLOW`, never `Power Automate`; `HUMAN`, never `Action Center`. The product name goes in the sublabel or the annotation. Do not invent a tag outside this set — pick the closest one and let the sublabel carry the specificity.
+
+The mapping describes the **tagged system**, not the edge that invokes it. An API endpoint is therefore `kind.service` + `behavior.passive`; the caller carries the active behavior (`⚙ RPA`, `◆ FLOW`, or `✦ AGENT`), and the `API CALL` / `TOOL CALL` edge shows the invocation. This keeps the same API node passive in both workflow and topology views.
 
 ## Badge convention — kind and behavior at a glance
 

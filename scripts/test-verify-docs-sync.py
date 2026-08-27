@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 import tempfile
 from pathlib import Path
@@ -131,6 +132,88 @@ def main() -> int:
         if errors != [expected]:
             raise AssertionError(f"stale pattern count was not reported: {errors}")
 
+        errors = []
+        verify.check_pattern_counts(
+            errors,
+            "2 semantic patterns.",
+            patterns,
+            expected_count=3,
+        )
+        expected = "semantic-patterns.md contains 2 patterns; taxonomy.json contains 3"
+        if errors != [expected]:
+            raise AssertionError(f"taxonomy pattern drift was not reported: {errors}")
+
+        original_taxonomy = verify.TAXONOMY
+        taxonomy = Path(temp_dir) / "taxonomy.json"
+        try:
+            verify.TAXONOMY = taxonomy
+            taxonomy.write_text(
+                json.dumps(
+                    {
+                        "visual_types": [{"label": "Architecture"}],
+                        "semantic_patterns": [{"label": "Agent with tools"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            errors = []
+            projection = verify.taxonomy_projection(errors)
+            if errors or projection != (["Architecture"], 1):
+                raise AssertionError(
+                    f"valid taxonomy projection failed: {projection}, {errors}"
+                )
+
+            taxonomy.write_text("{broken", encoding="utf-8")
+            errors = []
+            if verify.taxonomy_projection(errors) != ([], 0) or not any(
+                "could not load taxonomy.json" in error for error in errors
+            ):
+                raise AssertionError(f"invalid taxonomy JSON was not reported: {errors}")
+
+            taxonomy.write_text(json.dumps({"visual_types": []}), encoding="utf-8")
+            errors = []
+            verify.taxonomy_projection(errors)
+            expected = "taxonomy.json must contain visual_types and semantic_patterns arrays"
+            if errors != [expected]:
+                raise AssertionError(f"missing taxonomy catalog was not reported: {errors}")
+
+            taxonomy.write_text(
+                json.dumps(
+                    {
+                        "visual_types": [{"label": 42}],
+                        "semantic_patterns": [],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            errors = []
+            verify.taxonomy_projection(errors)
+            expected = "every taxonomy visual type must have a string label"
+            if errors != [expected]:
+                raise AssertionError(f"invalid taxonomy label was not reported: {errors}")
+        finally:
+            verify.TAXONOMY = original_taxonomy
+
+        original_skill = verify.SKILL
+        projected_skill = Path(temp_dir) / "projected-skill.md"
+        projected_skill.write_text(
+            "---\ndescription: Architecture and Sequence diagrams.\n---\n"
+            "### Visual-type guide (1)\n\n"
+            "| If you're showing… | Use | Reference |\n"
+            "|---|---|---|\n"
+            "| Components | **Architecture** | [Architecture](references/present.md) |\n"
+            "Rules of thumb:\n",
+            encoding="utf-8",
+        )
+        try:
+            verify.SKILL = projected_skill
+            errors = []
+            verify.check_description(errors, ["Sequence"])
+        finally:
+            verify.SKILL = original_skill
+        if not any("selection table does not match taxonomy.json" in error for error in errors):
+            raise AssertionError(f"taxonomy selection drift was not reported: {errors}")
+
         skill_version = verify.skill_metadata_version(
             '---\nname: example\nmetadata:\n  version: "1.2.3"\n---\n'
         )
@@ -149,8 +232,9 @@ def main() -> int:
             raise AssertionError("gallery and style-guide palette parsers disagree")
 
     print(
-        "PASS: docs sync checks reference links, references/ cross-links and "
-        "Claude/Pi profile-surface parity, semantic counts, versions, and palette parsing"
+        "PASS: docs sync checks taxonomy projections, reference links, references/ "
+        "cross-links, Claude/Pi profile-surface parity, semantic counts, versions, "
+        "and palette parsing"
     )
     return 0
 
