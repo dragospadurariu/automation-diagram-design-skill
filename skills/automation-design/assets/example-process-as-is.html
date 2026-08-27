@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote response · AS-IS process</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#f6f6f6;--paper-2:#e9ecef;--ink:#1e1e1e;--muted:#4a5464;--soft:#7b8797;--rule:rgba(30,30,30,.12);--rule-strong:rgba(30,30,30,.24);--lane:rgba(30,30,30,.018);--accent:#087a5b;--accent-tint:rgba(8,122,91,.08);--danger:#b23a38;--danger-tint:rgba(178,58,56,.06);--node:#fff;--sans:'Geist',system-ui,sans-serif;--serif:'Instrument Serif',Georgia,serif;--mono:'Geist Mono',ui-monospace,monospace}
+    body{min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--sans);padding:42px 36px 32px}
+    main{width:min(1500px,100%);margin:0 auto}
+    .kicker{font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    h1{font:400 clamp(30px,3vw,44px)/1.02 var(--serif);letter-spacing:-.025em;margin-bottom:8px}
+    .subtitle{max-width:900px;color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:24px}
+    .canvas{border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);padding:12px 0 8px;overflow-x:auto}
+    svg{display:block;width:100%;min-width:1180px;height:auto}
+    svg text{font-family:var(--sans)}
+    .mono{font-family:var(--mono)}
+    .meta-key,.phase,.lane-label,.tag,.edge-label,.legend-key{font-family:var(--mono);font-weight:500;letter-spacing:.11em;text-transform:uppercase}
+    .meta-key{font-size:7px;fill:var(--soft)}.meta-value{font:500 8px var(--mono);fill:var(--muted)}
+    .phase{font-size:7px;fill:var(--soft);text-anchor:middle}.phase-num{font:600 7px var(--mono);fill:var(--ink);text-anchor:middle}
+    .lane-label{font-size:8px;fill:var(--muted)}.lane-sub{font:400 7px var(--mono);fill:var(--soft)}
+    .lane-fill{fill:var(--lane)}.rule{stroke:var(--rule);stroke-width:.8}.label-rule{stroke:var(--rule-strong);stroke-width:1}
+    .connector{fill:none;stroke:var(--muted);stroke-width:1.15}.connector.focal{stroke:var(--accent);stroke-width:1.4}.connector.exception{stroke:var(--danger);stroke-dasharray:5 4;stroke-width:1.2}
+    .edge-mask{fill:var(--paper)}.edge-label{font-size:7px;fill:var(--muted);text-anchor:middle}.edge-label.exception{fill:var(--danger)}
+    .node{fill:var(--node);stroke:var(--rule-strong);stroke-width:1}.node.focal{fill:var(--accent-tint);stroke:var(--accent);stroke-width:1.3}.node.human{fill:var(--danger-tint);stroke:var(--danger);stroke-width:1.1}
+    .tag-box{fill:rgba(30,30,30,.06);stroke:var(--rule-strong);stroke-width:.7}.tag-box.focal{fill:rgba(8,122,91,.12);stroke:rgba(8,122,91,.45)}.tag-box.human{fill:rgba(178,58,56,.08);stroke:rgba(178,58,56,.45)}
+    .tag{font-size:6px;fill:var(--muted);text-anchor:middle}.tag.focal{fill:var(--accent)}.tag.human{fill:var(--danger)}
+    .node-title{font-size:10px;font-weight:600;fill:var(--ink);text-anchor:middle}.node-sub{font:400 7px var(--mono);fill:var(--soft);text-anchor:middle}
+    .decision{fill:var(--node);stroke:var(--rule-strong);stroke-width:1.1}.decision.focal{fill:var(--accent-tint);stroke:var(--accent);stroke-width:1.3}
+    .decision-kicker{font:500 6px var(--mono);letter-spacing:.1em;fill:var(--soft);text-anchor:middle}.decision-title{font-size:9px;font-weight:600;fill:var(--ink);text-anchor:middle}
+    .terminal{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}.terminal.danger{stroke:var(--danger)}.terminal-label{font:600 7px var(--mono);letter-spacing:.08em;fill:var(--ink);text-anchor:middle}.terminal-sub{font:500 6px var(--mono);fill:var(--soft);text-anchor:middle}.terminal-sub.danger{fill:var(--danger)}
+    .measure{font:500 6.5px var(--mono);letter-spacing:.06em;fill:var(--danger);text-anchor:middle}
+    .legend-key{font-size:7px;fill:var(--soft)}.legend-text{font-size:8px;fill:var(--muted)}
+    footer{display:flex;justify-content:space-between;gap:24px;padding-top:12px;color:var(--soft);font:500 10px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="kicker">AS-IS process · draft reconstruction</p>
+    <h1>Quote response and tax escalation</h1>
+    <p class="subtitle">A current-state view of how a conversational agent classifies the request, retrieves context, analyses the document, and escalates unresolved cases to Tax Compliance.</p>
+
+    <div class="canvas">
+      <svg viewBox="0 0 1360 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="process-as-is-title process-as-is-desc" data-process-profile="as-is">
+        <title id="process-as-is-title">AS-IS quote response and tax escalation process</title>
+        <desc id="process-as-is-desc">Four-lane current-state process showing a conversational agent, Salesforce, Document AI, and Tax Compliance from request classification to response or escalation.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4a5464"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#087a5b"/></marker>
+          <marker id="arrow-danger" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#b23a38"/></marker>
+        </defs>
+
+        <!-- Evidence strip: AS-IS claims are explicit, missing measures remain unknown. -->
+        <g data-profile-evidence>
+          <rect x="150" y="0" width="1190" height="32" rx="5" fill="rgba(30,30,30,.025)" stroke="rgba(30,30,30,.12)"/>
+          <text class="meta-key" x="166" y="12">STATUS</text><text class="meta-value" x="166" y="24" data-profile-field="status">AS-IS · DRAFT</text>
+          <text class="meta-key" x="332" y="12">SOURCE</text><text class="meta-value" x="332" y="24" data-profile-field="source">RECONSTRUCTED FROM PROVIDED DIAGRAM</text>
+          <text class="meta-key" x="668" y="12">SCOPE</text><text class="meta-value" x="668" y="24" data-profile-field="scope">REQUEST → RESPONSE OR TAX CASE</text>
+          <text class="meta-key" x="996" y="12">MEASURES</text><text class="meta-value" x="996" y="24" data-profile-field="measures" data-measure-state="unknown">VOLUME · WAIT · REWORK NOT PROVIDED</text>
+        </g>
+
+        <!-- Phase headers -->
+        <g>
+          <g><circle cx="190" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="190" y="57">1</text><text class="phase" x="190" y="72">INTAKE</text></g>
+          <g><circle cx="300" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="300" y="57">2</text><text class="phase" x="300" y="72">ROUTE</text></g>
+          <g><circle cx="432" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="432" y="57">3</text><text class="phase" x="432" y="72">RETRIEVE</text></g>
+          <g><circle cx="610" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="610" y="57">4</text><text class="phase" x="610" y="72">ANALYZE</text></g>
+          <g><circle cx="790" cy="54" r="9" fill="rgba(8,122,91,.18)"/><text x="790" y="57" class="phase-num" fill="#087a5b">5</text><text x="790" y="72" class="phase" fill="#087a5b">CONFLICT</text></g>
+          <g><circle cx="1054" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="1054" y="57">6</text><text class="phase" x="1054" y="72">RESPOND</text></g>
+          <g><circle cx="1190" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="1190" y="57">7</text><text class="phase" x="1190" y="72">FOLLOW-UP</text></g>
+          <g><circle cx="1310" cy="54" r="9" fill="rgba(30,30,30,.10)"/><text class="phase-num" x="1310" y="57">8</text><text class="phase" x="1310" y="72">OUTCOME</text></g>
+        </g>
+
+        <!-- Four consistent performer lanes -->
+        <rect class="lane-fill" x="150" y="80" width="1190" height="104"/>
+        <rect class="lane-fill" x="150" y="288" width="1190" height="104"/>
+        <g class="rule"><line x1="0" y1="80" x2="1340" y2="80"/><line x1="0" y1="184" x2="1340" y2="184"/><line x1="0" y1="288" x2="1340" y2="288"/><line x1="0" y1="392" x2="1340" y2="392"/><line x1="0" y1="496" x2="1340" y2="496"/></g>
+        <line class="label-rule" x1="150" y1="80" x2="150" y2="496"/>
+        <g data-lane-axis="performer">
+          <text class="lane-label" x="16" y="126">CONVERSATIONAL</text><text class="lane-label" x="16" y="138">AGENT</text><text class="lane-sub" x="16" y="153">✦ AGENT · UiPath</text>
+          <text class="lane-label" x="16" y="230">SALESFORCE</text><text class="lane-sub" x="16" y="245">APP · CRM</text>
+          <text class="lane-label" x="16" y="334">DOCUMENT AI</text><text class="lane-sub" x="16" y="349">◇ MODEL · ICERTIS</text>
+          <text class="lane-label" x="16" y="438">TAX COMPLIANCE</text><text class="lane-sub" x="16" y="453">◉ HUMAN · REVIEW</text>
+        </g>
+
+        <!-- Connectors first, so nodes remain clean landing surfaces. -->
+        <path class="connector" d="M210 132 H268" marker-end="url(#arrow)"/>
+        <path class="connector" d="M300 164 V220 Q300 232 312 232 H368" marker-end="url(#arrow)"/>
+        <path class="connector" d="M332 132 H348 Q356 132 356 140 V324 Q356 336 368 336" marker-end="url(#arrow)"/>
+        <path class="connector" d="M496 232 H516 Q524 232 524 240 V324 Q524 336 536 336" marker-end="url(#arrow)"/>
+        <path class="connector" d="M496 336 H536" marker-end="url(#arrow)"/>
+        <path class="connector focal" d="M684 336 H700 Q712 336 712 324 V144 Q712 132 724 132" marker-end="url(#arrow-accent)"/>
+        <path class="connector focal" d="M860 132 H866" marker-end="url(#arrow-accent)"/>
+        <path class="connector focal" d="M954 132 H982" marker-end="url(#arrow-accent)"/>
+        <path class="connector" d="M1126 132 H1146" marker-end="url(#arrow)"/>
+        <path class="connector" d="M1234 132 H1290" marker-end="url(#arrow)"/>
+        <path class="connector exception" d="M910 168 V428 Q910 444 926 444 H1115" marker-end="url(#arrow-danger)"/>
+        <path class="connector exception" d="M1190 168 V400 Q1190 412 1202 412 V412" marker-end="url(#arrow-danger)"/>
+        <path class="connector exception" d="M1265 444 H1290" marker-end="url(#arrow-danger)"/>
+
+        <!-- Edge labels with paper masks -->
+        <g><rect class="edge-mask" x="304" y="206" width="52" height="14" rx="2"/><text class="edge-label" x="330" y="216">OPPORTUNITY</text></g>
+        <g><rect class="edge-mask" x="329" y="266" width="50" height="14" rx="2"/><text class="edge-label" x="354" y="276">DOCUMENT</text></g>
+        <g><rect class="edge-mask" x="950" y="116" width="28" height="14" rx="2"/><text class="edge-label" x="964" y="126">YES</text></g>
+        <g><rect class="edge-mask" x="894" y="252" width="32" height="14" rx="2"/><text class="edge-label exception" x="910" y="262">NO</text></g>
+        <g><rect class="edge-mask" x="1244" y="116" width="28" height="14" rx="2"/><text class="edge-label" x="1258" y="126">NO</text></g>
+        <g><rect class="edge-mask" x="1174" y="268" width="32" height="14" rx="2"/><text class="edge-label exception" x="1190" y="278">YES</text></g>
+
+        <!-- Start -->
+        <circle class="terminal" cx="190" cy="132" r="20"/><text class="terminal-label" x="190" y="135">START</text>
+
+        <!-- Route decision -->
+        <polygon class="decision" points="300,96 332,132 300,168 268,132" data-node-kind="decision"/>
+        <text class="decision-kicker" x="300" y="119">AGENT · D01</text><text class="decision-title" x="300" y="133">Input</text><text class="decision-title" x="300" y="144">type?</text>
+
+        <!-- Salesforce branch -->
+        <g data-node-kind="action"><rect class="node" x="368" y="204" width="128" height="56" rx="6"/><rect class="tag-box" x="376" y="211" width="34" height="10" rx="2"/><text class="tag" x="393" y="218">API · S03</text><text class="node-title" x="432" y="236">Find opportunity</text><text class="node-sub" x="432" y="249">Salesforce CRM</text></g>
+
+        <!-- Document branch -->
+        <g data-node-kind="action"><rect class="node" x="368" y="308" width="128" height="56" rx="6"/><rect class="tag-box" x="376" y="315" width="42" height="10" rx="2"/><text class="tag" x="397" y="322">DOC AI · S04</text><text class="node-title" x="432" y="340">Validate document</text><text class="node-sub" x="432" y="353">uploaded attachment</text></g>
+        <g data-node-kind="action"><rect class="node" x="536" y="308" width="148" height="56" rx="6"/><rect class="tag-box" x="544" y="315" width="42" height="10" rx="2"/><text class="tag" x="565" y="322">DOC AI · S05</text><text class="node-title" x="610" y="340">Analyze quote / document</text><text class="node-sub" x="610" y="353">attachment + CRM context</text></g>
+
+        <!-- Conflict is split into action + decision -->
+        <g data-node-kind="action"><rect class="node focal" x="724" y="104" width="136" height="56" rx="6"/><rect class="tag-box focal" x="732" y="111" width="42" height="10" rx="2"/><text class="tag focal" x="753" y="118">AGENT · A06</text><text class="node-title" x="792" y="136">Detect conflicts</text><text class="node-sub" x="792" y="149">compare evidence</text></g>
+        <polygon class="decision focal" points="910,96 954,132 910,168 866,132" data-node-kind="decision"/>
+        <text class="decision-kicker" x="910" y="117" fill="#087a5b">AGENT · D02</text><text class="decision-title" x="910" y="132">Resolved</text><text class="decision-title" x="910" y="143">automatically?</text>
+
+        <!-- Response action + follow-up decision -->
+        <g data-node-kind="action"><rect class="node" x="982" y="104" width="144" height="56" rx="6"/><rect class="tag-box" x="990" y="111" width="42" height="10" rx="2"/><text class="tag" x="1011" y="118">AGENT · A07</text><text class="node-title" x="1054" y="136">Compose &amp; deliver response</text><text class="node-sub" x="1054" y="149">answer + evidence</text></g>
+        <polygon class="decision" points="1190,96 1234,132 1190,168 1146,132" data-node-kind="decision"/>
+        <text class="decision-kicker" x="1190" y="117">AGENT · D03</text><text class="decision-title" x="1190" y="132">Follow-up</text><text class="decision-title" x="1190" y="143">required?</text>
+
+        <!-- Human exception path -->
+        <g data-node-kind="action" data-manual-handoff><rect class="node human" x="1115" y="416" width="150" height="56" rx="6"/><rect class="tag-box human" x="1123" y="423" width="44" height="10" rx="2"/><text class="tag human" x="1145" y="430">HUMAN · H01</text><text class="node-title" x="1190" y="448">Create tax escalation</text><text class="node-sub" x="1190" y="461">Tax Compliance case</text><text class="measure" x="1190" y="486" data-measure-state="unknown">MEASURE · QUEUE WAIT + REWORK</text></g>
+
+        <!-- Distinct AS-IS outcomes -->
+        <circle class="terminal" cx="1310" cy="132" r="20" data-outcome="responded"/><text class="terminal-label" x="1310" y="131">END</text><text class="terminal-sub" x="1310" y="141">RESPONDED</text>
+        <circle class="terminal danger" cx="1310" cy="444" r="20" data-outcome="escalated"/><text class="terminal-label" x="1310" y="443">END</text><text class="terminal-sub danger" x="1310" y="453">ESCALATED</text>
+
+        <!-- Compact reading key -->
+        <g transform="translate(150 520)">
+          <text class="legend-key legend-label" x="0" y="8">READING KEY</text>
+          <rect x="94" y="-2" width="44" height="14" rx="3" fill="rgba(8,122,91,.08)" stroke="#087a5b"/><text class="legend-text" x="148" y="8">automated focal handoff</text>
+          <line x1="324" y1="5" x2="360" y2="5" stroke="#b23a38" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrow-danger)"/><text class="legend-text" x="372" y="8">exception / escalation</text>
+          <rect x="538" y="-2" width="44" height="14" rx="3" fill="rgba(178,58,56,.06)" stroke="#b23a38"/><text class="legend-text" x="592" y="8">human touchpoint</text>
+          <text class="legend-key" x="754" y="8">AS-IS RULE</text><text class="legend-text" x="834" y="8">unknown measures stay explicitly unknown</text>
+        </g>
+      </svg>
+    </div>
+    <footer><span>Process · swimlane structure</span><span>Draft · validate against observed execution</span></footer>
+  </main>
+</body>
+</html>

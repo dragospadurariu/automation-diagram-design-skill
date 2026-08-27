@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +22,40 @@ README = ROOT / "README.md"
 ID = re.compile(r"^[a-z][a-z0-9-]*$")
 TAG = re.compile(r"^[A-Z][A-Z0-9 ]*$")
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
+
+
+class ProcessProfileExampleParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.profiles: list[str] = []
+        self.evidence_blocks = 0
+        self.evidence_fields: set[str] = set()
+        self.lane_axes: list[str] = []
+        self.node_kinds: list[str] = []
+        self.outcomes: list[str] = []
+        self.unknown_measures = 0
+        self.manual_handoffs = 0
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        data = {name.casefold(): value or "" for name, value in attrs}
+        if data.get("data-process-profile"):
+            self.profiles.append(data["data-process-profile"])
+        if "data-profile-evidence" in data:
+            self.evidence_blocks += 1
+        if data.get("data-profile-field"):
+            self.evidence_fields.add(data["data-profile-field"])
+        if data.get("data-lane-axis"):
+            self.lane_axes.append(data["data-lane-axis"])
+        if data.get("data-node-kind"):
+            self.node_kinds.append(data["data-node-kind"])
+        if data.get("data-outcome"):
+            self.outcomes.append(data["data-outcome"])
+        if data.get("data-measure-state") == "unknown":
+            self.unknown_measures += 1
+        if "data-manual-handoff" in data:
+            self.manual_handoffs += 1
 
 
 def _load_json(path: Path, errors: list[str]) -> dict[str, Any] | None:
@@ -168,6 +203,18 @@ def _activity_tag_mappings(source: str) -> list[tuple[str, str, str]]:
     ]
 
 
+def _process_profile_table(source: str) -> list[tuple[str, str, str]]:
+    section = _section(source, "## Stable profiles", "## Input contract")
+    return [
+        (profile_id.strip(), label.strip(), description.strip())
+        for profile_id, label, description in re.findall(
+            r"^\|\s*`profile\.([^`]+)`\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$",
+            section,
+            re.MULTILINE,
+        )
+    ]
+
+
 def _stable_id_table(
     source: str,
     heading: str,
@@ -180,6 +227,30 @@ def _stable_id_table(
         section,
         re.MULTILINE,
     )
+
+
+def _check_process_profile_example(source: str, errors: list[str]) -> None:
+    parser = ProcessProfileExampleParser()
+    parser.feed(source)
+    parser.close()
+    if parser.profiles != ["as-is"]:
+        errors.append("example-process-as-is.html must declare one as-is process profile")
+    if parser.evidence_blocks != 1:
+        errors.append("AS-IS example must contain one profile evidence block")
+    required_fields = {"status", "source", "scope", "measures"}
+    if not required_fields.issubset(parser.evidence_fields):
+        missing = ", ".join(sorted(required_fields - parser.evidence_fields))
+        errors.append(f"AS-IS example profile evidence is missing: {missing}")
+    if parser.lane_axes != ["performer"]:
+        errors.append("AS-IS example must declare one performer lane axis")
+    if parser.node_kinds.count("decision") < 1 or parser.node_kinds.count("action") < 1:
+        errors.append("AS-IS example must distinguish action nodes from decisions")
+    if set(parser.outcomes) != {"responded", "escalated"}:
+        errors.append("AS-IS example must distinguish responded and escalated outcomes")
+    if parser.unknown_measures < 1:
+        errors.append("AS-IS example must keep at least one unknown measure explicit")
+    if parser.manual_handoffs < 1:
+        errors.append("AS-IS example must expose at least one manual handoff")
 
 
 def _check_declared_counts(
@@ -246,6 +317,12 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
         payload,
         "semantic_patterns",
         ("label", "category", "nearest_visual_type"),
+        errors,
+    )
+    process_profiles = _catalog(
+        payload,
+        "process_profiles",
+        ("label", "description"),
         errors,
     )
     kinds = _catalog(payload, "node_kinds", ("label", "description"), errors)
@@ -386,6 +463,24 @@ def verify_taxonomy(root: Path = ROOT) -> list[str]:
             "automation-primitives.md activity-tag mappings do not match taxonomy"
         )
 
+    process_profile_source = (
+        skill_dir / "references/process-profiles.md"
+    ).read_text(encoding="utf-8")
+    expected_process_profiles = [
+        (
+            str(entry.get("id")),
+            str(entry.get("label")),
+            str(entry.get("description")),
+        )
+        for entry in process_profiles
+    ]
+    if _process_profile_table(process_profile_source) != expected_process_profiles:
+        errors.append("process-profiles.md stable-profile table does not match taxonomy")
+    _check_process_profile_example(
+        (skill_dir / "assets/example-process-as-is.html").read_text(encoding="utf-8"),
+        errors,
+    )
+
     automation_pattern_count = sum(
         1 for entry in patterns if entry.get("category") == "automation"
     )
@@ -411,6 +506,7 @@ def main() -> int:
         "OK taxonomy: "
         f"{len(payload['visual_types'])} visual types, "
         f"{len(payload['semantic_patterns'])} semantic patterns, "
+        f"{len(payload['process_profiles'])} process profiles, "
         f"{len(payload['node_kinds'])} node kinds, "
         f"{len(payload['behavior_classes'])} behavior classes, "
         f"{len(payload['activity_tags'])} activity tags"

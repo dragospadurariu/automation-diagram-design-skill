@@ -59,6 +59,13 @@ def seed(root: Path) -> dict:
                 "aliases": ["tool using agent"],
             }
         ],
+        "process_profiles": [
+            {
+                "id": "as-is",
+                "label": "AS-IS",
+                "description": "Observed current execution.",
+            }
+        ],
         "node_kinds": [
             {"id": "agent", "label": "Agent", "description": "Chooses actions."},
             {
@@ -93,6 +100,24 @@ def seed(root: Path) -> dict:
     (references / "type-architecture.md").write_text("# Architecture\n", encoding="utf-8")
     (assets / "example-architecture.html").write_text(
         "<!DOCTYPE html><title>Architecture</title>\n", encoding="utf-8"
+    )
+    (assets / "example-process-as-is.html").write_text(
+        """<!DOCTYPE html><title>AS-IS</title>
+<svg data-process-profile="as-is">
+  <g data-profile-evidence>
+    <text data-profile-field="status">DRAFT</text>
+    <text data-profile-field="source">WALKTHROUGH</text>
+    <text data-profile-field="scope">REQUEST TO OUTCOME</text>
+    <text data-profile-field="measures" data-measure-state="unknown">UNKNOWN</text>
+  </g>
+  <g data-lane-axis="performer"></g>
+  <rect data-node-kind="action" data-manual-handoff></rect>
+  <polygon data-node-kind="decision"></polygon>
+  <circle data-outcome="responded"></circle>
+  <circle data-outcome="escalated"></circle>
+</svg>
+""",
+        encoding="utf-8",
     )
     (skill / "SKILL.md").write_text(
         """# Skill
@@ -148,6 +173,19 @@ Do not infer kind from implementation details.
 | `AGENT` | Agent reasoning | `kind.agent` · `behavior.agentic` |
 
 ## Badge convention
+""",
+        encoding="utf-8",
+    )
+    (references / "process-profiles.md").write_text(
+        """# Process-state profiles
+
+## Stable profiles
+
+| Stable profile ID | Label | Meaning |
+|---|---|---|
+| `profile.as-is` | `AS-IS` | Observed current execution. |
+
+## Input contract
 """,
         encoding="utf-8",
     )
@@ -290,6 +328,40 @@ def main() -> int:
             "activity-tag taxonomy mapping drift",
             VERIFY.verify_taxonomy(root),
             "activity-tag mappings do not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-profile-map-") as scratch:
+        root = Path(scratch)
+        seed(root)
+        profiles = root / "skills/automation-design/references/process-profiles.md"
+        profiles.write_text(
+            profiles.read_text(encoding="utf-8").replace(
+                "Observed current execution.",
+                "Invented future execution.",
+            ),
+            encoding="utf-8",
+        )
+        expect_failure(
+            "process-profile documentation drift",
+            VERIFY.verify_taxonomy(root),
+            "stable-profile table does not match taxonomy",
+        )
+
+    with tempfile.TemporaryDirectory(prefix="taxonomy-profile-example-") as scratch:
+        root = Path(scratch)
+        seed(root)
+        example = root / "skills/automation-design/assets/example-process-as-is.html"
+        example.write_text(
+            example.read_text(encoding="utf-8").replace(
+                'data-measure-state="unknown"',
+                'data-measure-state="estimated"',
+            ),
+            encoding="utf-8",
+        )
+        expect_failure(
+            "implicit AS-IS unknown measure",
+            VERIFY.verify_taxonomy(root),
+            "keep at least one unknown measure explicit",
         )
 
     with tempfile.TemporaryDirectory(prefix="taxonomy-unhashable-") as scratch:

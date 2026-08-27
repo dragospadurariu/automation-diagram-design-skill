@@ -60,6 +60,10 @@ A solution-design document needs the same automation drawn at more than one dept
 
 All three are vendor-neutral: they work for UiPath, Power Automate, Automation Anywhere, or a hand-rolled stack, because the tag names the system *class* and the product name lives in the sublabel. Already have these as draw.io PDDs? `/automation-design:import-drawio` redraws them in this system, with a fidelity ledger.
 
+### One process, three operational states
+
+`AS-IS`, `TO-BE`, and `TRANSITION` are process profiles, not additional visual types. Choose Process, Swimlane, Flowchart, or Sequence for the layout, then apply the state contract from [`process-profiles.md`](skills/automation-design/references/process-profiles.md). AS-IS preserves manual work, waits, rework, exceptions, evidence, and explicit unknowns; TO-BE separates proposed behavior from approved requirements; TRANSITION owns temporary coexistence, cutover, and retirement. See the canonical [`example-process-as-is.html`](skills/automation-design/assets/example-process-as-is.html).
+
 ### Agent cards — one page per agent, on any platform
 
 An agent built in UiPath, Copilot Studio, LangGraph, or plain code gets the same one-page architecture artifact: a fixed spatial grammar where the I/O spine runs horizontally, knowledge sits lower-left (grounding container, dashed `RETRIEVE` edges), actions sit lower-right (tool-permission boundary, `TOOL CALL` edges), reasoning on top, and the human at the bottom. Operating-mode chips (`AUTO` autonomous / `CONV` conversational / `STEP` invoked) say how the agent is engaged; guardrail gates sit on the exact edge each control governs.
@@ -309,6 +313,7 @@ automation-design/
 │       │   ├── animation.md         — optional motion + accessibility contract
 │       │   ├── onboarding.md        — the URL-to-tokens flow
 │       │   ├── profiles.md          — named client profiles + project markers
+│       │   ├── process-profiles.md  — AS-IS / TO-BE / TRANSITION evidence contracts
 │       │   ├── import-drawio.md     — draw.io redraw procedure
 │       │   ├── import-mermaid.md    — Mermaid redraw procedure
 │       │   ├── output-spec.md       — format × size × detail level
@@ -336,6 +341,7 @@ automation-design/
 │           ├── template*.html       — scaffolds for new diagrams
 │           ├── example-<type>.html  — base examples for all 13 visual types
 │           ├── example-process-detail.html   — PDD-depth flagship
+│           ├── example-process-as-is.html    — current-state evidence profile
 │           ├── example-rpa-blueprint.html    — phased-blueprint flagship
 │           ├── example-invoice-automation.html — overview flagship
 │           ├── example-loop-terminal.html

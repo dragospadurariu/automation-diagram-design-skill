@@ -4,6 +4,8 @@
 
 Prefer swimlane (simpler) when the data types and tools don't matter. Prefer process when each step's input/output payload and responsible team must be legible at a glance.
 
+When the request explicitly distinguishes current, future, or migration state, also load [`process-profiles.md`](process-profiles.md). `AS-IS`, `TO-BE`, and `TRANSITION` are profiles layered onto this type, not additional visual types.
+
 This type is **parametric** — the inputs schema in §1 drives every coordinate via the formulas in §2. Two generations from the same inputs must produce visually identical SVG. The rule shapes mirror `type-data-flow.md` so color override, IN/OUT chip semantic, and reproducibility checklist read identically across types.
 
 ---
@@ -45,7 +47,10 @@ arrows:                             # explicit edges; styles bind to topology (s
   # ... etc
 
 dark: false
+process_profile: null              # optional: as-is | to-be | transition
 ```
+
+When `process_profile` is set, provide the `profile_context` contract from [`process-profiles.md`](process-profiles.md) and add its 32px evidence strip before applying the formulas in §2. With `null`, every existing coordinate remains unchanged.
 
 **Reserved field semantics:**
 - `lanes[k].key` — the 3-letter role badge text shown inside every node in that lane.
@@ -493,3 +498,4 @@ Everything else — viewBox sizing, chip positions, legend layout, dark-mode tok
 - `assets/example-process-extended.html` — exercises §4 color override: Build app in slate-blue (data quality), Train enumerators in rust-red (governance), Publish results in olive-green (data products). Focal accent on Pilot test step + node unchanged.
 - `assets/example-process-extended-dark.html` — extended pattern, dark skin.
 - `assets/example-process-extended-full.html` — extended pattern, editorial-card frame.
+- `assets/example-process-as-is.html` — AS-IS profile: evidence strip, explicit unknown measures, performer lanes, branching, and distinct response/escalation outcomes.
