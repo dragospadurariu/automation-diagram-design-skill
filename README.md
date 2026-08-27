@@ -4,9 +4,9 @@
 
 A visual language for enterprise automation: robots, agents, humans, queues, orchestrators, business systems, and the boundaries between them — drawn as editorial, self-contained HTML/SVG diagrams that match your brand.
 
-![Process detail — numbered steps, technical annotations, an agent step with a confidence gate falling back to human review](readme-assets/process-detail.png)
+![Dispatcher–Performer batched execution — input sources, dispatcher job, durable work queue, queue trigger, scalable performer pool, and business application](readme-assets/dispatcher-performer-architecture.png)
 
-*One numbered process at the depth a PDD is written: step IDs that match the document's sections, technical facts annotated under each box, and the agent step with its confidence gate as the focal decision. Source: [`example-process-detail.html`](skills/automation-design/assets/example-process-detail.html).*
+*A production-shaped Dispatcher–Performer architecture: the dispatcher creates durable transactions, the queue decouples and triggers a scalable performer pool, and every performer writes its final status back to the same queue — with no separate reporter process. Source: [`example-dispatcher-performer-architecture.html`](skills/automation-design/assets/example-dispatcher-performer-architecture.html).*
 
 13 visual types, 20 semantic patterns — 13 of them automation-specific. One agent skill for Claude Code, Codex, and Pi. Semantic patterns describe behavior separately from layout: a dispatcher/queue/performer topology, an agent→RPA handoff, or a human-in-the-loop approval each routes to the nearest existing visual type instead of inventing a new one. Static HTML remains the default; optional motion is available for ordered explanations. The skill also redraws draw.io or Mermaid sources at a chosen format, size, and detail level.
 
